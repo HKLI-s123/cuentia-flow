@@ -263,7 +263,7 @@
 
 				if (result.timbrado && result.timbrado.success) {
 					mensaje += `🎉 Factura timbrada correctamente\n`;
-					mensaje += `📧 Correo enviado a: ${result.timbrado.emailEnviado}\n`;
+					mensaje += `📄 Folio: ${result.timbrado.numeroFactura}\n`;
 					mensaje += `🔑 UUID: ${result.timbrado.uuid}`;
 				} else {
 					mensaje += '⚠️ La factura se guardó pero no se pudo timbrar automáticamente\n';

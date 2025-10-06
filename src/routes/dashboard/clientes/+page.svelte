@@ -209,11 +209,8 @@
 				// Importación dinámica de PDF.js solo en el cliente
 				const pdfjsLib = await import('pdfjs-dist');
 
-				// Configurar el worker con la ruta del paquete instalado
-				(pdfjsLib as any).GlobalWorkerOptions.workerSrc = new URL(
-					'pdfjs-dist/build/pdf.worker.min.mjs',
-					import.meta.url
-				).toString();
+				// Configurar el worker desde CDN con la misma versión
+				pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
 				const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
 				const fullText = await extraerTextoPDF(pdf);

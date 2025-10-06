@@ -2,16 +2,9 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import axios from 'axios';
-import formData from 'form-data';
-import Mailgun from 'mailgun.js';
 
 // Configuración de Facturapi
 const FACTURAPI_KEY = 'REDACTED_FACTURAPI_TEST_KEY';
-
-// Configuración de Mailgun
-const MAILGUN_DOMAIN = 'sandboxd365386a7aae481ab007685bc5b9847b.mailgun.org';
-const MAILGUN_API_KEY = 'REDACTED_MAILGUN_API_KEY';
-const MAILGUN_FROM = 'mmendozacobranza@sandboxd365386a7aae481ab007685bc5b9847b.mailgun.org';
 
 export const POST: RequestHandler = async ({ request }) => {
   try {
@@ -144,7 +137,8 @@ export const POST: RequestHandler = async ({ request }) => {
         quantity: parseFloat(concepto.Cantidad)
       })),
       payment_form: factura.FormaPago || '99',
-      use: factura.UsoCFDI || 'G03'
+      use: factura.UsoCFDI || 'G03',
+      folio_number: factura.numero_factura // Usar el número de factura como folio
     };
 
     // Si es RFC genérico, agregar nodo global (Factura Global)
@@ -168,22 +162,6 @@ export const POST: RequestHandler = async ({ request }) => {
       }
     );
 
-    // Obtener PDF y XML usando los endpoints correctos
-    const [pdfRes, xmlRes] = await Promise.all([
-      axios.get(`https://www.facturapi.io/v2/invoices/${invoice.id}/pdf`, {
-        responseType: 'arraybuffer',
-        auth: { username: FACTURAPI_KEY, password: '' }
-      }),
-      axios.get(`https://www.facturapi.io/v2/invoices/${invoice.id}/xml`, {
-        responseType: 'arraybuffer',
-        auth: { username: FACTURAPI_KEY, password: '' }
-      })
-    ]);
-
-    // Convertir a base64
-    const pdfBase64 = Buffer.from(pdfRes.data).toString('base64');
-    const xmlBase64 = Buffer.from(xmlRes.data).toString('base64');
-
     // Guardar UUID del timbrado en la base de datos
     await db.query(
       `UPDATE Facturas
@@ -195,110 +173,12 @@ export const POST: RequestHandler = async ({ request }) => {
       [invoice.uuid, invoice.id, facturaId]
     );
 
-    // Enviar correo con Mailgun
-    const mailgun = new Mailgun(formData);
-    const mg = mailgun.client({
-      username: 'api',
-      key: MAILGUN_API_KEY
-    });
-
-    const emailData = {
-      from: MAILGUN_FROM,
-      to: factura.ClienteEmail,
-      subject: `Factura ${factura.numero_factura} - ${factura.OrganizacionRazonSocial}`,
-      html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
-            .invoice-details { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
-            .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
-            .detail-label { font-weight: bold; color: #666; }
-            .detail-value { color: #333; }
-            .total-row { background: #667eea; color: white; padding: 15px; border-radius: 5px; margin-top: 20px; }
-            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>📄 Nueva Factura Electrónica</h1>
-              <p>Se ha generado una nueva factura</p>
-            </div>
-            <div class="content">
-              <p>Estimado/a <strong>${factura.ClienteRazonSocial}</strong>,</p>
-              <p>Le informamos que se ha generado y timbrado exitosamente la siguiente factura:</p>
-
-              <div class="invoice-details">
-                <div class="detail-row">
-                  <span class="detail-label">Número de Factura:</span>
-                  <span class="detail-value">${factura.numero_factura}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">UUID:</span>
-                  <span class="detail-value">${invoice.uuid}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Fecha de Emisión:</span>
-                  <span class="detail-value">${new Date(factura.FechaEmision).toLocaleDateString('es-MX')}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Fecha de Vencimiento:</span>
-                  <span class="detail-value">${new Date(factura.FechaVencimiento).toLocaleDateString('es-MX')}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">RFC Emisor:</span>
-                  <span class="detail-value">${factura.OrganizacionRFC}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">RFC Receptor:</span>
-                  <span class="detail-value">${factura.ClienteRFC}</span>
-                </div>
-                <div class="total-row">
-                  <div class="detail-row" style="border: none; padding: 0;">
-                    <span class="detail-label" style="color: white;">Total:</span>
-                    <span class="detail-value" style="color: white; font-size: 24px; font-weight: bold;">$${Number(factura.MontoTotal).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MXN</span>
-                  </div>
-                </div>
-              </div>
-
-              <p style="margin-top: 30px;">El XML y PDF de la factura están adjuntos a este correo.</p>
-
-              <div class="footer">
-                <p><strong>${factura.OrganizacionRazonSocial}</strong></p>
-                <p>Este es un correo automático, por favor no responder.</p>
-              </div>
-            </div>
-          </div>
-        </body>
-        </html>
-      `,
-      attachment: [
-        {
-          data: Buffer.from(pdfBase64, 'base64'),
-          filename: `${factura.numero_factura}.pdf`,
-          contentType: 'application/pdf'
-        },
-        {
-          data: Buffer.from(xmlBase64, 'base64'),
-          filename: `${factura.numero_factura}.xml`,
-          contentType: 'application/xml'
-        }
-      ]
-    };
-
-    await mg.messages.create(MAILGUN_DOMAIN, emailData);
-
     return json({
       success: true,
-      message: 'Factura timbrada y enviada exitosamente',
+      message: 'Factura timbrada exitosamente',
       uuid: invoice.uuid,
       facturapiId: invoice.id,
-      emailEnviado: factura.ClienteEmail
+      numeroFactura: factura.numero_factura
     });
 
   } catch (error: any) {
