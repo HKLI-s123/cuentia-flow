@@ -481,7 +481,6 @@ WHERE c.OrganizacionId = ?
       "ultimaGestion": null,
       "observaciones": "Pago parcial recibido",
       "createdAt": "2024-01-01T10:00:00",
-      "updatedAt": "2024-01-15T14:30:00",
       "cliente": {
         "id": 5,
         "razonSocial": "Cliente ABC SA",

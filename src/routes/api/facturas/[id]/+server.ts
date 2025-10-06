@@ -35,7 +35,6 @@ export const GET: RequestHandler = async ({ params, url }) => {
         f.UsuarioCreadorId,
         f.UltimaGestion,
         f.CreatedAt,
-        f.UpdatedAt,
         c.RazonSocial as ClienteRazonSocial,
         c.RFC as ClienteRFC,
         c.NombreComercial as ClienteNombreComercial,
@@ -152,7 +151,6 @@ export const GET: RequestHandler = async ({ params, url }) => {
       usuarioCreadorApellido: row.UsuarioCreadorApellido,
       ultimaGestion: row.UltimaGestion,
       createdAt: row.CreatedAt,
-      updatedAt: row.UpdatedAt,
       cliente: {
         id: row.ClienteId,
         razonSocial: row.ClienteRazonSocial,

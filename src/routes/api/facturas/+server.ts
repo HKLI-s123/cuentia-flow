@@ -124,7 +124,6 @@ export const GET: RequestHandler = async ({ url }) => {
         f.UltimaGestion,
         f.Observaciones,
         f.CreatedAt,
-        f.UpdatedAt,
         c.RazonSocial as ClienteRazonSocial,
         c.NombreComercial as ClienteNombreComercial,
         c.RFC as ClienteRFC,
@@ -197,7 +196,6 @@ export const GET: RequestHandler = async ({ url }) => {
       ultimaGestion: factura.UltimaGestion,
       observaciones: factura.Observaciones,
       createdAt: factura.CreatedAt,
-      updatedAt: factura.UpdatedAt,
       cliente: {
         id: factura.ClienteId,
         razonSocial: factura.ClienteRazonSocial,
@@ -256,7 +254,7 @@ export const GET: RequestHandler = async ({ url }) => {
   }
 };
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request, fetch }) => {
   let transaction: sql.Transaction | null = null;
 
   try {
@@ -359,7 +357,7 @@ export const POST: RequestHandler = async ({ request }) => {
       INSERT INTO Facturas (
         ClienteId, MontoTotal, SaldoPendiente, FechaEmision, FechaVencimiento,
         estado_factura_id, prioridad_cobranza_id, numero_factura,
-        MetodoPago, FormaPago, OrdenCompra, Moneda, TipoCambio, CondicionesPago,
+        MetodoPago, FormaPago, UsoCFDI, OrdenCompra, Moneda, TipoCambio, CondicionesPago,
         NotasCliente, NotasInternas, DesglosarImpuestos, Identificador,
         UsuarioCreadorId,
         RecurrenciaActiva, OrdenRecurrencia, IdentificadorRecurrencia,
@@ -371,7 +369,7 @@ export const POST: RequestHandler = async ({ request }) => {
       VALUES (
         @ClienteId, @MontoTotal, @SaldoPendiente, @FechaEmision, @FechaVencimiento,
         @EstadoId, @PrioridadId, @NumeroFactura,
-        @MetodoPago, @FormaPago, @OrdenCompra, @Moneda, @TipoCambio, @CondicionesPago,
+        @MetodoPago, @FormaPago, @UsoCFDI, @OrdenCompra, @Moneda, @TipoCambio, @CondicionesPago,
         @NotasCliente, @NotasInternas, @DesglosarImpuestos, @Identificador,
         @UsuarioCreadorId,
         @RecurrenciaActiva, @OrdenRecurrencia, @IdentificadorRecurrencia,
@@ -392,6 +390,7 @@ export const POST: RequestHandler = async ({ request }) => {
       .input('NumeroFactura', sql.NVarChar(100), numeroFactura)
       .input('MetodoPago', sql.NVarChar(10), data.metodoPago || 'PUE')
       .input('FormaPago', sql.NVarChar(10), data.formaPago || '99')
+      .input('UsoCFDI', sql.NVarChar(10), data.usoCfdi || 'G03')
       .input('OrdenCompra', sql.NVarChar(100), data.ordenCompra || null)
       .input('Moneda', sql.NVarChar(10), data.moneda || 'MXN')
       .input('TipoCambio', sql.Decimal(10, 4), parseFloat(data.tipoCambio || '1.0000'))
@@ -484,10 +483,30 @@ export const POST: RequestHandler = async ({ request }) => {
 
     await transaction.commit();
 
+    // Timbrar y enviar factura automáticamente
+    let resultadoTimbrado = null;
+    try {
+      const responseTimbrado = await fetch('/api/facturas/timbrar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ facturaId })
+      });
+
+      if (responseTimbrado.ok) {
+        resultadoTimbrado = await responseTimbrado.json();
+      }
+    } catch (errorTimbrado) {
+      // Si falla el timbrado, continuar sin error (la factura ya está guardada)
+      console.error('Error al timbrar factura automáticamente:', errorTimbrado);
+    }
+
     return json({
       success: true,
       message: 'Factura creada exitosamente con conceptos e impuestos',
-      facturaId: facturaId
+      facturaId: facturaId,
+      timbrado: resultadoTimbrado || { success: false, message: 'No se pudo timbrar automáticamente' }
     }, { status: 201 });
 
   } catch (error) {

@@ -275,8 +275,7 @@
           estado_factura_id: f.estado.id,
           prioridad_cobranza_id: f.prioridad.id,
           ultimaGestion: f.ultimaGestion,
-          createdAt: f.createdAt,
-          updatedAt: f.updatedAt
+          createdAt: f.createdAt
         }));
 
         agingData = data.aging;

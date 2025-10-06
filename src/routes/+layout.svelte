@@ -7,7 +7,7 @@
   <link rel="icon" href="/favicon.ico" />
 </svelte:head>
 
-<!-- Layout principal pegado a la izquierda -->
+<!-- Layout principal pegado a la izquierda --> 
 <div class="bg-gray-100">
   <!-- Contenido de la página -->
   <slot />

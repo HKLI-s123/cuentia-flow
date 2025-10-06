@@ -305,6 +305,8 @@ Teléfono: {telefono_empresa}
     try {
       // Preparar datos para enviar
       const datosParaGuardar = {
+        razonSocial: datosOrganizacion.razonSocial,
+        rfc: datosOrganizacion.rfc,
         nombreComercial: datosOrganizacion.nombre,
         emailCorporativo: datosOrganizacion.correoElectronico,
         telefono: datosOrganizacion.telefono,

@@ -12,20 +12,21 @@
   let metricas = {
     totalPorCobrar: 0,
     saldoVencido: 0,
-    totalVentas: 0,
+    totalFacturado: 0,
+    totalCobrado: 0,
+    eficienciaCobranza: 0,
     facturasPendientes: 0,
     facturasVencidas: 0
   };
 
   let aging = {
-    actual: { cantidad: 0, monto: 0 },
-    dias30: { cantidad: 0, monto: 0 },
-    dias60: { cantidad: 0, monto: 0 },
-    dias90: { cantidad: 0, monto: 0 },
+    vigente: { cantidad: 0, monto: 0 },
+    dias0_30: { cantidad: 0, monto: 0 },
+    dias31_60: { cantidad: 0, monto: 0 },
+    dias61_90: { cantidad: 0, monto: 0 },
     mas90: { cantidad: 0, monto: 0 }
   };
 
-  let facturas: any[] = [];
   let cargando = true;
   let selectedPeriod = 'Semana';
 
@@ -48,85 +49,64 @@
         return;
       }
 
-      const response = await authFetch(`/api/facturas?organizacionId=${organizacionId}&limit=100`);
+      // Cargar métricas desde el nuevo endpoint
+      const responseMetricas = await authFetch(`/api/dashboard/metricas?organizacionId=${organizacionId}`);
 
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      if (!responseMetricas.ok) {
+        throw new Error(`Error ${responseMetricas.status}: ${responseMetricas.statusText}`);
       }
 
-      const data = await response.json();
+      const dataMetricas = await responseMetricas.json();
 
-      if (data.success) {
-        facturas = data.facturas;
+      if (dataMetricas.success) {
+        const m = dataMetricas.metricas;
 
-        // Calcular métricas
-        metricas.totalPorCobrar = data.aging?.montoTotal || 0;
-        metricas.facturasPendientes = data.aging?.totalFacturas || 0;
-
-        // Calcular saldo vencido (facturas con estado vencida)
-        const facturasVencidas = facturas.filter(f => f.estado.id === 4);
-        metricas.saldoVencido = facturasVencidas.reduce((sum, f) => sum + (f.saldoPendiente || 0), 0);
-        metricas.facturasVencidas = facturasVencidas.length;
-
-        // Total de ventas (suma de todos los montos totales)
-        metricas.totalVentas = facturas.reduce((sum, f) => sum + (f.montoTotal || 0), 0);
+        // Actualizar métricas principales
+        metricas.totalPorCobrar = m.totalPorCobrar || 0;
+        metricas.saldoVencido = m.saldoVencido || 0;
+        metricas.totalFacturado = m.totalFacturado || 0;
+        metricas.totalCobrado = m.totalCobrado || 0;
+        metricas.eficienciaCobranza = m.eficienciaCobranza || 0;
+        metricas.facturasPendientes = m.cantidadFacturasPendientes || 0;
+        metricas.facturasVencidas = m.cantidadFacturasVencidas || 0;
 
         // Actualizar aging
-        if (data.aging) {
-          aging = {
-            actual: { cantidad: data.aging.rango0_30?.count || 0, monto: data.aging.rango0_30?.monto || 0 },
-            dias30: { cantidad: data.aging.rango31_60?.count || 0, monto: data.aging.rango31_60?.monto || 0 },
-            dias60: { cantidad: data.aging.rango61_90?.count || 0, monto: data.aging.rango61_90?.monto || 0 },
-            dias90: { cantidad: data.aging.rango91_mas?.count || 0, monto: data.aging.rango91_mas?.monto || 0 },
-            mas90: { cantidad: data.aging.rango91_mas?.count || 0, monto: data.aging.rango91_mas?.monto || 0 }
-          };
+        if (m.aging) {
+          aging = m.aging;
         }
 
         cargando = false;
 
         // Crear gráficos después de cargar datos
-        setTimeout(crearGraficos, 100);
+        setTimeout(() => crearGraficos(m.ventasPorMes, m.resumenCobranza, m.topSaldoVencido), 100);
       }
+
     } catch (error) {
+      console.error('Error al cargar datos:', error);
       cargando = false;
     }
   }
 
-  async function crearGraficos() {
+  async function crearGraficos(ventasPorMes: any[], resumenCobranza: any[], topSaldoVencido: any[]) {
     // import dinámico de Chart.js solo en cliente
     const Chart = (await import("chart.js/auto")).default;
 
-    // Gráfico de Ventas - Calcular últimos 4 meses dinámicamente
-    if (canvasVentas) {
+    // Gráfico de Ventas - Usar datos del backend
+    if (canvasVentas && ventasPorMes) {
       const hoy = new Date();
-      const meses = [];
       const labels = [];
+      const datos = [];
 
       // Generar los últimos 4 meses
       for (let i = 3; i >= 0; i--) {
         const fecha = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
-        meses.push(fecha);
         const nombreMes = fecha.toLocaleDateString('es-ES', { month: 'short' });
         labels.push(nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1) + '.');
+
+        // Buscar datos del backend para este mes
+        const datosDelMes = ventasPorMes.find(v => v.Anio === fecha.getFullYear() && v.Mes === (fecha.getMonth() + 1));
+        datos.push(datosDelMes?.TotalVentas || 0);
       }
-
-      // Agrupar facturas por mes
-      const ventasPorMes = new Array(4).fill(0);
-
-      facturas.forEach(f => {
-        const fechaFactura = new Date(f.fechaEmision);
-
-        // Encontrar en qué mes cae
-        for (let i = 0; i < meses.length; i++) {
-          const mesActual = meses[i];
-          const mesSiguiente = new Date(mesActual.getFullYear(), mesActual.getMonth() + 1, 1);
-
-          if (fechaFactura >= mesActual && fechaFactura < mesSiguiente) {
-            ventasPorMes[i] += f.montoTotal || 0;
-            break;
-          }
-        }
-      });
 
       new Chart(canvasVentas, {
         type: "bar",
@@ -135,7 +115,7 @@
           datasets: [
             {
               label: "Ventas",
-              data: ventasPorMes,
+              data: datos,
               backgroundColor: "#4ade80",
               borderRadius: 4,
               barThickness: 40
@@ -170,54 +150,13 @@
       });
     }
 
-    // Gráfico Resumen de Cobranza - Últimas 4 semanas dinámicamente
-    if (canvasResumenCobranza) {
-      const hoy = new Date();
-      const semanas = [];
-      const labels = [];
-
-      // Generar las últimas 4 semanas
-      for (let i = 3; i >= 0; i--) {
-        const inicioSemana = new Date(hoy);
-        inicioSemana.setDate(hoy.getDate() - (i * 7));
-        semanas.push(inicioSemana);
-
-        const dia = inicioSemana.getDate();
-        const mes = inicioSemana.toLocaleDateString('es-ES', { month: 'short' });
-        labels.push(`${dia}-${mes.charAt(0).toUpperCase() + mes.slice(1)}`);
-      }
-
-      // Agrupar facturas por semana
-      const datosVigente = new Array(4).fill(0);
-      const datosVencido = new Array(4).fill(0);
-      const datosPagado = new Array(4).fill(0);
-
-      facturas.forEach(f => {
-        const fechaFactura = new Date(f.fechaEmision);
-
-        // Encontrar en qué semana cae
-        for (let i = 0; i < semanas.length; i++) {
-          const inicioSemana = semanas[i];
-          const finSemana = new Date(inicioSemana);
-          finSemana.setDate(inicioSemana.getDate() + 7);
-
-          if (fechaFactura >= inicioSemana && fechaFactura < finSemana) {
-            // Vigente: estado pendiente y no vencida
-            if (f.estado.id === 1 && (f.diasVencido || 0) <= 0) {
-              datosVigente[i] += f.montoTotal || 0;
-            }
-            // Vencido: estado vencida
-            else if (f.estado.id === 4) {
-              datosVencido[i] += f.saldoPendiente || 0;
-            }
-            // Pagado: estado pagada
-            else if (f.estado.id === 3) {
-              datosPagado[i] += f.montoTotal || 0;
-            }
-            break;
-          }
-        }
-      });
+    // Gráfico Resumen de Cobranza - Usar datos del backend
+    if (canvasResumenCobranza && resumenCobranza) {
+      // Preparar datos para las últimas 4 semanas
+      const labels = resumenCobranza.map((r, i) => `Sem ${i + 1}`);
+      const datosVigente = resumenCobranza.map(r => r.Vigente || 0);
+      const datosVencido = resumenCobranza.map(r => r.Vencido || 0);
+      const datosPagado = resumenCobranza.map(r => r.Pagado || 0);
 
       new Chart(canvasResumenCobranza, {
         type: "bar",
@@ -279,36 +218,14 @@
       });
     }
 
-    // Gráfico Top Saldo Vencido por Cliente
-    if (canvasTopSaldoVencido) {
-      // Agrupar facturas vencidas por cliente
-      const saldoPorCliente: { [key: string]: { nombre: string; saldo: number } } = {};
-
-      facturas.forEach(f => {
-        if (f.estado.id === 4 && f.saldoPendiente > 0) {
-          const clienteId = f.cliente.id;
-          const nombreCliente = f.cliente.razonSocial || 'Sin nombre';
-
-          if (!saldoPorCliente[clienteId]) {
-            saldoPorCliente[clienteId] = {
-              nombre: nombreCliente,
-              saldo: 0
-            };
-          }
-          saldoPorCliente[clienteId].saldo += f.saldoPendiente;
-        }
-      });
-
-      // Convertir a array y ordenar por saldo descendente
-      const topClientes = Object.values(saldoPorCliente)
-        .sort((a, b) => b.saldo - a.saldo)
-        .slice(0, 10); // Top 10 clientes
-
-      const labels = topClientes.map(c => {
+    // Gráfico Top Saldo Vencido por Cliente - Usar datos del backend
+    if (canvasTopSaldoVencido && topSaldoVencido) {
+      const labels = topSaldoVencido.map(c => {
         // Truncar nombre si es muy largo
-        return c.nombre.length > 25 ? c.nombre.substring(0, 25) + '...' : c.nombre;
+        const nombre = c.ClienteNombre || 'Sin nombre';
+        return nombre.length > 25 ? nombre.substring(0, 25) + '...' : nombre;
       });
-      const datos = topClientes.map(c => c.saldo);
+      const datos = topSaldoVencido.map(c => c.TotalSaldoVencido || 0);
 
       new Chart(canvasTopSaldoVencido, {
         type: "bar",
@@ -414,20 +331,27 @@
     <!-- Tarjeta VENTAS -->
     <div class="bg-gradient-to-br from-blue-900 to-blue-800 rounded-xl p-6 shadow-lg text-white">
       <div class="flex items-start justify-between mb-4">
-        <div>
+        <div class="flex-1">
           <div class="flex items-center gap-2 mb-2">
-            <h2 class="text-sm font-semibold tracking-wide uppercase">VENTAS</h2>
+            <h2 class="text-sm font-semibold tracking-wide uppercase">VENTAS (Total Facturado)</h2>
             <button class="text-white/70 hover:text-white">
               <HelpCircle class="w-4 h-4" />
             </button>
           </div>
-          <div class="flex items-baseline gap-3">
-            <p class="text-4xl font-bold">{formatearMoneda(metricas.totalVentas)}</p>
+          <div class="flex items-baseline gap-3 mb-4">
+            <p class="text-4xl font-bold">{formatearMoneda(metricas.totalFacturado)}</p>
             <div class="flex items-center gap-1 text-green-400">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-sm font-semibold">100%</span>
+              <span class="text-sm font-semibold">{metricas.eficienciaCobranza.toFixed(1)}%</span>
+            </div>
+          </div>
+
+          <div class="border-t border-white/20 pt-3">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium">Total Cobrado</span>
+              <span class="text-lg font-bold">{formatearMoneda(metricas.totalCobrado)}</span>
             </div>
           </div>
         </div>

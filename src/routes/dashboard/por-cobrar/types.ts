@@ -78,7 +78,6 @@ export interface Factura {
   usuarioCreadorApellido?: string;
   conceptos?: ConceptoFactura[];
   createdAt: string;
-  updatedAt: string;
 }
 
 // Pago aplicado a factura
@@ -93,7 +92,6 @@ export interface Pago {
   notas?: string;
   factura?: Factura;
   createdAt: string;
-  updatedAt: string;
 }
 
 // Gestión de cobranza

@@ -162,6 +162,28 @@ export const POST: RequestHandler = async ({ params, request }) => {
 
     const ahora = new Date();
 
+    // Primero actualizar la tabla Organizaciones si se proporcionan los datos
+    if (data.razonSocial || data.rfc || data.emailCorporativo || data.nombreComercial) {
+      const updateOrgQuery = `
+        UPDATE Organizaciones SET
+          RazonSocial = COALESCE(?, RazonSocial),
+          RFC = COALESCE(?, RFC),
+          CorreoElectronico = COALESCE(?, CorreoElectronico),
+          Nombre = COALESCE(?, Nombre),
+          UpdatedAt = ?
+        WHERE Id = ?
+      `;
+
+      await db.query(updateOrgQuery, [
+        data.razonSocial || null,
+        data.rfc || null,
+        data.emailCorporativo || null,
+        data.nombreComercial || null,
+        ahora,
+        organizacionId
+      ]);
+    }
+
     if (existeResult.length > 0) {
       // Actualizar configuración existente
       const updateQuery = `

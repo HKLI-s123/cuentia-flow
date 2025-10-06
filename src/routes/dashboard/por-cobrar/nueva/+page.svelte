@@ -39,6 +39,7 @@
 	let fechaEmision = new Date().toISOString().split('T')[0];
 	let metodoPago = 'PPD'; // PUE o PPD según SAT (default: PPD)
 	let formaPago = '99'; // Forma de pago según SAT
+	let usoCfdi = 'G03'; // Uso CFDI según SAT (default: G03 - Gastos en general)
 	let condicionesPago = '';
 	let ordenCompra = '';
 	let moneda = 'MXN';
@@ -220,6 +221,7 @@
 				fechaEmision,
 				metodoPago,
 				formaPago,
+				usoCfdi,
 				condicionesPago,
 				ordenCompra,
 				moneda,
@@ -256,7 +258,19 @@
 			const result = await response.json();
 
 			if (result.success) {
-				alert('✅ Factura guardada exitosamente');
+				// Mostrar mensaje de éxito con información del timbrado
+				let mensaje = '✅ Factura guardada correctamente\n\n';
+
+				if (result.timbrado && result.timbrado.success) {
+					mensaje += `🎉 Factura timbrada correctamente\n`;
+					mensaje += `📧 Correo enviado a: ${result.timbrado.emailEnviado}\n`;
+					mensaje += `🔑 UUID: ${result.timbrado.uuid}`;
+				} else {
+					mensaje += '⚠️ La factura se guardó pero no se pudo timbrar automáticamente\n';
+					mensaje += 'Puede timbrarla manualmente desde el listado de facturas';
+				}
+
+				alert(mensaje);
 				goto('/dashboard/por-cobrar');
 			} else {
 				alert(`❌ Error: ${result.error}`);
@@ -412,6 +426,41 @@
 					<option value="30">30 - Aplicación de anticipos</option>
 					<option value="31">31 - Intermediario pagos</option>
 					<option value="99">99 - Por definir</option>
+				</select>
+			</div>
+			<div>
+				<label for="uso-cfdi" class="block text-sm font-medium text-gray-700 mb-1"
+					>Uso CFDI</label
+				>
+				<select
+					id="uso-cfdi"
+					bind:value={usoCfdi}
+					class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+				>
+					<option value="G01">G01 - Adquisición de mercancías</option>
+					<option value="G02">G02 - Devoluciones, descuentos o bonificaciones</option>
+					<option value="G03">G03 - Gastos en general</option>
+					<option value="I01">I01 - Construcciones</option>
+					<option value="I02">I02 - Mobiliario y equipo de oficina por inversiones</option>
+					<option value="I03">I03 - Equipo de transporte</option>
+					<option value="I04">I04 - Equipo de computo y accesorios</option>
+					<option value="I05">I05 - Dados, troqueles, moldes, matrices y herramental</option>
+					<option value="I06">I06 - Comunicaciones telefónicas</option>
+					<option value="I07">I07 - Comunicaciones satelitales</option>
+					<option value="I08">I08 - Otra maquinaria y equipo</option>
+					<option value="D01">D01 - Honorarios médicos, dentales y gastos hospitalarios</option>
+					<option value="D02">D02 - Gastos médicos por incapacidad o discapacidad</option>
+					<option value="D03">D03 - Gastos funerales</option>
+					<option value="D04">D04 - Donativos</option>
+					<option value="D05">D05 - Intereses reales efectivamente pagados por créditos hipotecarios</option>
+					<option value="D06">D06 - Aportaciones voluntarias al SAR</option>
+					<option value="D07">D07 - Primas por seguros de gastos médicos</option>
+					<option value="D08">D08 - Gastos de transportación escolar obligatoria</option>
+					<option value="D09">D09 - Depósitos en cuentas para el ahorro</option>
+					<option value="D10">D10 - Pagos por servicios educativos (colegiaturas)</option>
+					<option value="S01">S01 - Sin efectos fiscales</option>
+					<option value="CP01">CP01 - Pagos</option>
+					<option value="CN01">CN01 - Nómina</option>
 				</select>
 			</div>
 			<div>

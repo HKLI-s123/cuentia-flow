@@ -12,6 +12,14 @@
   let editingUser: any = null;
   let showPassword = false;
 
+  // Listas para comboboxes
+  let organizaciones: any[] = [];
+  let roles: any[] = [];
+
+  // Variable para verificar si el usuario es administrador
+  let esAdministrador = false;
+  let usuarioActualId: number | null = null;
+
   // Formulario de nuevo usuario
   let nuevoUsuario = {
     correo: '',
@@ -19,7 +27,9 @@
     numero_tel: '',
     Nombre: '',
     Apellido: '',
-    activo: 1
+    activo: 1,
+    organizacionId: '',
+    rolId: ''
   };
 
   // Errores de validación
@@ -28,53 +38,119 @@
     contrasena: '',
     numero_tel: '',
     Nombre: '',
-    Apellido: ''
+    Apellido: '',
+    organizacionId: '',
+    rolId: ''
   };
 
   // Variable de entorno para la API
   let API_URL = '';
 
-  // Cargar variable de entorno
+  // Cargar datos iniciales
   onMount(async () => {
-    try {
-      const response = await authFetch('/api/config');
-      if (response.ok) {
-        const config = await response.json();
-        API_URL = config.API_REGISTER_URL || 'http://192.168.0.30:3000/api/auth/register';
-      }
-    } catch (error) {
-      API_URL = 'http://192.168.0.30:3000/api/auth/register';
-    }
+    await verificarRolUsuario();
     await cargarUsuarios();
+    await cargarOrganizaciones();
+    await cargarRoles();
   });
 
-  // Cargar usuarios (mock data por ahora)
+  // Verificar si el usuario actual es administrador
+  async function verificarRolUsuario() {
+    try {
+      const userData = sessionStorage.getItem('userData');
+      if (!userData) return;
+
+      const user = JSON.parse(userData);
+      usuarioActualId = user.id;
+      const organizacionId = user.organizacionId;
+
+      const response = await authFetch(`/api/usuario/${user.id}/organizacion`);
+      if (response.ok) {
+        const data = await response.json();
+        // Verificar si el rol es Administrador
+        esAdministrador = data.rolNombre === 'Administrador';
+      }
+    } catch (error) {
+      console.error('Error al verificar rol:', error);
+    }
+  }
+
+  // Cargar organizaciones del usuario logueado
+  async function cargarOrganizaciones() {
+    try {
+      const userData = sessionStorage.getItem('userData');
+      if (!userData) return;
+
+      const user = JSON.parse(userData);
+      const response = await authFetch(`/api/usuario/${user.id}/organizaciones`);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          organizaciones = data.organizaciones;
+        }
+      }
+    } catch (error) {
+      console.error('Error al cargar organizaciones:', error);
+    }
+  }
+
+  // Cargar roles disponibles
+  async function cargarRoles() {
+    try {
+      const response = await authFetch('/api/roles');
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          roles = data.roles;
+        }
+      }
+    } catch (error) {
+      console.error('Error al cargar roles:', error);
+    }
+  }
+
+  // Cargar usuarios de la organización actual
   async function cargarUsuarios() {
     loading = true;
     try {
-      // Simulación de datos de usuarios
-      await new Promise(resolve => setTimeout(resolve, 500));
-      usuarios = [
-        {
-          id: 1,
-          correo: 'admin@empresa.com',
-          Nombre: 'Carlos',
-          Apellido: 'Moreno',
-          numero_tel: '5512345678',
-          activo: 1,
-          fechaCreacion: '2024-01-15'
-        },
-        {
-          id: 2,
-          correo: 'usuario2@empresa.com',
-          Nombre: 'María',
-          Apellido: 'González',
-          numero_tel: '5587654321',
-          activo: 1,
-          fechaCreacion: '2024-02-20'
+      const userData = sessionStorage.getItem('userData');
+      if (!userData) {
+        loading = false;
+        return;
+      }
+
+      const user = JSON.parse(userData);
+      const organizacionId = user.organizacionId;
+
+      if (!organizacionId) {
+        console.error('No se encontró organizacionId en userData');
+        loading = false;
+        return;
+      }
+
+      // Cargar usuarios usando authFetch
+      const response = await authFetch(`/api/usuarios?organizacionId=${organizacionId}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          usuarios = data.usuarios.map((u: any) => ({
+            id: u.id,
+            correo: u.correo,
+            Nombre: u.nombre,
+            Apellido: u.apellido,
+            numero_tel: u.numeroTel || '',
+            activo: u.activo,
+            fechaCreacion: u.fechaCreacion,
+            rolId: u.rolId,
+            rolNombre: u.rolNombre
+          }));
         }
-      ];
+      }
     } catch (error) {
+      console.error('Error al cargar usuarios:', error);
     } finally {
       loading = false;
     }
@@ -88,7 +164,9 @@
       contrasena: '',
       numero_tel: '',
       Nombre: '',
-      Apellido: ''
+      Apellido: '',
+      organizacionId: '',
+      rolId: ''
     };
 
     // Validar nombre
@@ -119,12 +197,33 @@
       esValido = false;
     }
 
-    // Validar contraseña
-    if (!nuevoUsuario.contrasena) {
-      errors.contrasena = 'La contraseña es obligatoria';
+    // Validar contraseña (solo obligatoria al crear, opcional al editar)
+    if (!editingUser) {
+      // Modo creación - contraseña obligatoria
+      if (!nuevoUsuario.contrasena) {
+        errors.contrasena = 'La contraseña es obligatoria';
+        esValido = false;
+      } else if (nuevoUsuario.contrasena.length < 6) {
+        errors.contrasena = 'La contraseña debe tener al menos 6 caracteres';
+        esValido = false;
+      }
+    } else {
+      // Modo edición - contraseña opcional, pero si se ingresa debe ser válida
+      if (nuevoUsuario.contrasena && nuevoUsuario.contrasena.length < 6) {
+        errors.contrasena = 'La contraseña debe tener al menos 6 caracteres';
+        esValido = false;
+      }
+    }
+
+    // Validar organización
+    if (!nuevoUsuario.organizacionId) {
+      errors.organizacionId = 'Debe seleccionar una organización';
       esValido = false;
-    } else if (nuevoUsuario.contrasena.length < 6) {
-      errors.contrasena = 'La contraseña debe tener al menos 6 caracteres';
+    }
+
+    // Validar rol
+    if (!nuevoUsuario.rolId) {
+      errors.rolId = 'Debe seleccionar un rol';
       esValido = false;
     }
 
@@ -140,7 +239,7 @@
     return esValido;
   }
 
-  // Crear nuevo usuario
+  // Crear o actualizar usuario
   async function crearUsuario() {
     if (!validarFormulario()) {
       return;
@@ -148,23 +247,36 @@
 
     loading = true;
     try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(nuevoUsuario)
-      });
+      const datosUsuario = {
+        ...nuevoUsuario,
+        usuarioCreadorId: usuarioActualId,
+        usuarioEditorId: usuarioActualId
+      };
 
-      if (response.ok) {
-        const result = await response.json();
+      let response;
+      let mensajeExito;
 
-        // Agregar usuario a la lista local
-        usuarios = [...usuarios, {
-          id: usuarios.length + 1,
-          ...nuevoUsuario,
-          fechaCreacion: new Date().toISOString().split('T')[0]
-        }];
+      if (editingUser) {
+        // Modo edición - PUT
+        response = await authFetch(`/api/usuarios/${editingUser.id}`, {
+          method: 'PUT',
+          body: JSON.stringify(datosUsuario)
+        });
+        mensajeExito = 'Usuario actualizado exitosamente';
+      } else {
+        // Modo creación - POST
+        response = await authFetch('/api/usuarios', {
+          method: 'POST',
+          body: JSON.stringify(datosUsuario)
+        });
+        mensajeExito = 'Usuario creado exitosamente';
+      }
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        // Recargar lista de usuarios
+        await cargarUsuarios();
 
         // Limpiar formulario y cerrar modal
         limpiarFormulario();
@@ -173,18 +285,17 @@
         // Mostrar notificación de éxito
         await Swal.fire({
           icon: 'success',
-          title: '¡Usuario creado!',
-          text: 'El usuario ha sido registrado exitosamente',
+          title: editingUser ? '¡Usuario actualizado!' : '¡Usuario creado!',
+          text: result.message || mensajeExito,
           confirmButtonColor: '#2563eb',
           timer: 2000,
           showConfirmButton: false
         });
       } else {
-        const error = await response.json();
         await Swal.fire({
           icon: 'error',
-          title: 'Error al crear usuario',
-          text: error.message || 'Ocurrió un error desconocido',
+          title: editingUser ? 'Error al actualizar usuario' : 'Error al crear usuario',
+          text: result.message || result.error || 'Ocurrió un error desconocido',
           confirmButtonColor: '#2563eb'
         });
       }
@@ -208,14 +319,18 @@
       numero_tel: '',
       Nombre: '',
       Apellido: '',
-      activo: 1
+      activo: 1,
+      organizacionId: '',
+      rolId: ''
     };
     errors = {
       correo: '',
       contrasena: '',
       numero_tel: '',
       Nombre: '',
-      Apellido: ''
+      Apellido: '',
+      organizacionId: '',
+      rolId: ''
     };
     showPassword = false;
   }
@@ -227,10 +342,26 @@
     usuario.correo.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Abrir modal
+  // Abrir modal para nuevo usuario
   function abrirModal() {
     editingUser = null;
     limpiarFormulario();
+    showModal = true;
+  }
+
+  // Abrir modal para editar usuario
+  function abrirModalEditar(usuario: any) {
+    editingUser = usuario;
+    nuevoUsuario = {
+      correo: usuario.correo,
+      contrasena: '', // Dejar vacío, solo se actualiza si se ingresa algo
+      numero_tel: usuario.numero_tel || '',
+      Nombre: usuario.Nombre,
+      Apellido: usuario.Apellido,
+      activo: usuario.activo,
+      organizacionId: usuario.organizacionId || organizaciones[0]?.id || '',
+      rolId: usuario.rolId || ''
+    };
     showModal = true;
   }
 
@@ -250,6 +381,68 @@
   function toggleActivo() {
     nuevoUsuario.activo = nuevoUsuario.activo === 1 ? 0 : 1;
   }
+
+  // Eliminar usuario
+  async function eliminarUsuario(usuario: any) {
+    const result = await Swal.fire({
+      title: '¿Eliminar usuario?',
+      html: `
+        <p>¿Está seguro que desea eliminar al usuario:</p>
+        <p class="font-bold mt-2">${usuario.Nombre} ${usuario.Apellido}</p>
+        <p class="text-sm text-gray-600">${usuario.correo}</p>
+        <p class="text-sm text-red-600 mt-3">Esta acción desactivará el usuario y lo desvinculará de la organización.</p>
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    loading = true;
+    try {
+      const response = await authFetch(`/api/usuarios/${usuario.id}`, {
+        method: 'DELETE'
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Eliminar usuario de la lista local
+        usuarios = usuarios.filter(u => u.id !== usuario.id);
+
+        await Swal.fire({
+          icon: 'success',
+          title: 'Usuario eliminado',
+          text: data.message || 'El usuario ha sido desactivado exitosamente',
+          confirmButtonColor: '#2563eb',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      } else {
+        await Swal.fire({
+          icon: 'error',
+          title: 'No se puede eliminar',
+          html: data.message || data.error || 'Ocurrió un error al intentar eliminar el usuario',
+          confirmButtonColor: '#2563eb'
+        });
+      }
+    } catch (error) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error de conexión',
+        text: 'No se pudo conectar con el servidor',
+        confirmButtonColor: '#2563eb'
+      });
+    } finally {
+      loading = false;
+    }
+  }
 </script>
 
 <svelte:head>
@@ -264,13 +457,19 @@
       <p class="text-gray-600">Administra los usuarios del sistema</p>
     </div>
 
-    <button
-      on:click={abrirModal}
-      class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-    >
-      <UserPlus class="w-5 h-5" />
-      Nuevo Usuario
-    </button>
+    {#if esAdministrador}
+      <button
+        on:click={abrirModal}
+        class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+      >
+        <UserPlus class="w-5 h-5" />
+        Nuevo Usuario
+      </button>
+    {:else}
+      <div class="text-sm text-gray-500 italic">
+        Solo los administradores pueden crear usuarios
+      </div>
+    {/if}
   </div>
 
   <!-- Filtros y búsqueda -->
@@ -317,6 +516,7 @@
             <tr>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contacto</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Registro</th>
               <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
@@ -343,7 +543,12 @@
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-900">{usuario.numero_tel}</div>
+                  <div class="text-sm text-gray-900">{usuario.numero_tel || '-'}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                    {usuario.rolNombre || 'Sin rol'}
+                  </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span class="px-2 py-1 text-xs font-medium rounded-full {usuario.activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
@@ -355,24 +560,24 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div class="flex items-center justify-end gap-2">
-                    <button
-                      class="text-blue-600 hover:text-blue-900 p-1 rounded"
-                      aria-label="Editar usuario {usuario.Nombre} {usuario.Apellido}"
-                    >
-                      <Edit2 class="w-4 h-4" />
-                    </button>
-                    <button
-                      class="text-red-600 hover:text-red-900 p-1 rounded"
-                      aria-label="Eliminar usuario {usuario.Nombre} {usuario.Apellido}"
-                    >
-                      <Trash2 class="w-4 h-4" />
-                    </button>
-                    <button
-                      class="text-gray-600 hover:text-gray-900 p-1 rounded"
-                      aria-label="Más opciones para {usuario.Nombre} {usuario.Apellido}"
-                    >
-                      <MoreVertical class="w-4 h-4" />
-                    </button>
+                    {#if esAdministrador}
+                      <button
+                        on:click={() => abrirModalEditar(usuario)}
+                        class="text-blue-600 hover:text-blue-900 p-1 rounded"
+                        aria-label="Editar usuario {usuario.Nombre} {usuario.Apellido}"
+                      >
+                        <Edit2 class="w-4 h-4" />
+                      </button>
+                      <button
+                        on:click={() => eliminarUsuario(usuario)}
+                        class="text-red-600 hover:text-red-900 p-1 rounded"
+                        aria-label="Eliminar usuario {usuario.Nombre} {usuario.Apellido}"
+                      >
+                        <Trash2 class="w-4 h-4" />
+                      </button>
+                    {:else}
+                      <span class="text-xs text-gray-400 italic">Sin permisos</span>
+                    {/if}
                   </div>
                 </td>
               </tr>
@@ -528,6 +733,61 @@
             </div>
           </div>
 
+          <!-- Sección: Organización y Rol -->
+          <div>
+            <h4 class="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <User class="w-4 h-4 text-blue-600" />
+              Organización y Permisos
+            </h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Organización -->
+              <div>
+                <label for="organizacion" class="block text-sm font-medium text-gray-700 mb-2">
+                  Organización <span class="text-red-500">*</span>
+                </label>
+                <select
+                  id="organizacion"
+                  bind:value={nuevoUsuario.organizacionId}
+                  class="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 transition-all {errors.organizacionId ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}"
+                >
+                  <option value="">Seleccionar organización...</option>
+                  {#each organizaciones as org}
+                    <option value={org.id}>{org.razonSocial} ({org.rfc})</option>
+                  {/each}
+                </select>
+                {#if errors.organizacionId}
+                  <div class="flex items-center gap-1 mt-1 text-red-600 text-sm">
+                    <AlertCircle class="w-4 h-4" />
+                    <span>{errors.organizacionId}</span>
+                  </div>
+                {/if}
+              </div>
+
+              <!-- Rol -->
+              <div>
+                <label for="rol" class="block text-sm font-medium text-gray-700 mb-2">
+                  Rol <span class="text-red-500">*</span>
+                </label>
+                <select
+                  id="rol"
+                  bind:value={nuevoUsuario.rolId}
+                  class="w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 transition-all {errors.rolId ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}"
+                >
+                  <option value="">Seleccionar rol...</option>
+                  {#each roles as rol}
+                    <option value={rol.id}>{rol.nombre}</option>
+                  {/each}
+                </select>
+                {#if errors.rolId}
+                  <div class="flex items-center gap-1 mt-1 text-red-600 text-sm">
+                    <AlertCircle class="w-4 h-4" />
+                    <span>{errors.rolId}</span>
+                  </div>
+                {/if}
+              </div>
+            </div>
+          </div>
+
           <!-- Sección: Seguridad -->
           <div>
             <h4 class="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -538,7 +798,7 @@
               <!-- Contraseña -->
               <div>
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                  Contraseña <span class="text-red-500">*</span>
+                  Contraseña {#if !editingUser}<span class="text-red-500">*</span>{/if}
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -549,7 +809,7 @@
                     type={showPassword ? 'text' : 'password'}
                     bind:value={nuevoUsuario.contrasena}
                     class="w-full pl-10 pr-12 py-2.5 border rounded-lg focus:outline-none focus:ring-2 transition-all {errors.contrasena ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}"
-                    placeholder="Ingrese una contraseña segura"
+                    placeholder={editingUser ? 'Dejar en blanco para mantener la actual' : 'Ingrese una contraseña segura'}
                   />
                   <button
                     type="button"
@@ -570,7 +830,13 @@
                     <span>{errors.contrasena}</span>
                   </div>
                 {:else}
-                  <p class="mt-1 text-sm text-gray-500">Mínimo 6 caracteres</p>
+                  <p class="mt-1 text-sm text-gray-500">
+                    {#if editingUser}
+                      Dejar en blanco para no cambiar la contraseña. Mínimo 6 caracteres si desea cambiarla.
+                    {:else}
+                      Mínimo 6 caracteres
+                    {/if}
+                  </p>
                 {/if}
               </div>
 
@@ -627,10 +893,10 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Creando...
+              {editingUser ? 'Actualizando...' : 'Creando...'}
             {:else}
               <UserPlus class="w-4 h-4" />
-              Crear Usuario
+              {editingUser ? 'Actualizar Usuario' : 'Crear Usuario'}
             {/if}
           </button>
         </div>

@@ -1,10 +1,10 @@
 {
-"timestamp": "2025-10-01T18:28:38.284Z",
+"timestamp": "2025-10-06T21:48:28.576Z",
 "database": "Cobranza",
 "data": [
 {
 "Tipo": "RESUMEN_BD",
-"Informacion": "Base de datos: Cobranza - Fecha: 2025-10-01 18:28:40",
+"Informacion": "Base de datos: Cobranza - Fecha: 2025-10-06 21:48:31",
 "Valor1": "",
 "Valor2": "",
 "Valor3": "",
@@ -23,6 +23,15 @@
 {
 "Tipo": "TABLA",
 "Informacion": "Clientes",
+"Valor1": "",
+"Valor2": "",
+"Valor3": "",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "TABLA",
+"Informacion": "ConceptosFactura",
 "Valor1": "",
 "Valor2": "",
 "Valor3": "",
@@ -77,6 +86,15 @@
 {
 "Tipo": "TABLA",
 "Informacion": "GestionesCobranza",
+"Valor1": "",
+"Valor2": "",
+"Valor3": "",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "TABLA",
+"Informacion": "ImpuestosConcepto",
 "Valor1": "",
 "Valor2": "",
 "Valor3": "",
@@ -378,6 +396,150 @@
 "Valor2": "int",
 "Valor3": "NO",
 "Valor4": "((1))",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Clientes.RegimenFiscalId",
+"Valor1": "19",
+"Valor2": "int",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Clientes.EstadoId",
+"Valor1": "20",
+"Valor2": "int",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Clientes.PaisId",
+"Valor1": "21",
+"Valor2": "int",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.Id",
+"Valor1": "1",
+"Valor2": "int",
+"Valor3": "NO",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.FacturaId",
+"Valor1": "2",
+"Valor2": "int",
+"Valor3": "NO",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.Nombre",
+"Valor1": "3",
+"Valor2": "nvarchar",
+"Valor3": "NO",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.Descripcion",
+"Valor1": "4",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.ClaveProdServ",
+"Valor1": "5",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.UnidadMedida",
+"Valor1": "6",
+"Valor2": "nvarchar",
+"Valor3": "NO",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.Cantidad",
+"Valor1": "7",
+"Valor2": "decimal",
+"Valor3": "NO",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.PrecioUnitario",
+"Valor1": "8",
+"Valor2": "decimal",
+"Valor3": "NO",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.Subtotal",
+"Valor1": "9",
+"Valor2": "decimal",
+"Valor3": "NO",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.MonedaProducto",
+"Valor1": "10",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.ObjetoImpuesto",
+"Valor1": "11",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.TotalImpuestos",
+"Valor1": "12",
+"Valor2": "decimal",
+"Valor3": "YES",
+"Valor4": "((0))",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ConceptosFactura.Total",
+"Valor1": "13",
+"Valor2": "decimal",
+"Valor3": "NO",
+"Valor4": "",
 "Valor5": ""
 },
 {
@@ -697,17 +859,8 @@
 },
 {
 "Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.UpdatedAt",
-"Valor1": "7",
-"Valor2": "datetime",
-"Valor3": "NO",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
 "Informacion": "Facturas.SaldoPendiente",
-"Valor1": "8",
+"Valor1": "7",
 "Valor2": "decimal",
 "Valor3": "YES",
 "Valor4": "",
@@ -716,7 +869,7 @@
 {
 "Tipo": "ESTRUCTURA",
 "Informacion": "Facturas.DiasVencido",
-"Valor1": "9",
+"Valor1": "8",
 "Valor2": "int",
 "Valor3": "YES",
 "Valor4": "((0))",
@@ -725,7 +878,7 @@
 {
 "Tipo": "ESTRUCTURA",
 "Informacion": "Facturas.UltimaGestion",
-"Valor1": "10",
+"Valor1": "9",
 "Valor2": "datetime",
 "Valor3": "YES",
 "Valor4": "",
@@ -734,7 +887,7 @@
 {
 "Tipo": "ESTRUCTURA",
 "Informacion": "Facturas.Observaciones",
-"Valor1": "11",
+"Valor1": "10",
 "Valor2": "nvarchar",
 "Valor3": "YES",
 "Valor4": "",
@@ -743,7 +896,7 @@
 {
 "Tipo": "ESTRUCTURA",
 "Informacion": "Facturas.estado_factura_id",
-"Valor1": "12",
+"Valor1": "11",
 "Valor2": "int",
 "Valor3": "YES",
 "Valor4": "",
@@ -752,7 +905,7 @@
 {
 "Tipo": "ESTRUCTURA",
 "Informacion": "Facturas.prioridad_cobranza_id",
-"Valor1": "13",
+"Valor1": "12",
 "Valor2": "int",
 "Valor3": "YES",
 "Valor4": "",
@@ -761,10 +914,244 @@
 {
 "Tipo": "ESTRUCTURA",
 "Informacion": "Facturas.numero_factura",
-"Valor1": "14",
+"Valor1": "13",
 "Valor2": "varchar",
 "Valor3": "YES",
 "Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.FechaUltimoPago",
+"Valor1": "14",
+"Valor2": "date",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.RecurrenciaActiva",
+"Valor1": "15",
+"Valor2": "bit",
+"Valor3": "YES",
+"Valor4": "((0))",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.OrdenRecurrencia",
+"Valor1": "16",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.IdentificadorRecurrencia",
+"Valor1": "17",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.FechaInicioRecurrencia",
+"Valor1": "18",
+"Valor2": "date",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.FechaPrimeraFactura",
+"Valor1": "19",
+"Valor2": "date",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.PeriodoRecurrencia",
+"Valor1": "20",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.DiaRecurrencia",
+"Valor1": "21",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.CadaRecurrencia",
+"Valor1": "22",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.FinRecurrencia",
+"Valor1": "23",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.FechaFinRecurrencia",
+"Valor1": "24",
+"Valor2": "date",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.NumeroOcurrencias",
+"Valor1": "25",
+"Valor2": "int",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.OrdenCompra",
+"Valor1": "26",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.Moneda",
+"Valor1": "27",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "('MXN')",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.TipoCambio",
+"Valor1": "28",
+"Valor2": "decimal",
+"Valor3": "YES",
+"Valor4": "((1.0000))",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.CondicionesPago",
+"Valor1": "29",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.NotasCliente",
+"Valor1": "30",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.NotasInternas",
+"Valor1": "31",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.UUIDFacturapi",
+"Valor1": "32",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.PDFUrl",
+"Valor1": "33",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.XMLUrl",
+"Valor1": "34",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.DesglosarImpuestos",
+"Valor1": "35",
+"Valor2": "bit",
+"Valor3": "YES",
+"Valor4": "((1))",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.Identificador",
+"Valor1": "36",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.MetodoPago",
+"Valor1": "37",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "('PUE')",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.UsuarioCreadorId",
+"Valor1": "38",
+"Valor2": "int",
+"Valor3": "YES",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "Facturas.FormaPago",
+"Valor1": "39",
+"Valor2": "nvarchar",
+"Valor3": "YES",
+"Valor4": "('99')",
 "Valor5": ""
 },
 {
@@ -864,6 +1251,51 @@
 "Valor2": "bit",
 "Valor3": "YES",
 "Valor4": "((0))",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ImpuestosConcepto.Id",
+"Valor1": "1",
+"Valor2": "int",
+"Valor3": "NO",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ImpuestosConcepto.ConceptoId",
+"Valor1": "2",
+"Valor2": "int",
+"Valor3": "NO",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ImpuestosConcepto.Tipo",
+"Valor1": "3",
+"Valor2": "nvarchar",
+"Valor3": "NO",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ImpuestosConcepto.Tasa",
+"Valor1": "4",
+"Valor2": "decimal",
+"Valor3": "NO",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "ESTRUCTURA",
+"Informacion": "ImpuestosConcepto.Monto",
+"Valor1": "5",
+"Valor2": "decimal",
+"Valor3": "NO",
+"Valor4": "",
 "Valor5": ""
 },
 {
@@ -1282,12 +1714,48 @@
 },
 {
 "Tipo": "RELACION",
+"Informacion": "Clientes.EstadoId -> Estados.ID",
+"Valor1": "Clientes",
+"Valor2": "EstadoId",
+"Valor3": "Estados",
+"Valor4": "ID",
+"Valor5": "FK_Clientes_Estado"
+},
+{
+"Tipo": "RELACION",
 "Informacion": "Clientes.OrganizacionId -> Organizaciones.Id",
 "Valor1": "Clientes",
 "Valor2": "OrganizacionId",
 "Valor3": "Organizaciones",
 "Valor4": "Id",
 "Valor5": "FK_Clientes_Organizacion"
+},
+{
+"Tipo": "RELACION",
+"Informacion": "Clientes.PaisId -> Paises.ID",
+"Valor1": "Clientes",
+"Valor2": "PaisId",
+"Valor3": "Paises",
+"Valor4": "ID",
+"Valor5": "FK_Clientes_Pais"
+},
+{
+"Tipo": "RELACION",
+"Informacion": "Clientes.RegimenFiscalId -> Regimen.ID_Regimen",
+"Valor1": "Clientes",
+"Valor2": "RegimenFiscalId",
+"Valor3": "Regimen",
+"Valor4": "ID_Regimen",
+"Valor5": "FK_Clientes_Regimen"
+},
+{
+"Tipo": "RELACION",
+"Informacion": "ConceptosFactura.FacturaId -> Facturas.Id",
+"Valor1": "ConceptosFactura",
+"Valor2": "FacturaId",
+"Valor3": "Facturas",
+"Valor4": "Id",
+"Valor5": "FK_ConceptosFactura_Factura"
 },
 {
 "Tipo": "RELACION",
@@ -1354,6 +1822,15 @@
 },
 {
 "Tipo": "RELACION",
+"Informacion": "Facturas.UsuarioCreadorId -> Usuarios.Id",
+"Valor1": "Facturas",
+"Valor2": "UsuarioCreadorId",
+"Valor3": "Usuarios",
+"Valor4": "Id",
+"Valor5": "FK_Facturas_UsuarioCreador"
+},
+{
+"Tipo": "RELACION",
 "Informacion": "GestionesCobranza.FacturaId -> Facturas.Id",
 "Valor1": "GestionesCobranza",
 "Valor2": "FacturaId",
@@ -1369,6 +1846,15 @@
 "Valor3": "Usuarios",
 "Valor4": "Id",
 "Valor5": "FK_GestionesCobranza_Usuario"
+},
+{
+"Tipo": "RELACION",
+"Informacion": "ImpuestosConcepto.ConceptoId -> ConceptosFactura.Id",
+"Valor1": "ImpuestosConcepto",
+"Valor2": "ConceptoId",
+"Valor3": "ConceptosFactura",
+"Valor4": "Id",
+"Valor5": "FK_ImpuestosConcepto_Concepto"
 },
 {
 "Tipo": "RELACION",
@@ -1436,8 +1922,8 @@
 {
 "Tipo": "REGISTROS",
 "Informacion": "Agentes_Clientes",
-"Valor1": "13",
-"Valor2": "Datos de prueba",
+"Valor1": "4",
+"Valor2": "Pocos datos",
 "Valor3": "",
 "Valor4": "",
 "Valor5": ""
@@ -1445,8 +1931,17 @@
 {
 "Tipo": "REGISTROS",
 "Informacion": "Clientes",
-"Valor1": "227",
+"Valor1": "199",
 "Valor2": "Datos abundantes",
+"Valor3": "",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "REGISTROS",
+"Informacion": "ConceptosFactura",
+"Valor1": "6",
+"Valor2": "Pocos datos",
 "Valor3": "",
 "Valor4": "",
 "Valor5": ""
@@ -1490,8 +1985,8 @@
 {
 "Tipo": "REGISTROS",
 "Informacion": "Facturas",
-"Valor1": "14",
-"Valor2": "Datos de prueba",
+"Valor1": "2573",
+"Valor2": "Datos abundantes",
 "Valor3": "",
 "Valor4": "",
 "Valor5": ""
@@ -1500,6 +1995,15 @@
 "Tipo": "REGISTROS",
 "Informacion": "GestionesCobranza",
 "Valor1": "2",
+"Valor2": "Pocos datos",
+"Valor3": "",
+"Valor4": "",
+"Valor5": ""
+},
+{
+"Tipo": "REGISTROS",
+"Informacion": "ImpuestosConcepto",
+"Valor1": "6",
 "Valor2": "Pocos datos",
 "Valor3": "",
 "Valor4": "",
@@ -1517,7 +2021,7 @@
 {
 "Tipo": "REGISTROS",
 "Informacion": "Pagos",
-"Valor1": "1",
+"Valor1": "6",
 "Valor2": "Pocos datos",
 "Valor3": "",
 "Valor4": "",
@@ -1571,7 +2075,7 @@
 {
 "Tipo": "REGISTROS",
 "Informacion": "Usuario_Organizacion",
-"Valor1": "3",
+"Valor1": "2",
 "Valor2": "Pocos datos",
 "Valor3": "",
 "Valor4": "",
@@ -1580,7 +2084,7 @@
 {
 "Tipo": "REGISTROS",
 "Informacion": "Usuarios",
-"Valor1": "3",
+"Valor1": "4",
 "Valor2": "Pocos datos",
 "Valor3": "",
 "Valor4": "",
@@ -1588,7 +2092,7 @@
 },
 {
 "Tipo": "RESUMEN_EJECUTIVO",
-"Informacion": "ANÁLISIS COMPLETADO - 2025-10-01 18:28:43",
+"Informacion": "ANÁLISIS COMPLETADO - 2025-10-06 21:48:34",
 "Valor1": "? BD Analizada",
 "Valor2": "?? Listo para módulo Por Cobrar",
 "Valor3": "",
