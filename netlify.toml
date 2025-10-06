@@ -1,0 +1,21 @@
+# Configuración de Netlify para SvelteKit
+[build]
+  command = "npm run build"
+  publish = ".svelte-kit/netlify"
+
+# Variables de entorno (configurar en Netlify UI)
+# Las siguientes variables deben configurarse en Netlify Dashboard:
+# - DB_SERVER
+# - DB_DATABASE
+# - DB_USER
+# - DB_PASSWORD
+# - JWT_SECRET
+
+# Headers de seguridad
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
