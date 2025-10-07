@@ -45,8 +45,8 @@
   let filtroVencimiento = '';
 
   // Estado de ordenamiento
-  let ordenCampo: string = 'fechaVencimiento'; // Campo por defecto
-  let ordenDireccion: 'ASC' | 'DESC' = 'ASC'; // Dirección por defecto
+  let ordenCampo: string = 'FechaEmision'; // Campo por defecto - ordenar por fecha de emisión
+  let ordenDireccion: 'ASC' | 'DESC' = 'DESC'; // Dirección por defecto - más recientes primero
 
   // Estado de modales
   let modalPagoAbierto = false;
@@ -207,18 +207,8 @@
     error = '';
 
     try {
-      // Obtener organizacionId del usuario logueado
-      let organizacionId = null;
-      if (typeof window !== 'undefined') {
-        try {
-          const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-          organizacionId = userData.organizacionId;
-
-          // Obtener organizacionId del userData
-        } catch (error) {
-          // Error parseando userData
-        }
-      }
+      // Obtener organizacionId actual de sessionStorage
+      const organizacionId = sessionStorage.getItem('organizacionActualId');
 
       if (!organizacionId) {
         error = 'No se pudo obtener la información de la organización. Por favor, inicie sesión nuevamente.';

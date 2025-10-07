@@ -25,8 +25,8 @@ export const GET: RequestHandler = async ({ url }) => {
     const offset = (page - 1) * limit;
 
     // Parámetros de ordenamiento
-    const ordenCampo = searchParams.get('ordenCampo') || 'FechaVencimiento';
-    const ordenDireccion = searchParams.get('ordenDireccion') || 'ASC';
+    const ordenCampo = searchParams.get('ordenCampo') || 'FechaEmision';
+    const ordenDireccion = searchParams.get('ordenDireccion') || 'DESC';
 
     // Validar ordenDireccion
     const direccion = ordenDireccion.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
@@ -42,8 +42,8 @@ export const GET: RequestHandler = async ({ url }) => {
       'DiasVencido': 'f.DiasVencido'
     };
 
-    // Obtener nombre del campo en BD (por defecto FechaVencimiento)
-    const campoOrden = camposBD[ordenCampo] || 'f.FechaVencimiento';
+    // Obtener nombre del campo en BD (por defecto FechaEmision)
+    const campoOrden = camposBD[ordenCampo] || 'f.FechaEmision';
 
     // Construir query base
     let whereConditions: string[] = [];
@@ -298,12 +298,14 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
 
     // Generar número de factura consecutivo
     const ultimoNumeroQuery = `
-      SELECT TOP 1 numero_factura
+      SELECT TOP 1
+        numero_factura,
+        TRY_CAST(SUBSTRING(numero_factura, CHARINDEX('-', numero_factura) + 1, LEN(numero_factura)) AS INT) as NumeroExtraido
       FROM Facturas f
       INNER JOIN Clientes c ON f.ClienteId = c.Id
       WHERE c.OrganizacionId = @OrganizacionId
-        AND numero_factura LIKE @Prefijo + '%'
-      ORDER BY f.Id DESC
+        AND numero_factura LIKE @Prefijo + '-%'
+      ORDER BY TRY_CAST(SUBSTRING(numero_factura, CHARINDEX('-', numero_factura) + 1, LEN(numero_factura)) AS INT) DESC
     `;
 
     const ultimoNumeroResult = await pool.request()
@@ -313,10 +315,9 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
 
     let numeroConsecutivo = 1;
     if (ultimoNumeroResult.recordset && ultimoNumeroResult.recordset.length > 0) {
-      const ultimoNumero = ultimoNumeroResult.recordset[0].numero_factura;
-      const match = ultimoNumero.match(/-(\d+)$/);
-      if (match) {
-        numeroConsecutivo = parseInt(match[1]) + 1;
+      const numeroExtraido = ultimoNumeroResult.recordset[0].NumeroExtraido;
+      if (numeroExtraido) {
+        numeroConsecutivo = numeroExtraido + 1;
       }
     }
 
@@ -517,10 +518,13 @@ export const POST: RequestHandler = async ({ request, fetch }) => {
       }
     }
 
+    console.error('Error al crear factura:', error);
+
     return json({
       success: false,
       error: 'Error interno del servidor',
-      details: error instanceof Error ? error.message : 'Error desconocido'
+      details: error instanceof Error ? error.message : 'Error desconocido',
+      stack: error instanceof Error ? error.stack : undefined
     }, { status: 500 });
   }
 };

@@ -450,17 +450,25 @@
               </div>
               <div>
                 <p class="text-sm text-gray-600 mb-2">Condiciones de pago</p>
-                <p class="text-sm text-gray-900">7 días</p>
+                <p class="text-sm text-gray-900">{factura.condicionesPago || 'No especificado'}</p>
               </div>
               <div>
                 <p class="text-sm text-gray-600 mb-2">Régimen Fiscal</p>
-                <p class="text-sm text-gray-900">612 - Personas Físicas</p>
+                <p class="text-sm text-gray-900">{factura.cliente?.regimenFiscal || 'N/A'}</p>
               </div>
             </div>
 
-            <div class="mb-6">
-              <p class="text-sm text-gray-600 mb-2">Código Postal</p>
-              <p class="text-sm text-gray-900">{factura.cliente?.codigoPostal || 'N/A'}</p>
+            <div class="grid grid-cols-2 gap-6 mb-6 pb-6 border-b border-gray-200">
+              <div>
+                <p class="text-sm text-gray-600 mb-2">Código Postal</p>
+                <p class="text-sm text-gray-900">{factura.cliente?.codigoPostal || 'N/A'}</p>
+              </div>
+              {#if factura.uuid}
+                <div>
+                  <p class="text-sm text-gray-600 mb-2">UUID (Timbrado)</p>
+                  <p class="text-xs text-gray-900 font-mono">{factura.uuid}</p>
+                </div>
+              {/if}
             </div>
 
             <!-- Tabla de productos -->

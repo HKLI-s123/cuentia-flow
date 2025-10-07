@@ -33,11 +33,14 @@ export const POST: RequestHandler = async ({ request }) => {
         c.RegimenFiscalId as ClienteRegimenFiscalId,
         r.Codigo as ClienteRegimenFiscalCodigo,
         o.RazonSocial as OrganizacionRazonSocial,
-        o.RFC as OrganizacionRFC
+        o.RFC as OrganizacionRFC,
+        rOrg.Codigo as OrganizacionRegimenFiscalCodigo
       FROM Facturas f
       INNER JOIN Clientes c ON f.ClienteId = c.Id
       INNER JOIN Organizaciones o ON c.OrganizacionId = o.Id
       LEFT JOIN Regimen r ON c.RegimenFiscalId = r.ID_Regimen
+      LEFT JOIN configuracion_organizacion co ON o.Id = co.organizacion_id
+      LEFT JOIN Regimen rOrg ON co.regimen_fiscal = rOrg.ID_Regimen
       WHERE f.Id = ?
     `;
 
@@ -49,10 +52,32 @@ export const POST: RequestHandler = async ({ request }) => {
 
     const factura = facturaResult[0];
 
+    // Validaciones de datos requeridos
     if (!factura.ClienteEmail) {
       return json({
         success: false,
         error: 'El cliente no tiene correo electrónico configurado en CorreoPrincipal'
+      }, { status: 400 });
+    }
+
+    if (!factura.MetodoPago) {
+      return json({
+        success: false,
+        error: 'La factura no tiene método de pago (MetodoPago) configurado'
+      }, { status: 400 });
+    }
+
+    if (!factura.FormaPago) {
+      return json({
+        success: false,
+        error: 'La factura no tiene forma de pago (FormaPago) configurada'
+      }, { status: 400 });
+    }
+
+    if (!factura.UsoCFDI) {
+      return json({
+        success: false,
+        error: 'La factura no tiene uso de CFDI (UsoCFDI) configurado'
       }, { status: 400 });
     }
 
@@ -67,6 +92,7 @@ export const POST: RequestHandler = async ({ request }) => {
         cf.PrecioUnitario,
         cf.Subtotal,
         cf.Total,
+        cf.ObjetoImpuesto,
         cf.Id as ConceptoId
       FROM ConceptosFactura cf
       WHERE cf.FacturaId = ?
@@ -90,55 +116,101 @@ export const POST: RequestHandler = async ({ request }) => {
       // RFC genérico SIEMPRE usa régimen 616, sin importar lo que tenga el cliente
       regimenFiscal = '616';
     } else {
-      // Detectar si es persona física o moral basándose en el RFC
-      // RFC Persona Física: 13 caracteres (AAAA######XXX)
-      // RFC Persona Moral: 12 caracteres (AAA######XXX)
-      const esPersonaFisica = factura.ClienteRFC && factura.ClienteRFC.length === 13;
-
-      // Regímenes fiscales válidos según tipo de persona
-      const regimenesPersonasFisicas = ['605', '606', '608', '610', '611', '612', '614', '615', '616', '621', '625', '626'];
-      const regimenesPersonasMorales = ['601', '603', '607', '609', '620', '622', '623', '624'];
-
-      // Usar el código del régimen fiscal de la tabla Regimen
+      // Usar el código del régimen fiscal directamente de la base de datos
       regimenFiscal = factura.ClienteRegimenFiscalCodigo;
 
-      if (regimenFiscal) {
-        // Validar que el régimen fiscal coincida con el tipo de persona
-        if (esPersonaFisica && !regimenesPersonasFisicas.includes(regimenFiscal)) {
-          // Régimen inválido para persona física, usar default
-          regimenFiscal = '612'; // 612 = Personas Físicas con Actividades Empresariales y Profesionales
-        } else if (!esPersonaFisica && !regimenesPersonasMorales.includes(regimenFiscal)) {
-          // Régimen inválido para persona moral, usar default
-          regimenFiscal = '601'; // 601 = General de Ley Personas Morales
-        }
-      } else {
-        // Si no hay régimen fiscal, usar default según tipo de persona
-        regimenFiscal = esPersonaFisica ? '612' : '601';
+      // Validar que el régimen fiscal exista
+      if (!regimenFiscal) {
+        return json({
+          success: false,
+          error: 'El cliente no tiene régimen fiscal configurado'
+        }, { status: 400 });
       }
     }
+
+    // Limpiar razón social para el SAT (CFDI 4.0)
+    // - Convertir a mayúsculas
+    // - Eliminar acentos
+    // - Eliminar regímenes societarios SOLO para personas morales
+    const limpiarRazonSocial = (razonSocial: string, rfc: string): string => {
+      // Detectar si es persona física (RFC de 13 caracteres)
+      const esPersonaFisica = rfc && rfc.length === 13;
+
+      let resultado = razonSocial
+        .toUpperCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // Eliminar acentos
+
+      // Solo eliminar regímenes societarios si es persona moral
+      if (!esPersonaFisica) {
+        resultado = resultado
+          .replace(/\s+S\.?\s?A\.?\s+(DE\s+)?C\.?\s?V\.?$/i, '') // S.A. DE C.V., SA DE CV, S.A. de C.V.
+          .replace(/\s+S\.?\s?DE\s+R\.?\s?L\.?(\s+DE\s+C\.?\s?V\.?)?$/i, '') // S. DE R.L., S DE RL DE CV
+          .replace(/\s+S\.?\s?C\.?$/i, '') // S.C.
+          .replace(/\s+A\.?\s?C\.?$/i, ''); // A.C.
+      }
+
+      return resultado.trim();
+    };
 
     // Construir payload para Facturapi según documentación
     const facturapiPayload: any = {
       customer: {
-        legal_name: factura.ClienteRazonSocial,
+        legal_name: limpiarRazonSocial(factura.ClienteRazonSocial, factura.ClienteRFC),
         tax_id: factura.ClienteRFC,
-        tax_system: regimenFiscal,
+        tax_system: String(regimenFiscal), // Convertir a string
         email: factura.ClienteEmail,
         address: {
           zip: factura.ClienteCP || '00000' // Código postal requerido, usar '00000' si no está disponible
         }
       },
-      items: conceptosResult.map((concepto: any) => ({
-        product: {
-          description: concepto.Descripcion || concepto.Nombre,
-          product_key: concepto.ClaveProdServ || '01010101',
-          price: parseFloat(concepto.PrecioUnitario)
-        },
-        quantity: parseFloat(concepto.Cantidad)
+      items: await Promise.all(conceptosResult.map(async (concepto: any) => {
+        // Obtener impuestos del concepto desde la base de datos
+        const impuestosQuery = `
+          SELECT Tipo, Tasa
+          FROM ImpuestosConcepto
+          WHERE ConceptoId = ?
+        `;
+        const impuestosResult = await db.query(impuestosQuery, [concepto.ConceptoId]);
+
+        // Convertir impuestos al formato de Facturapi
+        const taxes = impuestosResult.map((imp: any) => {
+          // Facturapi usa los nombres, no códigos: IVA, ISR, IEPS
+          let tipoImpuesto: string;
+          if (imp.Tipo.includes('IVA')) {
+            tipoImpuesto = 'IVA';
+          } else if (imp.Tipo.includes('ISR')) {
+            tipoImpuesto = 'ISR';
+          } else if (imp.Tipo.includes('IEPS')) {
+            tipoImpuesto = 'IEPS';
+          } else {
+            tipoImpuesto = 'IVA'; // Default IVA
+          }
+
+          const isWithholding = imp.Tipo.includes('Retenido');
+
+          return {
+            type: tipoImpuesto,
+            rate: parseFloat(imp.Tasa),
+            withholding: isWithholding,
+            factor: 'Tasa'
+          };
+        });
+
+        return {
+          product: {
+            description: concepto.Descripcion || concepto.Nombre,
+            product_key: concepto.ClaveProdServ,
+            price: parseFloat(concepto.PrecioUnitario),
+            taxes: taxes.length > 0 ? taxes : undefined,
+            taxability: concepto.ObjetoImpuesto || '02'
+          },
+          quantity: parseFloat(concepto.Cantidad)
+        };
       })),
-      payment_form: factura.FormaPago || '99',
-      use: factura.UsoCFDI || 'G03',
-      folio_number: factura.numero_factura // Usar el número de factura como folio
+      payment_form: factura.FormaPago,
+      payment_method: factura.MetodoPago,
+      use: factura.UsoCFDI,
+      folio_number: factura.numero_factura
     };
 
     // Si es RFC genérico, agregar nodo global (Factura Global)
@@ -162,15 +234,22 @@ export const POST: RequestHandler = async ({ request }) => {
       }
     );
 
-    // Guardar UUID del timbrado en la base de datos
+    // Obtener URLs del PDF y XML desde Facturapi
+    const pdfUrl = `https://www.facturapi.io/v2/invoices/${invoice.id}/pdf`;
+    const xmlUrl = `https://www.facturapi.io/v2/invoices/${invoice.id}/xml`;
+
+    // Guardar toda la información del timbrado en la base de datos
     await db.query(
       `UPDATE Facturas
        SET UUID = ?,
+           UUIDFacturapi = ?,
            Timbrado = 1,
            FechaTimbrado = GETDATE(),
-           FacturapiId = ?
+           FacturapiId = ?,
+           PDFUrl = ?,
+           XMLUrl = ?
        WHERE Id = ?`,
-      [invoice.uuid, invoice.id, facturaId]
+      [invoice.uuid, invoice.uuid, invoice.id, pdfUrl, xmlUrl, facturaId]
     );
 
     return json({
@@ -178,7 +257,9 @@ export const POST: RequestHandler = async ({ request }) => {
       message: 'Factura timbrada exitosamente',
       uuid: invoice.uuid,
       facturapiId: invoice.id,
-      numeroFactura: factura.numero_factura
+      numeroFactura: factura.numero_factura,
+      pdfUrl: pdfUrl,
+      xmlUrl: xmlUrl
     });
 
   } catch (error: any) {

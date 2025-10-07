@@ -32,6 +32,13 @@ export const GET: RequestHandler = async ({ params, url }) => {
         f.prioridad_cobranza_id,
         f.MetodoPago,
         f.FormaPago,
+        f.CondicionesPago,
+        f.UUID,
+        f.Timbrado,
+        f.FechaTimbrado,
+        f.FacturapiId,
+        f.PDFUrl,
+        f.XMLUrl,
         f.UsuarioCreadorId,
         f.UltimaGestion,
         f.CreatedAt,
@@ -41,6 +48,8 @@ export const GET: RequestHandler = async ({ params, url }) => {
         c.CorreoPrincipal as ClienteCorreo,
         c.Telefono as ClienteTelefono,
         c.CodigoPostal as ClienteCodigoPostal,
+        r.Codigo as ClienteRegimenFiscalCodigo,
+        r.Descripcion as ClienteRegimenFiscalDescripcion,
         ef.codigo as EstadoCodigo,
         pc.codigo as PrioridadCodigo,
         u.Correo as UsuarioCreadorCorreo,
@@ -48,6 +57,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
         u.Apellido as UsuarioCreadorApellido
       FROM Facturas f
       INNER JOIN Clientes c ON f.ClienteId = c.Id
+      LEFT JOIN Regimen r ON c.RegimenFiscalId = r.ID_Regimen
       LEFT JOIN estados_factura ef ON f.estado_factura_id = ef.id
       LEFT JOIN prioridades_cobranza pc ON f.prioridad_cobranza_id = pc.id
       LEFT JOIN Usuarios u ON f.UsuarioCreadorId = u.Id
@@ -145,6 +155,13 @@ export const GET: RequestHandler = async ({ params, url }) => {
       prioridad_cobranza_id: row.prioridad_cobranza_id,
       metodoPago: row.MetodoPago,
       formaPago: row.FormaPago,
+      condicionesPago: row.CondicionesPago,
+      uuid: row.UUID,
+      timbrado: row.Timbrado,
+      fechaTimbrado: row.FechaTimbrado,
+      facturapiId: row.FacturapiId,
+      pdfUrl: row.PDFUrl,
+      xmlUrl: row.XMLUrl,
       usuarioCreadorId: row.UsuarioCreadorId,
       usuarioCreadorCorreo: row.UsuarioCreadorCorreo,
       usuarioCreadorNombre: row.UsuarioCreadorNombre,
@@ -158,7 +175,8 @@ export const GET: RequestHandler = async ({ params, url }) => {
         nombreComercial: row.ClienteNombreComercial,
         correo: row.ClienteCorreo,
         telefono: row.ClienteTelefono,
-        codigoPostal: row.ClienteCodigoPostal
+        codigoPostal: row.ClienteCodigoPostal,
+        regimenFiscal: row.ClienteRegimenFiscalCodigo ? `${row.ClienteRegimenFiscalCodigo} - ${row.ClienteRegimenFiscalDescripcion}` : null
       },
       estado: {
         id: row.estado_factura_id,
