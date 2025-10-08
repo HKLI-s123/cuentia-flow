@@ -1,8 +1,14 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
+import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async (event) => {
+  // Verificar autenticación
+  const user = getUserFromRequest(event);
+  if (!user) {
+    return unauthorizedResponse('Token de autenticación requerido');
+  }
   try {
     // Query para actualizar todos los días vencidos
     const updateQuery = `

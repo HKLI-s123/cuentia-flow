@@ -2,8 +2,16 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db, getConnection } from '$lib/server/db';
 import sql from 'mssql';
+import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async (event) => {
+  // Verificar autenticación
+  const user = getUserFromRequest(event);
+  if (!user) {
+    return unauthorizedResponse('Token de autenticación requerido');
+  }
+
+  const { url } = event;
   try {
     const searchParams = url.searchParams;
 
@@ -254,7 +262,14 @@ export const GET: RequestHandler = async ({ url }) => {
   }
 };
 
-export const POST: RequestHandler = async ({ request, fetch }) => {
+export const POST: RequestHandler = async (event) => {
+  // Verificar autenticación
+  const user = getUserFromRequest(event);
+  if (!user) {
+    return unauthorizedResponse('Token de autenticación requerido');
+  }
+
+  const { request, fetch } = event;
   let transaction: sql.Transaction | null = null;
 
   try {

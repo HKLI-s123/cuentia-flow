@@ -2,11 +2,17 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import axios from 'axios';
+import { FACTURAPI_KEY } from '$env/static/private';
+import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
 
-// Configuración de Facturapi
-const FACTURAPI_KEY = 'REDACTED_FACTURAPI_TEST_KEY';
+export const POST: RequestHandler = async (event) => {
+  // Verificar autenticación
+  const user = getUserFromRequest(event);
+  if (!user) {
+    return unauthorizedResponse('Token de autenticación requerido');
+  }
 
-export const POST: RequestHandler = async ({ request }) => {
+  const { request } = event;
   try {
     const { facturaId } = await request.json();
 
@@ -30,10 +36,18 @@ export const POST: RequestHandler = async ({ request }) => {
         c.RFC as ClienteRFC,
         c.CorreoPrincipal as ClienteEmail,
         c.CodigoPostal as ClienteCP,
+        c.Calle as ClienteCalle,
+        c.NumeroExterior as ClienteNumeroExterior,
+        c.NumeroInterior as ClienteNumeroInterior,
+        c.Colonia as ClienteColonia,
+        c.Ciudad as ClienteCiudad,
+        e.NombreEstado as ClienteEstado,
+        p.NombrePais as ClientePais,
         c.RegimenFiscalId as ClienteRegimenFiscalId,
         r.Codigo as ClienteRegimenFiscalCodigo,
         o.RazonSocial as OrganizacionRazonSocial,
         o.RFC as OrganizacionRFC,
+        co.nombre_comercial as OrganizacionNombreComercial,
         rOrg.Codigo as OrganizacionRegimenFiscalCodigo
       FROM Facturas f
       INNER JOIN Clientes c ON f.ClienteId = c.Id
@@ -41,6 +55,8 @@ export const POST: RequestHandler = async ({ request }) => {
       LEFT JOIN Regimen r ON c.RegimenFiscalId = r.ID_Regimen
       LEFT JOIN configuracion_organizacion co ON o.Id = co.organizacion_id
       LEFT JOIN Regimen rOrg ON co.regimen_fiscal = rOrg.ID_Regimen
+      LEFT JOIN Estados e ON c.EstadoId = e.ID
+      LEFT JOIN Paises p ON c.PaisId = p.ID
       WHERE f.Id = ?
     `;
 
@@ -152,6 +168,24 @@ export const POST: RequestHandler = async ({ request }) => {
       return resultado.trim();
     };
 
+    // Extraer serie y folio del número de factura
+    // Formato esperado: CAM-2373 -> Serie: CAM, Folio: 2373
+    let serie = '';
+    let folio = '';
+
+    if (factura.numero_factura) {
+      const partes = factura.numero_factura.split('-');
+      if (partes.length === 2) {
+        serie = partes[0]; // Primeras 3 letras del RFC (CAM)
+        folio = partes[1]; // Número consecutivo (2373)
+      }
+    }
+
+    // Si no se pudo extraer la serie del número de factura, usar las primeras 3 letras del RFC de la organización
+    if (!serie && factura.OrganizacionRFC) {
+      serie = factura.OrganizacionRFC.substring(0, 3).toUpperCase();
+    }
+
     // Construir payload para Facturapi según documentación
     const facturapiPayload: any = {
       customer: {
@@ -160,6 +194,14 @@ export const POST: RequestHandler = async ({ request }) => {
         tax_system: String(regimenFiscal), // Convertir a string
         email: factura.ClienteEmail,
         address: {
+          street: factura.ClienteCalle || '',
+          exterior: factura.ClienteNumeroExterior || '',
+          interior: factura.ClienteNumeroInterior || '',
+          neighborhood: factura.ClienteColonia || '',
+          city: factura.ClienteCiudad || '',
+          municipality: factura.ClienteCiudad || '',
+          state: factura.ClienteEstado || '',
+          country: factura.ClientePais === 'México' || factura.ClientePais === 'Mexico' ? 'MEX' : (factura.ClientePais || 'MEX'),
           zip: factura.ClienteCP || '00000' // Código postal requerido, usar '00000' si no está disponible
         }
       },
@@ -210,7 +252,8 @@ export const POST: RequestHandler = async ({ request }) => {
       payment_form: factura.FormaPago,
       payment_method: factura.MetodoPago,
       use: factura.UsoCFDI,
-      folio_number: factura.numero_factura
+      series: serie,
+      folio_number: folio ? parseInt(folio) : undefined
     };
 
     // Si es RFC genérico, agregar nodo global (Factura Global)
@@ -234,9 +277,29 @@ export const POST: RequestHandler = async ({ request }) => {
       }
     );
 
-    // Obtener URLs del PDF y XML desde Facturapi
+    // Descargar PDF y XML desde Facturapi con autenticación
     const pdfUrl = `https://www.facturapi.io/v2/invoices/${invoice.id}/pdf`;
     const xmlUrl = `https://www.facturapi.io/v2/invoices/${invoice.id}/xml`;
+
+    // Descargar PDF en base64
+    const pdfResponse = await axios.get(pdfUrl, {
+      auth: {
+        username: FACTURAPI_KEY,
+        password: ''
+      },
+      responseType: 'arraybuffer'
+    });
+    const pdfBase64 = Buffer.from(pdfResponse.data).toString('base64');
+
+    // Descargar XML en base64
+    const xmlResponse = await axios.get(xmlUrl, {
+      auth: {
+        username: FACTURAPI_KEY,
+        password: ''
+      },
+      responseType: 'arraybuffer'
+    });
+    const xmlBase64 = Buffer.from(xmlResponse.data).toString('base64');
 
     // Guardar toda la información del timbrado en la base de datos
     await db.query(
@@ -247,9 +310,11 @@ export const POST: RequestHandler = async ({ request }) => {
            FechaTimbrado = GETDATE(),
            FacturapiId = ?,
            PDFUrl = ?,
-           XMLUrl = ?
+           XMLUrl = ?,
+           PDFBase64 = ?,
+           XMLBase64 = ?
        WHERE Id = ?`,
-      [invoice.uuid, invoice.uuid, invoice.id, pdfUrl, xmlUrl, facturaId]
+      [invoice.uuid, invoice.uuid, invoice.id, pdfUrl, xmlUrl, pdfBase64, xmlBase64, facturaId]
     );
 
     return json({

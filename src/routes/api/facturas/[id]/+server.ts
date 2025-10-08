@@ -2,8 +2,16 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getConnection } from '$lib/server/db';
 import sql from 'mssql';
+import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
 
-export const GET: RequestHandler = async ({ params, url }) => {
+export const GET: RequestHandler = async (event) => {
+  // Verificar autenticación
+  const user = getUserFromRequest(event);
+  if (!user) {
+    return unauthorizedResponse('Token de autenticación requerido');
+  }
+
+  const { params, url } = event;
   try {
     const { id } = params;
     const organizacionId = url.searchParams.get('organizacionId');

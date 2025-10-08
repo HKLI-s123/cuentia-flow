@@ -6,10 +6,12 @@
 # Variables de entorno (configurar en Netlify UI)
 # Las siguientes variables deben configurarse en Netlify Dashboard:
 # - DB_SERVER
-# - DB_DATABASE
+# - DB_NAME
 # - DB_USER
 # - DB_PASSWORD
 # - JWT_SECRET
+# - FACTURAPI_KEY
+# - END_POINT
 
 # Headers de seguridad
 [[headers]]
