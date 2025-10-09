@@ -112,12 +112,13 @@
   }
 
   // Validar token al cargar el layout
-  onMount(async () => {
+  onMount(() => {
     const token = sessionStorage.getItem('jwt');
     if (!token) {
       goto('/');
     } else {
-      await loadUserInfo();
+      // Cargar info del usuario sin bloquear
+      loadUserInfo();
     }
 
     // Agregar listener para cerrar dropdown
