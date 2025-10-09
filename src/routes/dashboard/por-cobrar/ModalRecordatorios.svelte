@@ -1,13 +1,20 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { X, Mail, RefreshCw, Plus } from 'lucide-svelte';
+  import { X, Mail, RefreshCw, Plus, CheckCircle, AlertCircle } from 'lucide-svelte';
   import type { Factura } from './types';
+  import { authFetch } from '$lib/api';
 
   export let abierto = false;
-  export const factura: Factura | null = null;
+  export let factura: Factura | null = null;
   export let abrirFormulario = false;
 
   const dispatch = createEventDispatcher();
+
+  // Estado para mensajes de éxito/error
+  let enviando = false;
+  let mensajeExito = '';
+  let mensajeError = '';
+  let cargandoDatos = false;
 
   // Lista de recordatorios (mock - debería venir de la API)
   let recordatorios = [
@@ -26,26 +33,129 @@
   // Reactive: si abrirFormulario es true, abrir el formulario automáticamente
   $: if (abierto && abrirFormulario) {
     mostrarFormulario = true;
+    // Cargar datos cuando se abre el formulario automáticamente
+    if (factura) {
+      cargarDatosCliente();
+    }
   }
+
   let tipoMensaje: 'SMS' | 'CORREO' | 'URL' = 'CORREO';
   let nuevoRecordatorio = {
     tipoMensaje: 'Recordatorio de pago',
     destinatario: '',
     cc: '',
-    asunto: '{{customer.name}}, tu fecha límite de pago está cerca.',
-    mensaje: '¡Hola {{customer.name}}!\n\nNos comunicamos contigo para recordarte que la fecha límite de pago de tu factura {{invoice.code}}, con un total de $ $ {{invoice.amount}} {{invoice.currency}}, está muy cerca.',
+    asunto: '',
+    mensaje: '',
     etiquetas: [] as string[]
   };
+
+  // Función para obtener el nombre del cliente
+  function getNombreCliente(): string {
+    if (!factura?.cliente) return 'Estimado cliente';
+    return factura.cliente.razonSocial || 'Estimado cliente';
+  }
+
+  // Función para formatear moneda
+  function formatearMoneda(monto: number): string {
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN'
+    }).format(monto);
+  }
+
+  // Función para formatear fecha
+  function formatearFecha(fecha: string | Date): string {
+    const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
+    return date.toLocaleDateString('es-MX', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
+
+  async function cargarDatosCliente() {
+    if (!factura) {
+      console.log('❌ No hay factura seleccionada');
+      return;
+    }
+
+    console.log('📊 Cargando datos del cliente:', factura.clienteId);
+    cargandoDatos = true;
+
+    try {
+      // Obtener organizacionId del sessionStorage
+      const organizacionId = sessionStorage.getItem('organizacionActualId');
+
+      if (!organizacionId) {
+        console.log('❌ No hay organizacionId en sessionStorage');
+        return;
+      }
+
+      console.log('🔍 Obteniendo cliente ID:', factura.clienteId, 'Org:', organizacionId);
+
+      // Obtener datos completos del cliente
+      const response = await authFetch(`/api/clientes/${factura.clienteId}?organizacionId=${organizacionId}`);
+
+      if (!response.ok) {
+        throw new Error('Error al obtener datos del cliente');
+      }
+
+      const cliente = await response.json();
+      console.log('✅ Cliente obtenido:', cliente);
+
+      // Verificar si hay error en la respuesta
+      if (cliente.error) {
+        throw new Error(cliente.error);
+      }
+
+      // Pre-llenar el destinatario con el correo del cliente
+      nuevoRecordatorio.destinatario = cliente.CorreoPrincipal || '';
+
+      // Pre-llenar asunto y mensaje con datos reales
+      const nombreCliente = cliente.NombreComercial || cliente.RazonSocial || 'Estimado cliente';
+      const numeroFactura = factura.numero_factura || 'N/A';
+      const montoTotal = formatearMoneda(factura.montoTotal || 0);
+      const fechaVencimiento = factura.fechaVencimiento ? formatearFecha(factura.fechaVencimiento) : 'próximamente';
+
+      nuevoRecordatorio.asunto = `${nombreCliente}, recordatorio de pago - Factura ${numeroFactura}`;
+      nuevoRecordatorio.mensaje = `¡Hola ${nombreCliente}!\n\nNos comunicamos contigo para recordarte que la fecha límite de pago de tu factura ${numeroFactura}, con un total de ${montoTotal}, vence el ${fechaVencimiento}.\n\nTe pedimos por favor realizar el pago a la brevedad posible.\n\nSi ya realizaste el pago, por favor ignora este mensaje.\n\n¡Gracias por tu preferencia!`;
+
+      console.log('✅ Formulario pre-llenado:', {
+        destinatario: nuevoRecordatorio.destinatario,
+        asunto: nuevoRecordatorio.asunto
+      });
+    } catch (error) {
+      console.error('❌ Error al cargar datos del cliente:', error);
+      mensajeError = 'Error al cargar los datos del cliente';
+    } finally {
+      cargandoDatos = false;
+    }
+  }
 
   function cerrar() {
     abierto = false;
     mostrarFormulario = false;
     abrirFormulario = false;
+    mensajeExito = '';
+    mensajeError = '';
+    // Limpiar formulario
+    nuevoRecordatorio = {
+      tipoMensaje: 'Recordatorio de pago',
+      destinatario: '',
+      cc: '',
+      asunto: '',
+      mensaje: '',
+      etiquetas: []
+    };
     dispatch('cerrar');
   }
 
   function toggleFormulario() {
     mostrarFormulario = !mostrarFormulario;
+    // Si se está abriendo el formulario, cargar datos del cliente
+    if (mostrarFormulario && factura) {
+      cargarDatosCliente();
+    }
   }
 
   function actualizarRecordatorios() {
@@ -53,32 +163,72 @@
   }
 
   async function guardarRecordatorio() {
+    if (!factura) {
+      mensajeError = 'No se ha seleccionado ninguna factura';
+      return;
+    }
+
+    // Validar que sea tipo CORREO (por ahora solo soportamos correo)
+    if (tipoMensaje !== 'CORREO') {
+      mensajeError = 'Por ahora solo se soporta envío por correo electrónico';
+      return;
+    }
+
+    // Limpiar mensajes previos
+    mensajeError = '';
+    mensajeExito = '';
+    enviando = true;
+
     try {
-      // Aquí iría la llamada a la API para crear el recordatorio
+      // Obtener organizacionId del sessionStorage
+      const organizacionId = sessionStorage.getItem('organizacionActualId');
 
-      // Simular éxito
-      recordatorios = [...recordatorios, {
-        id: recordatorios.length + 1,
-        tipo: tipoMensaje,
-        fecha: new Date().toLocaleDateString('es-ES'),
-        metodo: 'Manual',
-        estado: 'Pendiente'
-      }];
+      if (!organizacionId) {
+        mensajeError = 'No se pudo obtener la información de la organización';
+        enviando = false;
+        return;
+      }
 
-      // Limpiar formulario
-      nuevoRecordatorio = {
-        tipoMensaje: 'Recordatorio de pago',
-        destinatario: '',
-        cc: '',
-        asunto: '{{customer.name}}, tu fecha límite de pago está cerca.',
-        mensaje: '¡Hola {{customer.name}}!\n\nNos comunicamos contigo para recordarte que la fecha límite de pago de tu factura {{invoice.code}}, con un total de $ $ {{invoice.amount}} {{invoice.currency}}, está muy cerca.',
-        etiquetas: []
-      };
+      // Llamar al endpoint de envío de correo
+      const response = await authFetch(`/api/facturas/${factura.id}/enviar-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          organizacionId: parseInt(organizacionId)
+        })
+      });
 
-      mostrarFormulario = false;
-      dispatch('recordatorioCreado');
+      const data = await response.json();
+
+      if (data.success) {
+        // Agregar a la lista de recordatorios enviados
+        recordatorios = [{
+          id: recordatorios.length + 1,
+          tipo: tipoMensaje,
+          fecha: new Date().toLocaleDateString('es-ES'),
+          metodo: 'Manual',
+          estado: 'Enviado'
+        }, ...recordatorios];
+
+        mensajeExito = `Correo enviado exitosamente a ${data.destinatario}`;
+
+        // Limpiar formulario después de 2 segundos
+        setTimeout(() => {
+          mostrarFormulario = false;
+          mensajeExito = '';
+        }, 2000);
+
+        dispatch('recordatorioCreado');
+      } else {
+        mensajeError = data.error || 'Error al enviar el correo';
+      }
     } catch (error) {
-      // Error al guardar recordatorio
+      console.error('Error al enviar recordatorio:', error);
+      mensajeError = error instanceof Error ? error.message : 'Error al conectar con el servidor';
+    } finally {
+      enviando = false;
     }
   }
 </script>
@@ -121,9 +271,46 @@
           <div class="bg-white rounded-lg mb-6 border border-gray-200 max-h-[600px] overflow-y-auto scrollbar-custom">
             <div class="bg-white sticky top-0 z-10 border-b border-gray-200 px-6 py-4">
               <h3 class="text-lg font-semibold text-gray-900">ENVIAR MENSAJE</h3>
+              {#if factura}
+                <div class="mt-3 p-3 bg-blue-50 rounded-lg">
+                  <div class="flex items-center justify-between text-sm">
+                    <div>
+                      <span class="font-medium text-gray-700">Factura:</span>
+                      <span class="text-blue-600 ml-2">#{factura.numero_factura}</span>
+                    </div>
+                    <div>
+                      <span class="font-medium text-gray-700">Cliente:</span>
+                      <span class="text-gray-900 ml-2">{factura.cliente?.razonSocial || 'N/A'}</span>
+                    </div>
+                    <div>
+                      <span class="font-medium text-gray-700">Total:</span>
+                      <span class="text-gray-900 ml-2">{formatearMoneda(factura.montoTotal || 0)}</span>
+                    </div>
+                  </div>
+                </div>
+              {/if}
             </div>
 
             <div class="p-6 space-y-4">
+              <!-- Alertas de éxito/error -->
+              {#if mensajeExito}
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
+                  <CheckCircle class="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-green-800">{mensajeExito}</p>
+                  </div>
+                </div>
+              {/if}
+
+              {#if mensajeError}
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+                  <AlertCircle class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-red-800">{mensajeError}</p>
+                  </div>
+                </div>
+              {/if}
+
               <!-- Pestañas VÍA -->
               <div>
                 <div class="block text-sm font-medium text-gray-700 mb-3">VÍA :</div>
@@ -323,16 +510,23 @@
                 <button
                   type="button"
                   on:click={toggleFormulario}
-                  class="px-6 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  disabled={enviando}
+                  class="px-6 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   CANCELAR
                 </button>
                 <button
                   type="button"
                   on:click={guardarRecordatorio}
-                  class="px-6 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
+                  disabled={enviando}
+                  class="px-6 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2"
                 >
-                  ENVIAR
+                  {#if enviando}
+                    <div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    ENVIANDO...
+                  {:else}
+                    ENVIAR
+                  {/if}
                 </button>
               </div>
             </div>

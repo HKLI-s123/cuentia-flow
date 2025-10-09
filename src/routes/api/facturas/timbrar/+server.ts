@@ -4,6 +4,15 @@ import { db } from '$lib/server/db';
 import axios from 'axios';
 import { FACTURAPI_KEY } from '$env/static/private';
 import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
+import nodemailer from 'nodemailer';
+import {
+	SMTP_HOST,
+	SMTP_PORT,
+	SMTP_USER,
+	SMTP_PASSWORD,
+	SMTP_FROM_EMAIL,
+	SMTP_FROM_NAME
+} from '$env/static/private';
 
 export const POST: RequestHandler = async (event) => {
   // Verificar autenticación
@@ -248,6 +257,7 @@ export const POST: RequestHandler = async (event) => {
           product: {
             description: concepto.Descripcion || concepto.Nombre,
             product_key: concepto.ClaveProdServ,
+            unit_key: concepto.UnidadMedida,
             price: precioUnitarioSinIVA,
             tax_included: false, // IMPORTANTE: El precio NO incluye impuestos
             taxes: taxes.length > 0 ? taxes : undefined,
@@ -324,6 +334,122 @@ export const POST: RequestHandler = async (event) => {
       [invoice.uuid, invoice.uuid, invoice.id, pdfUrl, xmlUrl, pdfBase64, xmlBase64, facturaId]
     );
 
+    // Enviar correo automáticamente al cliente después de timbrar
+    let emailEnviado = false;
+    let emailError = null;
+
+    if (factura.ClienteEmail) {
+      try {
+        // Convertir buffers de PDF y XML
+        const pdfBuffer = Buffer.from(pdfResponse.data);
+        const xmlBuffer = Buffer.from(xmlResponse.data);
+
+        // Configurar transporte SMTP
+        const transporter = nodemailer.createTransport({
+          host: SMTP_HOST,
+          port: parseInt(SMTP_PORT),
+          secure: false,
+          auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASSWORD
+          },
+          tls: {
+            rejectUnauthorized: false
+          }
+        });
+
+        const nombreCliente = factura.ClienteRazonSocial;
+        const numeroFactura = factura.numero_factura;
+
+        // Configurar el correo
+        const mailOptions = {
+          from: `"${SMTP_FROM_NAME}" <${SMTP_FROM_EMAIL}>`,
+          to: factura.ClienteEmail,
+          subject: `Factura ${numeroFactura} - ${nombreCliente}`,
+          html: `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            </head>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <div style="background-color: #f8f9fa; border-radius: 10px; padding: 30px; margin-bottom: 20px;">
+                <h2 style="color: #2563eb; margin-top: 0;">Factura Electrónica</h2>
+                <p style="font-size: 16px; margin-bottom: 20px;">Estimado(a) <strong>${nombreCliente}</strong>,</p>
+                <p style="font-size: 14px; color: #555;">
+                  Le enviamos su factura electrónica correspondiente al servicio prestado.
+                </p>
+              </div>
+
+              <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                <h3 style="color: #374151; margin-top: 0; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">
+                  Detalles de la Factura
+                </h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr>
+                    <td style="padding: 8px 0; color: #6b7280;"><strong>Folio:</strong></td>
+                    <td style="padding: 8px 0; text-align: right;">${numeroFactura}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px 0; color: #6b7280;"><strong>UUID:</strong></td>
+                    <td style="padding: 8px 0; text-align: right; font-size: 12px;">${invoice.uuid}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 8px 0; color: #6b7280;"><strong>Fecha de emisión:</strong></td>
+                    <td style="padding: 8px 0; text-align: right;">${new Date(factura.FechaEmision).toLocaleDateString('es-MX')}</td>
+                  </tr>
+                  <tr style="border-top: 2px solid #e5e7eb;">
+                    <td style="padding: 12px 0; color: #6b7280; font-size: 16px;"><strong>Total:</strong></td>
+                    <td style="padding: 12px 0; text-align: right; font-size: 18px; color: #2563eb; font-weight: bold;">
+                      $${parseFloat(factura.MontoTotal).toFixed(2)} MXN
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                <p style="margin: 0; font-size: 14px; color: #92400e;">
+                  📎 <strong>Archivos adjuntos:</strong> Esta factura incluye los archivos PDF y XML.
+                </p>
+              </div>
+
+              <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                <p style="font-size: 12px; color: #9ca3af; margin: 5px 0;">
+                  Este es un correo automático, por favor no responder.
+                </p>
+                <p style="font-size: 12px; color: #9ca3af; margin: 5px 0;">
+                  Si tiene alguna duda, póngase en contacto con nosotros.
+                </p>
+              </div>
+            </body>
+            </html>
+          `,
+          attachments: [
+            {
+              filename: `Factura_${numeroFactura}.pdf`,
+              content: pdfBuffer,
+              contentType: 'application/pdf'
+            },
+            {
+              filename: `Factura_${numeroFactura}.xml`,
+              content: xmlBuffer,
+              contentType: 'application/xml'
+            }
+          ]
+        };
+
+        // Enviar el correo
+        await transporter.sendMail(mailOptions);
+        emailEnviado = true;
+
+      } catch (emailErr) {
+        console.error('Error al enviar correo automático:', emailErr);
+        emailError = emailErr instanceof Error ? emailErr.message : 'Error desconocido';
+        // No fallar el timbrado si falla el email
+      }
+    }
+
     return json({
       success: true,
       message: 'Factura timbrada Correctamente',
@@ -331,7 +457,10 @@ export const POST: RequestHandler = async (event) => {
       facturapiId: invoice.id,
       numeroFactura: factura.numero_factura,
       pdfUrl: pdfUrl,
-      xmlUrl: xmlUrl
+      xmlUrl: xmlUrl,
+      emailEnviado,
+      emailDestinatario: factura.ClienteEmail || null,
+      emailError
     });
 
   } catch (error: any) {

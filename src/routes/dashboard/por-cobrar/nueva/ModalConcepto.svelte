@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { X } from 'lucide-svelte';
+	import { authFetch } from '$lib/api';
 
 	export let open = false;
 	export let concepto: any = null;
@@ -14,6 +15,12 @@
 	let unidadMedida = '';
 	let monedaProducto = 'MXN';
 	let objetoImpuesto = '01';
+
+	// Búsqueda de productos SAT
+	let busquedaProductoSAT = '';
+	let productosSATFiltrados: any[] = [];
+	let mostrarListaProductosSAT = false;
+	let cargandoProductosSAT = false;
 
 	// Tarifas
 	let totalConImpuestos = 0; // Total final con IVA incluido (lo que ingresa el usuario)
@@ -250,6 +257,9 @@
 		nombre = '';
 		descripcion = '';
 		productoServicio = '';
+		busquedaProductoSAT = '';
+		productosSATFiltrados = [];
+		mostrarListaProductosSAT = false;
 		unidadMedida = '';
 		monedaProducto = 'MXN';
 		objetoImpuesto = '01';
@@ -266,6 +276,7 @@
 		nombre = concepto.nombre || '';
 		descripcion = concepto.descripcion || '';
 		productoServicio = concepto.productoServicio || '';
+		busquedaProductoSAT = concepto.productoServicio || '';
 		unidadMedida = concepto.unidadMedida || '';
 		monedaProducto = concepto.monedaProducto || 'MXN';
 		objetoImpuesto = concepto.objetoImpuesto || '01';
@@ -277,6 +288,40 @@
 	// Limpiar cuando se cierra el modal
 	$: if (!open) {
 		ultimoConceptoCargado = null;
+	}
+
+	// Función para buscar productos SAT desde Facturapi
+	let timeoutBusqueda: any = null;
+	async function buscarProductosSAT() {
+		if (!busquedaProductoSAT.trim()) {
+			productosSATFiltrados = [];
+			mostrarListaProductosSAT = false;
+			return;
+		}
+
+		// Debounce: Esperar 300ms después de que el usuario deje de escribir
+		clearTimeout(timeoutBusqueda);
+		timeoutBusqueda = setTimeout(async () => {
+			cargandoProductosSAT = true;
+			try {
+				const response = await authFetch(`/api/catalogs/productos-sat?q=${encodeURIComponent(busquedaProductoSAT)}&limit=20`);
+				if (response.ok) {
+					const data = await response.json();
+					productosSATFiltrados = data.data || [];
+					mostrarListaProductosSAT = true;
+				}
+			} catch (error) {
+				console.error('Error al buscar productos SAT:', error);
+			} finally {
+				cargandoProductosSAT = false;
+			}
+		}, 300);
+	}
+
+	function seleccionarProductoSAT(producto: any) {
+		productoServicio = producto.key;
+		busquedaProductoSAT = `${producto.key} - ${producto.description}`;
+		mostrarListaProductosSAT = false;
 	}
 </script>
 
@@ -351,23 +396,46 @@
 								<label for="producto-servicio" class="block text-sm text-gray-600 mb-1"
 									>Clave producto/servicio SAT</label
 								>
-								<select
-									id="producto-servicio"
-									bind:value={productoServicio}
-									class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-								>
-									<option value="">Seleccionar clave SAT...</option>
-									{#each clavesSAT as clave}
-										<option value={clave.value}>{clave.label}</option>
-									{/each}
-								</select>
-								<a
-									href="https://www.sat.gob.mx/consultas/92487/catalogo-de-productos-y-servicios"
-									target="_blank"
-									rel="noopener noreferrer"
-									class="text-xs text-blue-600 mt-1 inline-block hover:underline"
-									>Ir al catálogo de productos del SAT</a
-								>
+								<div class="relative">
+									<input
+										id="producto-servicio"
+										type="text"
+										bind:value={busquedaProductoSAT}
+										on:input={buscarProductosSAT}
+										on:focus={buscarProductosSAT}
+										placeholder="Buscar por clave o descripción..."
+										class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+									/>
+									{#if cargandoProductosSAT}
+										<div class="absolute right-3 top-1/2 -translate-y-1/2">
+											<svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+												<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+												<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+											</svg>
+										</div>
+									{/if}
+									{#if mostrarListaProductosSAT && productosSATFiltrados.length > 0}
+										<div class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+											{#each productosSATFiltrados as producto}
+												<button
+													type="button"
+													on:click={() => seleccionarProductoSAT(producto)}
+													class="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+												>
+													<div class="font-medium text-gray-900 text-sm">
+														{producto.key}
+													</div>
+													<div class="text-xs text-gray-500 mt-1">
+														{producto.description}
+													</div>
+												</button>
+											{/each}
+										</div>
+									{/if}
+								</div>
+								<p class="text-xs text-gray-500 mt-1">
+									Busque por clave (ej: 84111506) o por descripción (ej: honorarios)
+								</p>
 							</div>
 
 							<div>
