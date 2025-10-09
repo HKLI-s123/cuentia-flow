@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { authFetch } from '$lib/api';
 	import ModalConcepto from './ModalConcepto.svelte';
+	import Swal from 'sweetalert2';
 
 	interface Cliente {
 		id: number;
@@ -202,14 +203,35 @@
 
 	async function guardarFactura() {
 		if (!clienteSeleccionado) {
-			alert('Debe seleccionar un cliente');
+			await Swal.fire({
+				icon: 'warning',
+				title: 'Cliente requerido',
+				text: 'Debe seleccionar un cliente',
+				confirmButtonColor: '#3b82f6'
+			});
 			return;
 		}
 
 		if (conceptos.length === 0) {
-			alert('Debe agregar al menos un concepto');
+			await Swal.fire({
+				icon: 'warning',
+				title: 'Conceptos requeridos',
+				text: 'Debe agregar al menos un concepto',
+				confirmButtonColor: '#3b82f6'
+			});
 			return;
 		}
+
+		// Mostrar loading
+		Swal.fire({
+			title: 'Guardando factura...',
+			html: 'Por favor espere mientras se procesa la factura',
+			allowOutsideClick: false,
+			allowEscapeKey: false,
+			didOpen: () => {
+				Swal.showLoading();
+			}
+		});
 
 		try {
 			// Obtener el ID del usuario logueado
@@ -258,25 +280,76 @@
 			const result = await response.json();
 
 			if (result.success) {
-				// Mostrar mensaje de éxito con información del timbrado
-				let mensaje = '✅ Factura guardada correctamente\n\n';
-
+				// Verificar si la factura fue timbrada o no
 				if (result.timbrado && result.timbrado.success) {
-					mensaje += `🎉 Factura timbrada correctamente\n`;
-					mensaje += `📄 Folio: ${result.timbrado.numeroFactura}\n`;
-					mensaje += `🔑 UUID: ${result.timbrado.uuid}`;
+					// Factura timbrada correctamente
+					await Swal.fire({
+						icon: 'success',
+						title: '¡Factura timbrada correctamente!',
+						html: `
+							<div class="text-left">
+								<p class="mb-2"><strong>Folio:</strong> ${result.timbrado.numeroFactura}</p>
+								<p class="mb-2"><strong>UUID:</strong> ${result.timbrado.uuid}</p>
+								<p class="mt-4 text-sm text-gray-600">La factura ha sido guardada y timbrada exitosamente</p>
+							</div>
+						`,
+						confirmButtonColor: '#3b82f6',
+						confirmButtonText: 'Aceptar'
+					});
 				} else {
-					mensaje += '⚠️ La factura se guardó pero no se pudo timbrar automáticamente\n';
-					mensaje += 'Puede timbrarla manualmente desde el listado de facturas';
+					// Factura guardada pero no timbrada
+					const fechaActual = new Date().toISOString().split('T')[0];
+					const fechaEmisionFactura = new Date(fechaEmision).toISOString().split('T')[0];
+					const esMismaFecha = fechaEmisionFactura === fechaActual;
+
+					if (!esMismaFecha) {
+						// La factura se timbrará el día de la fecha de emisión
+						await Swal.fire({
+							icon: 'info',
+							title: 'Factura guardada',
+							html: `
+								<div class="text-left">
+									<p class="mb-2">Su factura ha sido guardada correctamente.</p>
+									<p class="mb-2"><strong>Se timbrará automáticamente el día de la fecha de emisión</strong></p>
+									<p class="text-sm text-gray-600 mt-4">Fecha de emisión: ${fechaEmision}</p>
+								</div>
+							`,
+							confirmButtonColor: '#3b82f6',
+							confirmButtonText: 'Aceptar'
+						});
+					} else {
+						// Falló el timbrado
+						await Swal.fire({
+							icon: 'error',
+							title: 'Falló el timbrado de su factura',
+							html: `
+								<div class="text-left">
+									<p class="mb-2">La factura se guardó correctamente pero hubo un problema al timbrarla.</p>
+									<p class="text-sm text-gray-600 mt-4">Puede intentar timbrarla manualmente desde el listado de facturas</p>
+								</div>
+							`,
+							confirmButtonColor: '#3b82f6',
+							confirmButtonText: 'Aceptar'
+						});
+					}
 				}
 
-				alert(mensaje);
 				goto('/dashboard/por-cobrar');
 			} else {
-				alert(`❌ Error: ${result.error}`);
+				await Swal.fire({
+					icon: 'error',
+					title: 'Error al guardar factura',
+					text: result.error || 'Ocurrió un error al guardar la factura',
+					confirmButtonColor: '#3b82f6'
+				});
 			}
 		} catch (error) {
-			alert('❌ Error al guardar la factura');
+			await Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: 'Ocurrió un error al guardar la factura',
+				confirmButtonColor: '#3b82f6'
+			});
 		}
 	}
 

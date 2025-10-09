@@ -238,15 +238,22 @@ export const POST: RequestHandler = async (event) => {
           };
         });
 
+        // El PrecioUnitario en la base de datos ya está SIN IVA (es el subtotal / cantidad)
+        // Facturapi necesita saber que el precio NO incluye impuestos con tax_included: false
+        const cantidad = parseFloat(concepto.Cantidad);
+        const subtotal = parseFloat(concepto.Subtotal); // Ya está sin IVA
+        const precioUnitarioSinIVA = subtotal / cantidad;
+
         return {
           product: {
             description: concepto.Descripcion || concepto.Nombre,
             product_key: concepto.ClaveProdServ,
-            price: parseFloat(concepto.PrecioUnitario),
+            price: precioUnitarioSinIVA,
+            tax_included: false, // IMPORTANTE: El precio NO incluye impuestos
             taxes: taxes.length > 0 ? taxes : undefined,
             taxability: concepto.ObjetoImpuesto || '02'
           },
-          quantity: parseFloat(concepto.Cantidad)
+          quantity: cantidad
         };
       })),
       payment_form: factura.FormaPago,
@@ -319,7 +326,7 @@ export const POST: RequestHandler = async (event) => {
 
     return json({
       success: true,
-      message: 'Factura timbrada exitosamente',
+      message: 'Factura timbrada Correctamente',
       uuid: invoice.uuid,
       facturapiId: invoice.id,
       numeroFactura: factura.numero_factura,

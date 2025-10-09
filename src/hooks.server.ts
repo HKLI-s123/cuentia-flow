@@ -8,7 +8,8 @@ const PUBLIC_ROUTES = [
 	// '/api/auth/register',
 	// '/api/test-db', // Solo para desarrollo, remover en producción
 	// '/api/analyze-db', // Solo para desarrollo, remover en producción
-	// '/api/analyze-db', // Solo para desarrollo, remover en producción
+	'/api/analyze-db', // Solo para desarrollo, remover en producción
+	// '/api/facturas/fix-taxes', // ✅ Ejecutado correctamente, removido por seguridad
 ];
 
 export const handle: Handle = async ({ event, resolve }) => {

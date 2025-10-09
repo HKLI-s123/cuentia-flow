@@ -1,2148 +1,2166 @@
 {
-"timestamp": "2025-10-07T16:52:36.314Z",
-"database": "Cobranza",
-"data": [
-{
-"Tipo": "RESUMEN_BD",
-"Informacion": "Base de datos: Cobranza - Fecha: 2025-10-07 16:52:37",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "Agentes_Clientes",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "Clientes",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "ConceptosFactura",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "configuracion_organizacion",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "ConfiguracionCobranza",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "Estados",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "estados_factura",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "Facturas",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "GestionesCobranza",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "ImpuestosConcepto",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "Organizaciones",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "Pagos",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "Paises",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "prioridades_cobranza",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "RecordatoriosProgramados",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "Regimen",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "Roles",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "Usuario_Organizacion",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "TABLA",
-"Informacion": "Usuarios",
-"Valor1": "",
-"Valor2": "",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Agentes_Clientes.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Agentes_Clientes.ClienteId",
-"Valor1": "2",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Agentes_Clientes.UsuarioId",
-"Valor1": "3",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Agentes_Clientes.RolAgente",
-"Valor1": "4",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Agentes_Clientes.CreatedAt",
-"Valor1": "5",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Agentes_Clientes.UpdatedAt",
-"Valor1": "6",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.NombreComercial",
-"Valor1": "2",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.RazonSocial",
-"Valor1": "3",
-"Valor2": "nvarchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.RFC",
-"Valor1": "4",
-"Valor2": "nvarchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.RegimenFiscal",
-"Valor1": "5",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.CondicionesPago",
-"Valor1": "6",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.CorreoPrincipal",
-"Valor1": "7",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.Pais",
-"Valor1": "8",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.CodigoPais",
-"Valor1": "9",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.Telefono",
-"Valor1": "10",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.Estado",
-"Valor1": "11",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.Calle",
-"Valor1": "12",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.NumeroExterior",
-"Valor1": "13",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.NumeroInterior",
-"Valor1": "14",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.CodigoPostal",
-"Valor1": "15",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.Colonia",
-"Valor1": "16",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.Ciudad",
-"Valor1": "17",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.OrganizacionId",
-"Valor1": "18",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "((1))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.RegimenFiscalId",
-"Valor1": "19",
-"Valor2": "int",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.EstadoId",
-"Valor1": "20",
-"Valor2": "int",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Clientes.PaisId",
-"Valor1": "21",
-"Valor2": "int",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.FacturaId",
-"Valor1": "2",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.Nombre",
-"Valor1": "3",
-"Valor2": "nvarchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.Descripcion",
-"Valor1": "4",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.ClaveProdServ",
-"Valor1": "5",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.UnidadMedida",
-"Valor1": "6",
-"Valor2": "nvarchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.Cantidad",
-"Valor1": "7",
-"Valor2": "decimal",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.PrecioUnitario",
-"Valor1": "8",
-"Valor2": "decimal",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.Subtotal",
-"Valor1": "9",
-"Valor2": "decimal",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.MonedaProducto",
-"Valor1": "10",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.ObjetoImpuesto",
-"Valor1": "11",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.TotalImpuestos",
-"Valor1": "12",
-"Valor2": "decimal",
-"Valor3": "YES",
-"Valor4": "((0))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConceptosFactura.Total",
-"Valor1": "13",
-"Valor2": "decimal",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.organizacion_id",
-"Valor1": "2",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.nombre_comercial",
-"Valor1": "3",
-"Valor2": "varchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.email_corporativo",
-"Valor1": "4",
-"Valor2": "varchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.telefono",
-"Valor1": "5",
-"Valor2": "varchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.calle",
-"Valor1": "6",
-"Valor2": "varchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.numero_exterior",
-"Valor1": "7",
-"Valor2": "varchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.numero_interior",
-"Valor1": "8",
-"Valor2": "varchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.colonia",
-"Valor1": "9",
-"Valor2": "varchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.ciudad",
-"Valor1": "10",
-"Valor2": "varchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.estado",
-"Valor1": "11",
-"Valor2": "varchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.codigo_postal",
-"Valor1": "12",
-"Valor2": "varchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.pais",
-"Valor1": "13",
-"Valor2": "varchar",
-"Valor3": "YES",
-"Valor4": "('México')",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.regimen_fiscal",
-"Valor1": "14",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.activa",
-"Valor1": "15",
-"Valor2": "bit",
-"Valor3": "YES",
-"Valor4": "((1))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.fecha_creacion",
-"Valor1": "16",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "configuracion_organizacion.fecha_actualizacion",
-"Valor1": "17",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConfiguracionCobranza.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConfiguracionCobranza.OrganizacionId",
-"Valor1": "2",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConfiguracionCobranza.DiasGracia",
-"Valor1": "3",
-"Valor2": "int",
-"Valor3": "YES",
-"Valor4": "((3))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConfiguracionCobranza.EscalamientoDias",
-"Valor1": "4",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConfiguracionCobranza.EnvioAutomaticoRecordatorios",
-"Valor1": "5",
-"Valor2": "bit",
-"Valor3": "YES",
-"Valor4": "((0))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ConfiguracionCobranza.DiasRecordatorioPrevio",
-"Valor1": "6",
-"Valor2": "int",
-"Valor3": "YES",
-"Valor4": "((3))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Estados.ID",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Estados.ClaveEstado",
-"Valor1": "2",
-"Valor2": "varchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Estados.NombreEstado",
-"Valor1": "3",
-"Valor2": "varchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Estados.PaisID",
-"Valor1": "4",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "estados_factura.id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "estados_factura.codigo",
-"Valor1": "2",
-"Valor2": "varchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.ClienteId",
-"Valor1": "2",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.MontoTotal",
-"Valor1": "3",
-"Valor2": "decimal",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.FechaEmision",
-"Valor1": "4",
-"Valor2": "datetime",
-"Valor3": "NO",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.FechaVencimiento",
-"Valor1": "5",
-"Valor2": "datetime",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.CreatedAt",
-"Valor1": "6",
-"Valor2": "datetime",
-"Valor3": "NO",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.SaldoPendiente",
-"Valor1": "7",
-"Valor2": "decimal",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.DiasVencido",
-"Valor1": "8",
-"Valor2": "int",
-"Valor3": "YES",
-"Valor4": "((0))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.UltimaGestion",
-"Valor1": "9",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.Observaciones",
-"Valor1": "10",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.estado_factura_id",
-"Valor1": "11",
-"Valor2": "int",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.prioridad_cobranza_id",
-"Valor1": "12",
-"Valor2": "int",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.numero_factura",
-"Valor1": "13",
-"Valor2": "varchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.FechaUltimoPago",
-"Valor1": "14",
-"Valor2": "date",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.RecurrenciaActiva",
-"Valor1": "15",
-"Valor2": "bit",
-"Valor3": "YES",
-"Valor4": "((0))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.OrdenRecurrencia",
-"Valor1": "16",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.IdentificadorRecurrencia",
-"Valor1": "17",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.FechaInicioRecurrencia",
-"Valor1": "18",
-"Valor2": "date",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.FechaPrimeraFactura",
-"Valor1": "19",
-"Valor2": "date",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.PeriodoRecurrencia",
-"Valor1": "20",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.DiaRecurrencia",
-"Valor1": "21",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.CadaRecurrencia",
-"Valor1": "22",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.FinRecurrencia",
-"Valor1": "23",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.FechaFinRecurrencia",
-"Valor1": "24",
-"Valor2": "date",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.NumeroOcurrencias",
-"Valor1": "25",
-"Valor2": "int",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.OrdenCompra",
-"Valor1": "26",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.Moneda",
-"Valor1": "27",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "('MXN')",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.TipoCambio",
-"Valor1": "28",
-"Valor2": "decimal",
-"Valor3": "YES",
-"Valor4": "((1.0000))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.CondicionesPago",
-"Valor1": "29",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.NotasCliente",
-"Valor1": "30",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.NotasInternas",
-"Valor1": "31",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.UUIDFacturapi",
-"Valor1": "32",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.PDFUrl",
-"Valor1": "33",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.XMLUrl",
-"Valor1": "34",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.DesglosarImpuestos",
-"Valor1": "35",
-"Valor2": "bit",
-"Valor3": "YES",
-"Valor4": "((1))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.Identificador",
-"Valor1": "36",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.MetodoPago",
-"Valor1": "37",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "('PUE')",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.UsuarioCreadorId",
-"Valor1": "38",
-"Valor2": "int",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.FormaPago",
-"Valor1": "39",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "('99')",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.UUID",
-"Valor1": "40",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.Timbrado",
-"Valor1": "41",
-"Valor2": "bit",
-"Valor3": "YES",
-"Valor4": "((0))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.FechaTimbrado",
-"Valor1": "42",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.FacturapiId",
-"Valor1": "43",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Facturas.UsoCFDI",
-"Valor1": "44",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "GestionesCobranza.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "GestionesCobranza.FacturaId",
-"Valor1": "2",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "GestionesCobranza.UsuarioId",
-"Valor1": "3",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "GestionesCobranza.TipoGestion",
-"Valor1": "4",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "GestionesCobranza.Resultado",
-"Valor1": "5",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "GestionesCobranza.Descripcion",
-"Valor1": "6",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "GestionesCobranza.FechaGestion",
-"Valor1": "7",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "GestionesCobranza.FechaProximaGestion",
-"Valor1": "8",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "GestionesCobranza.PromesaPagoFecha",
-"Valor1": "9",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "GestionesCobranza.PromesaPagoMonto",
-"Valor1": "10",
-"Valor2": "decimal",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "GestionesCobranza.RequiereSeguimiento",
-"Valor1": "11",
-"Valor2": "bit",
-"Valor3": "YES",
-"Valor4": "((0))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ImpuestosConcepto.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ImpuestosConcepto.ConceptoId",
-"Valor1": "2",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ImpuestosConcepto.Tipo",
-"Valor1": "3",
-"Valor2": "nvarchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ImpuestosConcepto.Tasa",
-"Valor1": "4",
-"Valor2": "decimal",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "ImpuestosConcepto.Monto",
-"Valor1": "5",
-"Valor2": "decimal",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Organizaciones.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Organizaciones.RFC",
-"Valor1": "2",
-"Valor2": "nvarchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Organizaciones.RazonSocial",
-"Valor1": "3",
-"Valor2": "nvarchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Organizaciones.CreatedAt",
-"Valor1": "4",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Organizaciones.UpdatedAt",
-"Valor1": "5",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Organizaciones.CorreoElectronico",
-"Valor1": "6",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Organizaciones.Nombre",
-"Valor1": "7",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Pagos.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Pagos.FacturaId",
-"Valor1": "2",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Pagos.UsuarioId",
-"Valor1": "3",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Pagos.Monto",
-"Valor1": "4",
-"Valor2": "decimal",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Pagos.FechaPago",
-"Valor1": "5",
-"Valor2": "datetime",
-"Valor3": "NO",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Pagos.Metodo",
-"Valor1": "6",
-"Valor2": "nvarchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Pagos.CreatedAt",
-"Valor1": "7",
-"Valor2": "datetime",
-"Valor3": "NO",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Pagos.UpdatedAt",
-"Valor1": "8",
-"Valor2": "datetime",
-"Valor3": "NO",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Paises.ID",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Paises.NombrePais",
-"Valor1": "2",
-"Valor2": "varchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "prioridades_cobranza.id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "prioridades_cobranza.codigo",
-"Valor1": "2",
-"Valor2": "varchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "RecordatoriosProgramados.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "RecordatoriosProgramados.ClienteId",
-"Valor1": "2",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "RecordatoriosProgramados.FacturaId",
-"Valor1": "3",
-"Valor2": "int",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "RecordatoriosProgramados.TipoRecordatorio",
-"Valor1": "4",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "RecordatoriosProgramados.FechaEnvio",
-"Valor1": "5",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "RecordatoriosProgramados.Mensaje",
-"Valor1": "6",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "RecordatoriosProgramados.Estado",
-"Valor1": "7",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "('pendiente')",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Regimen.ID_Regimen",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Regimen.Codigo",
-"Valor1": "2",
-"Valor2": "smallint",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Regimen.Descripcion",
-"Valor1": "3",
-"Valor2": "nvarchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Roles.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Roles.Nombre",
-"Valor1": "2",
-"Valor2": "nvarchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuario_Organizacion.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuario_Organizacion.UsuarioId",
-"Valor1": "2",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuario_Organizacion.OrganizacionId",
-"Valor1": "3",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuario_Organizacion.RolId",
-"Valor1": "4",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuario_Organizacion.CreatedAt",
-"Valor1": "5",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuario_Organizacion.UpdatedAt",
-"Valor1": "6",
-"Valor2": "datetime",
-"Valor3": "YES",
-"Valor4": "(getdate())",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuarios.Id",
-"Valor1": "1",
-"Valor2": "int",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuarios.Correo",
-"Valor1": "2",
-"Valor2": "nvarchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuarios.Contrasena",
-"Valor1": "3",
-"Valor2": "nvarchar",
-"Valor3": "NO",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuarios.NumeroTel",
-"Valor1": "4",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuarios.Activo",
-"Valor1": "5",
-"Valor2": "bit",
-"Valor3": "YES",
-"Valor4": "((1))",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuarios.Nombre",
-"Valor1": "6",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "ESTRUCTURA",
-"Informacion": "Usuarios.Apellido",
-"Valor1": "7",
-"Valor2": "nvarchar",
-"Valor3": "YES",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Agentes_Clientes.ClienteId -> Clientes.Id",
-"Valor1": "Agentes_Clientes",
-"Valor2": "ClienteId",
-"Valor3": "Clientes",
-"Valor4": "Id",
-"Valor5": "FK_AgenteCliente_Cliente"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Agentes_Clientes.UsuarioId -> Usuarios.Id",
-"Valor1": "Agentes_Clientes",
-"Valor2": "UsuarioId",
-"Valor3": "Usuarios",
-"Valor4": "Id",
-"Valor5": "FK_AgenteCliente_Usuario"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Clientes.EstadoId -> Estados.ID",
-"Valor1": "Clientes",
-"Valor2": "EstadoId",
-"Valor3": "Estados",
-"Valor4": "ID",
-"Valor5": "FK_Clientes_Estado"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Clientes.OrganizacionId -> Organizaciones.Id",
-"Valor1": "Clientes",
-"Valor2": "OrganizacionId",
-"Valor3": "Organizaciones",
-"Valor4": "Id",
-"Valor5": "FK_Clientes_Organizacion"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Clientes.PaisId -> Paises.ID",
-"Valor1": "Clientes",
-"Valor2": "PaisId",
-"Valor3": "Paises",
-"Valor4": "ID",
-"Valor5": "FK_Clientes_Pais"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Clientes.RegimenFiscalId -> Regimen.ID_Regimen",
-"Valor1": "Clientes",
-"Valor2": "RegimenFiscalId",
-"Valor3": "Regimen",
-"Valor4": "ID_Regimen",
-"Valor5": "FK_Clientes_Regimen"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "ConceptosFactura.FacturaId -> Facturas.Id",
-"Valor1": "ConceptosFactura",
-"Valor2": "FacturaId",
-"Valor3": "Facturas",
-"Valor4": "Id",
-"Valor5": "FK_ConceptosFactura_Factura"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "configuracion_organizacion.organizacion_id -> Organizaciones.Id",
-"Valor1": "configuracion_organizacion",
-"Valor2": "organizacion_id",
-"Valor3": "Organizaciones",
-"Valor4": "Id",
-"Valor5": "fk_organizacion"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "configuracion_organizacion.regimen_fiscal -> Regimen.ID_Regimen",
-"Valor1": "configuracion_organizacion",
-"Valor2": "regimen_fiscal",
-"Valor3": "Regimen",
-"Valor4": "ID_Regimen",
-"Valor5": "fk_regimen"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "ConfiguracionCobranza.OrganizacionId -> Organizaciones.Id",
-"Valor1": "ConfiguracionCobranza",
-"Valor2": "OrganizacionId",
-"Valor3": "Organizaciones",
-"Valor4": "Id",
-"Valor5": "FK_ConfiguracionCobranza_Organizacion"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Estados.PaisID -> Paises.ID",
-"Valor1": "Estados",
-"Valor2": "PaisID",
-"Valor3": "Paises",
-"Valor4": "ID",
-"Valor5": "FK__Estados__PaisID__0D7A0286"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Facturas.ClienteId -> Clientes.Id",
-"Valor1": "Facturas",
-"Valor2": "ClienteId",
-"Valor3": "Clientes",
-"Valor4": "Id",
-"Valor5": "FK_Facturas_Clientes"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Facturas.estado_factura_id -> estados_factura.id",
-"Valor1": "Facturas",
-"Valor2": "estado_factura_id",
-"Valor3": "estados_factura",
-"Valor4": "id",
-"Valor5": "FK_facturas_estado_factura"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Facturas.prioridad_cobranza_id -> prioridades_cobranza.id",
-"Valor1": "Facturas",
-"Valor2": "prioridad_cobranza_id",
-"Valor3": "prioridades_cobranza",
-"Valor4": "id",
-"Valor5": "FK_facturas_prioridad_cobranza"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Facturas.UsuarioCreadorId -> Usuarios.Id",
-"Valor1": "Facturas",
-"Valor2": "UsuarioCreadorId",
-"Valor3": "Usuarios",
-"Valor4": "Id",
-"Valor5": "FK_Facturas_UsuarioCreador"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "GestionesCobranza.FacturaId -> Facturas.Id",
-"Valor1": "GestionesCobranza",
-"Valor2": "FacturaId",
-"Valor3": "Facturas",
-"Valor4": "Id",
-"Valor5": "FK_GestionesCobranza_Factura"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "GestionesCobranza.UsuarioId -> Usuarios.Id",
-"Valor1": "GestionesCobranza",
-"Valor2": "UsuarioId",
-"Valor3": "Usuarios",
-"Valor4": "Id",
-"Valor5": "FK_GestionesCobranza_Usuario"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "ImpuestosConcepto.ConceptoId -> ConceptosFactura.Id",
-"Valor1": "ImpuestosConcepto",
-"Valor2": "ConceptoId",
-"Valor3": "ConceptosFactura",
-"Valor4": "Id",
-"Valor5": "FK_ImpuestosConcepto_Concepto"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Pagos.FacturaId -> Facturas.Id",
-"Valor1": "Pagos",
-"Valor2": "FacturaId",
-"Valor3": "Facturas",
-"Valor4": "Id",
-"Valor5": "FK_Pagos_Facturas"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Pagos.UsuarioId -> Usuarios.Id",
-"Valor1": "Pagos",
-"Valor2": "UsuarioId",
-"Valor3": "Usuarios",
-"Valor4": "Id",
-"Valor5": "FK_Pagos_Usuarios"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "RecordatoriosProgramados.ClienteId -> Clientes.Id",
-"Valor1": "RecordatoriosProgramados",
-"Valor2": "ClienteId",
-"Valor3": "Clientes",
-"Valor4": "Id",
-"Valor5": "FK_RecordatoriosProgramados_Cliente"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "RecordatoriosProgramados.FacturaId -> Facturas.Id",
-"Valor1": "RecordatoriosProgramados",
-"Valor2": "FacturaId",
-"Valor3": "Facturas",
-"Valor4": "Id",
-"Valor5": "FK_RecordatoriosProgramados_Factura"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Usuario_Organizacion.OrganizacionId -> Organizaciones.Id",
-"Valor1": "Usuario_Organizacion",
-"Valor2": "OrganizacionId",
-"Valor3": "Organizaciones",
-"Valor4": "Id",
-"Valor5": "FK_UsuarioOrganizacion_Organizacion"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Usuario_Organizacion.RolId -> Roles.Id",
-"Valor1": "Usuario_Organizacion",
-"Valor2": "RolId",
-"Valor3": "Roles",
-"Valor4": "Id",
-"Valor5": "FK_UsuarioOrganizacion_Rol"
-},
-{
-"Tipo": "RELACION",
-"Informacion": "Usuario_Organizacion.UsuarioId -> Usuarios.Id",
-"Valor1": "Usuario_Organizacion",
-"Valor2": "UsuarioId",
-"Valor3": "Usuarios",
-"Valor4": "Id",
-"Valor5": "FK_UsuarioOrganizacion_Usuario"
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "Agentes_Clientes",
-"Valor1": "6",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "Clientes",
-"Valor1": "201",
-"Valor2": "Datos abundantes",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "ConceptosFactura",
-"Valor1": "18",
-"Valor2": "Datos de prueba",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "configuracion_organizacion",
-"Valor1": "2",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "ConfiguracionCobranza",
-"Valor1": "2",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "Estados",
-"Valor1": "82",
-"Valor2": "Datos de prueba",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "estados_factura",
-"Valor1": "5",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "Facturas",
-"Valor1": "2585",
-"Valor2": "Datos abundantes",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "GestionesCobranza",
-"Valor1": "2",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "ImpuestosConcepto",
-"Valor1": "18",
-"Valor2": "Datos de prueba",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "Organizaciones",
-"Valor1": "2",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "Pagos",
-"Valor1": "6",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "Paises",
-"Valor1": "2",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "prioridades_cobranza",
-"Valor1": "3",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "RecordatoriosProgramados",
-"Valor1": "1",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "Regimen",
-"Valor1": "19",
-"Valor2": "Datos de prueba",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "Roles",
-"Valor1": "3",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "Usuario_Organizacion",
-"Valor1": "2",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "REGISTROS",
-"Informacion": "Usuarios",
-"Valor1": "4",
-"Valor2": "Pocos datos",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-},
-{
-"Tipo": "RESUMEN_EJECUTIVO",
-"Informacion": "ANÁLISIS COMPLETADO - 2025-10-07 16:52:41",
-"Valor1": "? BD Analizada",
-"Valor2": "?? Listo para módulo Por Cobrar",
-"Valor3": "",
-"Valor4": "",
-"Valor5": ""
-}
-]
+  "timestamp": "2025-10-08T19:16:56.222Z",
+  "database": "Cobranza",
+  "data": [
+    {
+      "Tipo": "RESUMEN_BD",
+      "Informacion": "Base de datos: Cobranza - Fecha: 2025-10-08 19:16:57",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "Agentes_Clientes",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "Clientes",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "ConceptosFactura",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "configuracion_organizacion",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "ConfiguracionCobranza",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "Estados",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "estados_factura",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "Facturas",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "GestionesCobranza",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "ImpuestosConcepto",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "Organizaciones",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "Pagos",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "Paises",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "prioridades_cobranza",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "RecordatoriosProgramados",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "Regimen",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "Roles",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "Usuario_Organizacion",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "Usuarios",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Agentes_Clientes.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Agentes_Clientes.ClienteId",
+      "Valor1": "2",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Agentes_Clientes.UsuarioId",
+      "Valor1": "3",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Agentes_Clientes.RolAgente",
+      "Valor1": "4",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Agentes_Clientes.CreatedAt",
+      "Valor1": "5",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Agentes_Clientes.UpdatedAt",
+      "Valor1": "6",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.NombreComercial",
+      "Valor1": "2",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.RazonSocial",
+      "Valor1": "3",
+      "Valor2": "nvarchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.RFC",
+      "Valor1": "4",
+      "Valor2": "nvarchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.RegimenFiscal",
+      "Valor1": "5",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.CondicionesPago",
+      "Valor1": "6",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.CorreoPrincipal",
+      "Valor1": "7",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.Pais",
+      "Valor1": "8",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.CodigoPais",
+      "Valor1": "9",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.Telefono",
+      "Valor1": "10",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.Estado",
+      "Valor1": "11",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.Calle",
+      "Valor1": "12",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.NumeroExterior",
+      "Valor1": "13",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.NumeroInterior",
+      "Valor1": "14",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.CodigoPostal",
+      "Valor1": "15",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.Colonia",
+      "Valor1": "16",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.Ciudad",
+      "Valor1": "17",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.OrganizacionId",
+      "Valor1": "18",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "((1))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.RegimenFiscalId",
+      "Valor1": "19",
+      "Valor2": "int",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.EstadoId",
+      "Valor1": "20",
+      "Valor2": "int",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Clientes.PaisId",
+      "Valor1": "21",
+      "Valor2": "int",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.FacturaId",
+      "Valor1": "2",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.Nombre",
+      "Valor1": "3",
+      "Valor2": "nvarchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.Descripcion",
+      "Valor1": "4",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.ClaveProdServ",
+      "Valor1": "5",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.UnidadMedida",
+      "Valor1": "6",
+      "Valor2": "nvarchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.Cantidad",
+      "Valor1": "7",
+      "Valor2": "decimal",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.PrecioUnitario",
+      "Valor1": "8",
+      "Valor2": "decimal",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.Subtotal",
+      "Valor1": "9",
+      "Valor2": "decimal",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.MonedaProducto",
+      "Valor1": "10",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.ObjetoImpuesto",
+      "Valor1": "11",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.TotalImpuestos",
+      "Valor1": "12",
+      "Valor2": "decimal",
+      "Valor3": "YES",
+      "Valor4": "((0))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConceptosFactura.Total",
+      "Valor1": "13",
+      "Valor2": "decimal",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.organizacion_id",
+      "Valor1": "2",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.nombre_comercial",
+      "Valor1": "3",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.email_corporativo",
+      "Valor1": "4",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.telefono",
+      "Valor1": "5",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.calle",
+      "Valor1": "6",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.numero_exterior",
+      "Valor1": "7",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.numero_interior",
+      "Valor1": "8",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.colonia",
+      "Valor1": "9",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.ciudad",
+      "Valor1": "10",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.estado",
+      "Valor1": "11",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.codigo_postal",
+      "Valor1": "12",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.pais",
+      "Valor1": "13",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "('México')",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.regimen_fiscal",
+      "Valor1": "14",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.activa",
+      "Valor1": "15",
+      "Valor2": "bit",
+      "Valor3": "YES",
+      "Valor4": "((1))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.fecha_creacion",
+      "Valor1": "16",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.fecha_actualizacion",
+      "Valor1": "17",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConfiguracionCobranza.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConfiguracionCobranza.OrganizacionId",
+      "Valor1": "2",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConfiguracionCobranza.DiasGracia",
+      "Valor1": "3",
+      "Valor2": "int",
+      "Valor3": "YES",
+      "Valor4": "((3))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConfiguracionCobranza.EscalamientoDias",
+      "Valor1": "4",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConfiguracionCobranza.EnvioAutomaticoRecordatorios",
+      "Valor1": "5",
+      "Valor2": "bit",
+      "Valor3": "YES",
+      "Valor4": "((0))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ConfiguracionCobranza.DiasRecordatorioPrevio",
+      "Valor1": "6",
+      "Valor2": "int",
+      "Valor3": "YES",
+      "Valor4": "((3))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Estados.ID",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Estados.ClaveEstado",
+      "Valor1": "2",
+      "Valor2": "varchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Estados.NombreEstado",
+      "Valor1": "3",
+      "Valor2": "varchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Estados.PaisID",
+      "Valor1": "4",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "estados_factura.id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "estados_factura.codigo",
+      "Valor1": "2",
+      "Valor2": "varchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.ClienteId",
+      "Valor1": "2",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.MontoTotal",
+      "Valor1": "3",
+      "Valor2": "decimal",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.FechaEmision",
+      "Valor1": "4",
+      "Valor2": "datetime",
+      "Valor3": "NO",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.FechaVencimiento",
+      "Valor1": "5",
+      "Valor2": "datetime",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.CreatedAt",
+      "Valor1": "6",
+      "Valor2": "datetime",
+      "Valor3": "NO",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.SaldoPendiente",
+      "Valor1": "7",
+      "Valor2": "decimal",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.DiasVencido",
+      "Valor1": "8",
+      "Valor2": "int",
+      "Valor3": "YES",
+      "Valor4": "((0))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.UltimaGestion",
+      "Valor1": "9",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.Observaciones",
+      "Valor1": "10",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.estado_factura_id",
+      "Valor1": "11",
+      "Valor2": "int",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.prioridad_cobranza_id",
+      "Valor1": "12",
+      "Valor2": "int",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.numero_factura",
+      "Valor1": "13",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.FechaUltimoPago",
+      "Valor1": "14",
+      "Valor2": "date",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.RecurrenciaActiva",
+      "Valor1": "15",
+      "Valor2": "bit",
+      "Valor3": "YES",
+      "Valor4": "((0))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.OrdenRecurrencia",
+      "Valor1": "16",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.IdentificadorRecurrencia",
+      "Valor1": "17",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.FechaInicioRecurrencia",
+      "Valor1": "18",
+      "Valor2": "date",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.FechaPrimeraFactura",
+      "Valor1": "19",
+      "Valor2": "date",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.PeriodoRecurrencia",
+      "Valor1": "20",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.DiaRecurrencia",
+      "Valor1": "21",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.CadaRecurrencia",
+      "Valor1": "22",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.FinRecurrencia",
+      "Valor1": "23",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.FechaFinRecurrencia",
+      "Valor1": "24",
+      "Valor2": "date",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.NumeroOcurrencias",
+      "Valor1": "25",
+      "Valor2": "int",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.OrdenCompra",
+      "Valor1": "26",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.Moneda",
+      "Valor1": "27",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "('MXN')",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.TipoCambio",
+      "Valor1": "28",
+      "Valor2": "decimal",
+      "Valor3": "YES",
+      "Valor4": "((1.0000))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.CondicionesPago",
+      "Valor1": "29",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.NotasCliente",
+      "Valor1": "30",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.NotasInternas",
+      "Valor1": "31",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.UUIDFacturapi",
+      "Valor1": "32",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.PDFUrl",
+      "Valor1": "33",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.XMLUrl",
+      "Valor1": "34",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.DesglosarImpuestos",
+      "Valor1": "35",
+      "Valor2": "bit",
+      "Valor3": "YES",
+      "Valor4": "((1))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.Identificador",
+      "Valor1": "36",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.MetodoPago",
+      "Valor1": "37",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "('PUE')",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.UsuarioCreadorId",
+      "Valor1": "38",
+      "Valor2": "int",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.FormaPago",
+      "Valor1": "39",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "('99')",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.UUID",
+      "Valor1": "40",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.Timbrado",
+      "Valor1": "41",
+      "Valor2": "bit",
+      "Valor3": "YES",
+      "Valor4": "((0))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.FechaTimbrado",
+      "Valor1": "42",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.FacturapiId",
+      "Valor1": "43",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.UsoCFDI",
+      "Valor1": "44",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.PDFBase64",
+      "Valor1": "45",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Facturas.XMLBase64",
+      "Valor1": "46",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "GestionesCobranza.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "GestionesCobranza.FacturaId",
+      "Valor1": "2",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "GestionesCobranza.UsuarioId",
+      "Valor1": "3",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "GestionesCobranza.TipoGestion",
+      "Valor1": "4",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "GestionesCobranza.Resultado",
+      "Valor1": "5",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "GestionesCobranza.Descripcion",
+      "Valor1": "6",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "GestionesCobranza.FechaGestion",
+      "Valor1": "7",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "GestionesCobranza.FechaProximaGestion",
+      "Valor1": "8",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "GestionesCobranza.PromesaPagoFecha",
+      "Valor1": "9",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "GestionesCobranza.PromesaPagoMonto",
+      "Valor1": "10",
+      "Valor2": "decimal",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "GestionesCobranza.RequiereSeguimiento",
+      "Valor1": "11",
+      "Valor2": "bit",
+      "Valor3": "YES",
+      "Valor4": "((0))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ImpuestosConcepto.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ImpuestosConcepto.ConceptoId",
+      "Valor1": "2",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ImpuestosConcepto.Tipo",
+      "Valor1": "3",
+      "Valor2": "nvarchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ImpuestosConcepto.Tasa",
+      "Valor1": "4",
+      "Valor2": "decimal",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "ImpuestosConcepto.Monto",
+      "Valor1": "5",
+      "Valor2": "decimal",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Organizaciones.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Organizaciones.RFC",
+      "Valor1": "2",
+      "Valor2": "nvarchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Organizaciones.RazonSocial",
+      "Valor1": "3",
+      "Valor2": "nvarchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Organizaciones.CreatedAt",
+      "Valor1": "4",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Organizaciones.UpdatedAt",
+      "Valor1": "5",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Organizaciones.CorreoElectronico",
+      "Valor1": "6",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Organizaciones.Nombre",
+      "Valor1": "7",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Pagos.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Pagos.FacturaId",
+      "Valor1": "2",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Pagos.UsuarioId",
+      "Valor1": "3",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Pagos.Monto",
+      "Valor1": "4",
+      "Valor2": "decimal",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Pagos.FechaPago",
+      "Valor1": "5",
+      "Valor2": "datetime",
+      "Valor3": "NO",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Pagos.Metodo",
+      "Valor1": "6",
+      "Valor2": "nvarchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Pagos.CreatedAt",
+      "Valor1": "7",
+      "Valor2": "datetime",
+      "Valor3": "NO",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Pagos.UpdatedAt",
+      "Valor1": "8",
+      "Valor2": "datetime",
+      "Valor3": "NO",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Paises.ID",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Paises.NombrePais",
+      "Valor1": "2",
+      "Valor2": "varchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "prioridades_cobranza.id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "prioridades_cobranza.codigo",
+      "Valor1": "2",
+      "Valor2": "varchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "RecordatoriosProgramados.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "RecordatoriosProgramados.ClienteId",
+      "Valor1": "2",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "RecordatoriosProgramados.FacturaId",
+      "Valor1": "3",
+      "Valor2": "int",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "RecordatoriosProgramados.TipoRecordatorio",
+      "Valor1": "4",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "RecordatoriosProgramados.FechaEnvio",
+      "Valor1": "5",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "RecordatoriosProgramados.Mensaje",
+      "Valor1": "6",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "RecordatoriosProgramados.Estado",
+      "Valor1": "7",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "('pendiente')",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Regimen.ID_Regimen",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Regimen.Codigo",
+      "Valor1": "2",
+      "Valor2": "smallint",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Regimen.Descripcion",
+      "Valor1": "3",
+      "Valor2": "nvarchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Roles.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Roles.Nombre",
+      "Valor1": "2",
+      "Valor2": "nvarchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuario_Organizacion.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuario_Organizacion.UsuarioId",
+      "Valor1": "2",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuario_Organizacion.OrganizacionId",
+      "Valor1": "3",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuario_Organizacion.RolId",
+      "Valor1": "4",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuario_Organizacion.CreatedAt",
+      "Valor1": "5",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuario_Organizacion.UpdatedAt",
+      "Valor1": "6",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuarios.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuarios.Correo",
+      "Valor1": "2",
+      "Valor2": "nvarchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuarios.Contrasena",
+      "Valor1": "3",
+      "Valor2": "nvarchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuarios.NumeroTel",
+      "Valor1": "4",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuarios.Activo",
+      "Valor1": "5",
+      "Valor2": "bit",
+      "Valor3": "YES",
+      "Valor4": "((1))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuarios.Nombre",
+      "Valor1": "6",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Usuarios.Apellido",
+      "Valor1": "7",
+      "Valor2": "nvarchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Agentes_Clientes.ClienteId -> Clientes.Id",
+      "Valor1": "Agentes_Clientes",
+      "Valor2": "ClienteId",
+      "Valor3": "Clientes",
+      "Valor4": "Id",
+      "Valor5": "FK_AgenteCliente_Cliente"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Agentes_Clientes.UsuarioId -> Usuarios.Id",
+      "Valor1": "Agentes_Clientes",
+      "Valor2": "UsuarioId",
+      "Valor3": "Usuarios",
+      "Valor4": "Id",
+      "Valor5": "FK_AgenteCliente_Usuario"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Clientes.EstadoId -> Estados.ID",
+      "Valor1": "Clientes",
+      "Valor2": "EstadoId",
+      "Valor3": "Estados",
+      "Valor4": "ID",
+      "Valor5": "FK_Clientes_Estado"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Clientes.OrganizacionId -> Organizaciones.Id",
+      "Valor1": "Clientes",
+      "Valor2": "OrganizacionId",
+      "Valor3": "Organizaciones",
+      "Valor4": "Id",
+      "Valor5": "FK_Clientes_Organizacion"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Clientes.PaisId -> Paises.ID",
+      "Valor1": "Clientes",
+      "Valor2": "PaisId",
+      "Valor3": "Paises",
+      "Valor4": "ID",
+      "Valor5": "FK_Clientes_Pais"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Clientes.RegimenFiscalId -> Regimen.ID_Regimen",
+      "Valor1": "Clientes",
+      "Valor2": "RegimenFiscalId",
+      "Valor3": "Regimen",
+      "Valor4": "ID_Regimen",
+      "Valor5": "FK_Clientes_Regimen"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "ConceptosFactura.FacturaId -> Facturas.Id",
+      "Valor1": "ConceptosFactura",
+      "Valor2": "FacturaId",
+      "Valor3": "Facturas",
+      "Valor4": "Id",
+      "Valor5": "FK_ConceptosFactura_Factura"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "configuracion_organizacion.organizacion_id -> Organizaciones.Id",
+      "Valor1": "configuracion_organizacion",
+      "Valor2": "organizacion_id",
+      "Valor3": "Organizaciones",
+      "Valor4": "Id",
+      "Valor5": "fk_organizacion"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "configuracion_organizacion.regimen_fiscal -> Regimen.ID_Regimen",
+      "Valor1": "configuracion_organizacion",
+      "Valor2": "regimen_fiscal",
+      "Valor3": "Regimen",
+      "Valor4": "ID_Regimen",
+      "Valor5": "fk_regimen"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "ConfiguracionCobranza.OrganizacionId -> Organizaciones.Id",
+      "Valor1": "ConfiguracionCobranza",
+      "Valor2": "OrganizacionId",
+      "Valor3": "Organizaciones",
+      "Valor4": "Id",
+      "Valor5": "FK_ConfiguracionCobranza_Organizacion"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Estados.PaisID -> Paises.ID",
+      "Valor1": "Estados",
+      "Valor2": "PaisID",
+      "Valor3": "Paises",
+      "Valor4": "ID",
+      "Valor5": "FK__Estados__PaisID__0D7A0286"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Facturas.ClienteId -> Clientes.Id",
+      "Valor1": "Facturas",
+      "Valor2": "ClienteId",
+      "Valor3": "Clientes",
+      "Valor4": "Id",
+      "Valor5": "FK_Facturas_Clientes"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Facturas.estado_factura_id -> estados_factura.id",
+      "Valor1": "Facturas",
+      "Valor2": "estado_factura_id",
+      "Valor3": "estados_factura",
+      "Valor4": "id",
+      "Valor5": "FK_facturas_estado_factura"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Facturas.prioridad_cobranza_id -> prioridades_cobranza.id",
+      "Valor1": "Facturas",
+      "Valor2": "prioridad_cobranza_id",
+      "Valor3": "prioridades_cobranza",
+      "Valor4": "id",
+      "Valor5": "FK_facturas_prioridad_cobranza"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Facturas.UsuarioCreadorId -> Usuarios.Id",
+      "Valor1": "Facturas",
+      "Valor2": "UsuarioCreadorId",
+      "Valor3": "Usuarios",
+      "Valor4": "Id",
+      "Valor5": "FK_Facturas_UsuarioCreador"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "GestionesCobranza.FacturaId -> Facturas.Id",
+      "Valor1": "GestionesCobranza",
+      "Valor2": "FacturaId",
+      "Valor3": "Facturas",
+      "Valor4": "Id",
+      "Valor5": "FK_GestionesCobranza_Factura"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "GestionesCobranza.UsuarioId -> Usuarios.Id",
+      "Valor1": "GestionesCobranza",
+      "Valor2": "UsuarioId",
+      "Valor3": "Usuarios",
+      "Valor4": "Id",
+      "Valor5": "FK_GestionesCobranza_Usuario"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "ImpuestosConcepto.ConceptoId -> ConceptosFactura.Id",
+      "Valor1": "ImpuestosConcepto",
+      "Valor2": "ConceptoId",
+      "Valor3": "ConceptosFactura",
+      "Valor4": "Id",
+      "Valor5": "FK_ImpuestosConcepto_Concepto"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Pagos.FacturaId -> Facturas.Id",
+      "Valor1": "Pagos",
+      "Valor2": "FacturaId",
+      "Valor3": "Facturas",
+      "Valor4": "Id",
+      "Valor5": "FK_Pagos_Facturas"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Pagos.UsuarioId -> Usuarios.Id",
+      "Valor1": "Pagos",
+      "Valor2": "UsuarioId",
+      "Valor3": "Usuarios",
+      "Valor4": "Id",
+      "Valor5": "FK_Pagos_Usuarios"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "RecordatoriosProgramados.ClienteId -> Clientes.Id",
+      "Valor1": "RecordatoriosProgramados",
+      "Valor2": "ClienteId",
+      "Valor3": "Clientes",
+      "Valor4": "Id",
+      "Valor5": "FK_RecordatoriosProgramados_Cliente"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "RecordatoriosProgramados.FacturaId -> Facturas.Id",
+      "Valor1": "RecordatoriosProgramados",
+      "Valor2": "FacturaId",
+      "Valor3": "Facturas",
+      "Valor4": "Id",
+      "Valor5": "FK_RecordatoriosProgramados_Factura"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Usuario_Organizacion.OrganizacionId -> Organizaciones.Id",
+      "Valor1": "Usuario_Organizacion",
+      "Valor2": "OrganizacionId",
+      "Valor3": "Organizaciones",
+      "Valor4": "Id",
+      "Valor5": "FK_UsuarioOrganizacion_Organizacion"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Usuario_Organizacion.RolId -> Roles.Id",
+      "Valor1": "Usuario_Organizacion",
+      "Valor2": "RolId",
+      "Valor3": "Roles",
+      "Valor4": "Id",
+      "Valor5": "FK_UsuarioOrganizacion_Rol"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Usuario_Organizacion.UsuarioId -> Usuarios.Id",
+      "Valor1": "Usuario_Organizacion",
+      "Valor2": "UsuarioId",
+      "Valor3": "Usuarios",
+      "Valor4": "Id",
+      "Valor5": "FK_UsuarioOrganizacion_Usuario"
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "Agentes_Clientes",
+      "Valor1": "203",
+      "Valor2": "Datos abundantes",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "Clientes",
+      "Valor1": "201",
+      "Valor2": "Datos abundantes",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "ConceptosFactura",
+      "Valor1": "45",
+      "Valor2": "Datos de prueba",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "configuracion_organizacion",
+      "Valor1": "2",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "ConfiguracionCobranza",
+      "Valor1": "2",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "Estados",
+      "Valor1": "82",
+      "Valor2": "Datos de prueba",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "estados_factura",
+      "Valor1": "5",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "Facturas",
+      "Valor1": "2604",
+      "Valor2": "Datos abundantes",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "GestionesCobranza",
+      "Valor1": "2",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "ImpuestosConcepto",
+      "Valor1": "70",
+      "Valor2": "Datos de prueba",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "Organizaciones",
+      "Valor1": "2",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "Pagos",
+      "Valor1": "6",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "Paises",
+      "Valor1": "2",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "prioridades_cobranza",
+      "Valor1": "3",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "RecordatoriosProgramados",
+      "Valor1": "1",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "Regimen",
+      "Valor1": "19",
+      "Valor2": "Datos de prueba",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "Roles",
+      "Valor1": "3",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "Usuario_Organizacion",
+      "Valor1": "3",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
+      "Informacion": "Usuarios",
+      "Valor1": "5",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "RESUMEN_EJECUTIVO",
+      "Informacion": "ANÁLISIS COMPLETADO - 2025-10-08 19:17:00",
+      "Valor1": "? BD Analizada",
+      "Valor2": "?? Listo para módulo Por Cobrar",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    }
+  ]
 }

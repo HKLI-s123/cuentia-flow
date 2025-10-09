@@ -99,6 +99,36 @@
     return formasPago[formaPago] || formaPago;
   }
 
+  async function visualizarPDF() {
+    if (!factura) return;
+    try {
+      const response = await authFetch(`/api/facturas/${factura.id}/pdf`);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    } catch (err) {
+      console.error('Error al visualizar PDF:', err);
+      alert('Error al visualizar el PDF');
+    }
+  }
+
+  async function descargarXML() {
+    if (!factura) return;
+    try {
+      const response = await authFetch(`/api/facturas/${factura.id}/xml`);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `factura-${factura.numero_factura}.xml`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error al descargar XML:', err);
+      alert('Error al descargar el XML');
+    }
+  }
+
   onMount(() => {
     cargarFactura();
   });
@@ -145,6 +175,22 @@
           </div>
 
           <div class="flex gap-3">
+            {#if factura.timbrado}
+              <button
+                on:click={visualizarPDF}
+                class="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center gap-2"
+              >
+                <FileText class="w-4 h-4" />
+                VER PDF
+              </button>
+              <button
+                on:click={descargarXML}
+                class="px-5 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium flex items-center gap-2"
+              >
+                <Download class="w-4 h-4" />
+                DESCARGAR XML
+              </button>
+            {/if}
             <button class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
               ENVIAR NOTA DE VENTA
             </button>

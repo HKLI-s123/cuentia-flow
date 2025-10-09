@@ -338,8 +338,15 @@ export const POST: RequestHandler = async (event) => {
 
     const numeroFactura = `${prefijo}-${numeroConsecutivo}`;
 
-    // Calcular totales desde los conceptos
-    const montoTotal = data.montoTotal || 0;
+    // Calcular totales correctamente desde los conceptos con impuestos
+    // El total de la factura es la suma de los totales de cada concepto
+    // Cada concepto.total ya viene con IVA incluido
+    let montoTotalFactura = 0;
+    for (const concepto of data.conceptos) {
+      const totalConceptoConIVA = parseFloat(concepto.total);
+      montoTotalFactura += totalConceptoConIVA;
+    }
+
     const fechaEmision = data.fechaEmision || new Date().toISOString().split('T')[0];
 
     // Calcular fecha de vencimiento basada en condiciones de pago
@@ -397,8 +404,8 @@ export const POST: RequestHandler = async (event) => {
 
     const facturaRequest = new sql.Request(transaction)
       .input('ClienteId', sql.Int, data.clienteId)
-      .input('MontoTotal', sql.Decimal(18, 2), montoTotal)
-      .input('SaldoPendiente', sql.Decimal(18, 2), montoTotal)
+      .input('MontoTotal', sql.Decimal(18, 2), montoTotalFactura)
+      .input('SaldoPendiente', sql.Decimal(18, 2), montoTotalFactura)
       .input('FechaEmision', sql.Date, fechaEmision)
       .input('FechaVencimiento', sql.Date, fechaVencimiento)
       .input('EstadoId', sql.Int, 1) // Pendiente
@@ -452,6 +459,36 @@ export const POST: RequestHandler = async (event) => {
 
     // Insertar conceptos e impuestos
     for (const concepto of data.conceptos) {
+      // Calcular valores correctamente según SAT México:
+      // El 'total' que viene del frontend es el precio TOTAL FINAL con IVA incluido (para todas las unidades)
+      // Necesitamos calcular el precio unitario SIN IVA (ValorUnitario del SAT)
+      // Fórmula: Subtotal = Total / (1 + tasa_iva)
+      //          IVA = Subtotal × tasa_iva
+
+      let tasaIVA = 0;
+      if (concepto.impuestos && concepto.impuestos.length > 0) {
+        // Obtener la tasa del primer impuesto (generalmente IVA)
+        tasaIVA = parseFloat(concepto.impuestos[0].tasa) || 0;
+      }
+
+      // Total FINAL con IVA incluido (para todas las unidades)
+      const totalFinalConIVA = parseFloat(concepto.total);
+      const cantidad = parseFloat(concepto.cantidad);
+
+      // Calcular subtotal (sin IVA) según fórmula del SAT
+      // Subtotal = Total / (1 + tasa)
+      const subtotal = totalFinalConIVA / (1 + tasaIVA);
+
+      // Calcular precio unitario SIN IVA (ValorUnitario según SAT)
+      const precioUnitarioSinIVA = subtotal / cantidad;
+
+      // Calcular total de impuestos
+      // IVA = Subtotal × tasa
+      const totalImpuestos = subtotal * tasaIVA;
+
+      // Total final (debe ser igual al que vino del frontend)
+      const totalFinal = subtotal + totalImpuestos;
+
       const insertConceptoQuery = `
         INSERT INTO ConceptosFactura (
           FacturaId, Nombre, Descripcion, ClaveProdServ, UnidadMedida, Cantidad,
@@ -471,12 +508,12 @@ export const POST: RequestHandler = async (event) => {
         .input('ClaveProdServ', sql.NVarChar(50), concepto.productoServicio || null)
         .input('UnidadMedida', sql.NVarChar(10), concepto.unidadMedida)
         .input('Cantidad', sql.Decimal(18, 2), concepto.cantidad)
-        .input('PrecioUnitario', sql.Decimal(18, 2), concepto.precioUnitario)
-        .input('Subtotal', sql.Decimal(18, 2), concepto.subtotal * concepto.cantidad)
+        .input('PrecioUnitario', sql.Decimal(18, 2), precioUnitarioSinIVA)
+        .input('Subtotal', sql.Decimal(18, 2), subtotal)
         .input('MonedaProducto', sql.NVarChar(10), concepto.monedaProducto || 'MXN')
         .input('ObjetoImpuesto', sql.NVarChar(10), concepto.objetoImpuesto || '02')
-        .input('TotalImpuestos', sql.Decimal(18, 2), concepto.totalImpuestos * concepto.cantidad)
-        .input('Total', sql.Decimal(18, 2), concepto.total * concepto.cantidad)
+        .input('TotalImpuestos', sql.Decimal(18, 2), totalImpuestos)
+        .input('Total', sql.Decimal(18, 2), totalFinal)
         .query(insertConceptoQuery);
 
       const conceptoId = conceptoResult.recordset[0].Id;
@@ -484,11 +521,14 @@ export const POST: RequestHandler = async (event) => {
       // Insertar impuestos del concepto
       if (concepto.impuestos && concepto.impuestos.length > 0) {
         for (const impuesto of concepto.impuestos) {
+          // Calcular monto del impuesto sobre el subtotal (sin IVA)
+          const montoImpuesto = subtotal * parseFloat(impuesto.tasa);
+
           await new sql.Request(transaction)
             .input('ConceptoId', sql.Int, conceptoId)
             .input('Tipo', sql.NVarChar(50), impuesto.tipo)
             .input('Tasa', sql.Decimal(5, 4), impuesto.tasa)
-            .input('Monto', sql.Decimal(18, 2), impuesto.monto * concepto.cantidad)
+            .input('Monto', sql.Decimal(18, 2), montoImpuesto)
             .query(`
               INSERT INTO ImpuestosConcepto (ConceptoId, Tipo, Tasa, Monto)
               VALUES (@ConceptoId, @Tipo, @Tasa, @Monto)
@@ -499,30 +539,41 @@ export const POST: RequestHandler = async (event) => {
 
     await transaction.commit();
 
-    // Timbrar y enviar factura automáticamente
-    let resultadoTimbrado = null;
-    try {
-      const responseTimbrado = await fetch('/api/facturas/timbrar', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ facturaId })
-      });
+    // Verificar si la fecha de emisión es la misma que la fecha actual
+    const fechaActual = new Date().toISOString().split('T')[0];
+    const fechaEmisionFactura = new Date(fechaEmision).toISOString().split('T')[0];
+    const esMismaFecha = fechaEmisionFactura === fechaActual;
 
-      if (responseTimbrado.ok) {
-        resultadoTimbrado = await responseTimbrado.json();
+    // Timbrar y enviar factura automáticamente SOLO si la fecha de emisión es HOY
+    let resultadoTimbrado = null;
+    if (esMismaFecha) {
+      try {
+        const responseTimbrado = await fetch('/api/facturas/timbrar', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ facturaId })
+        });
+
+        if (responseTimbrado.ok) {
+          resultadoTimbrado = await responseTimbrado.json();
+        }
+      } catch (errorTimbrado) {
+        // Si falla el timbrado, continuar sin error (la factura ya está guardada)
+        console.error('Error al timbrar factura automáticamente:', errorTimbrado);
       }
-    } catch (errorTimbrado) {
-      // Si falla el timbrado, continuar sin error (la factura ya está guardada)
-      console.error('Error al timbrar factura automáticamente:', errorTimbrado);
     }
 
     return json({
       success: true,
-      message: 'Factura creada exitosamente con conceptos e impuestos',
+      message: esMismaFecha
+        ? 'Factura creada exitosamente con conceptos e impuestos'
+        : 'Factura creada exitosamente. El timbrado automático solo se realiza para facturas con fecha de emisión actual.',
       facturaId: facturaId,
-      timbrado: resultadoTimbrado || { success: false, message: 'No se pudo timbrar automáticamente' }
+      timbrado: esMismaFecha
+        ? (resultadoTimbrado || { success: false, message: 'No se pudo timbrar automáticamente' })
+        : { success: false, message: 'No se timbró automáticamente porque la fecha de emisión es diferente a la fecha actual' }
     }, { status: 201 });
 
   } catch (error) {

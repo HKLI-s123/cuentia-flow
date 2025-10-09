@@ -16,7 +16,7 @@
 	let objetoImpuesto = '01';
 
 	// Tarifas
-	let precioUnitario = 0;
+	let totalConImpuestos = 0; // Total final con IVA incluido (lo que ingresa el usuario)
 	let impuestos: Array<{ tipo: string; tasa: number; monto: number }> = [];
 	let nuevoImpuestoTipo = '';
 
@@ -144,12 +144,20 @@
 		{ value: '78111800', label: '78111800 - Arrendamiento de bienes inmuebles' }
 	];
 
-	$: subtotal = precioUnitario;
+	// Calcular tasa total de impuestos
+	$: tasaTotal = impuestos.reduce((sum, imp) => sum + imp.tasa, 0);
 
-	// Recalcular impuestos automáticamente cuando cambia el precio
+	// Calcular subtotal (sin IVA) según fórmula del SAT México:
+	// Subtotal = Total / (1 + tasa_total)
+	$: subtotal = tasaTotal > 0 ? totalConImpuestos / (1 + tasaTotal) : totalConImpuestos;
+
+	// Calcular precio unitario sin IVA
+	$: precioUnitario = subtotal;
+
+	// Recalcular montos de impuestos sobre el subtotal (sin IVA)
 	$: impuestosRecalculados = impuestos.map(imp => ({
 		...imp,
-		monto: precioUnitario * imp.tasa
+		monto: subtotal * imp.tasa
 	}));
 
 	$: totalImpuestos = impuestosRecalculados.reduce((sum, imp) => sum + imp.monto, 0);
@@ -167,14 +175,13 @@
 			return;
 		}
 
-		const monto = precioUnitario * impuestoSeleccionado.tasa;
-
+		// El monto se calculará automáticamente en impuestosRecalculados
 		impuestos = [
 			...impuestos,
 			{
 				tipo: impuestoSeleccionado.label,
 				tasa: impuestoSeleccionado.tasa,
-				monto: monto
+				monto: 0 // Se recalculará automáticamente
 			}
 		];
 
@@ -203,8 +210,8 @@
 			return;
 		}
 
-		if (!precioUnitario || precioUnitario <= 0) {
-			alert('El precio unitario debe ser mayor a 0');
+		if (!totalConImpuestos || totalConImpuestos <= 0) {
+			alert('El total debe ser mayor a 0');
 			guardando = false;
 			return;
 		}
@@ -246,7 +253,7 @@
 		unidadMedida = '';
 		monedaProducto = 'MXN';
 		objetoImpuesto = '01';
-		precioUnitario = 0;
+		totalConImpuestos = 0;
 		impuestos = [];
 		nuevoImpuestoTipo = '';
 		desglosarImpuestos = false;
@@ -262,7 +269,7 @@
 		unidadMedida = concepto.unidadMedida || '';
 		monedaProducto = concepto.monedaProducto || 'MXN';
 		objetoImpuesto = concepto.objetoImpuesto || '01';
-		precioUnitario = concepto.precioUnitario || 0;
+		totalConImpuestos = concepto.total || 0;
 		impuestos = concepto.impuestos ? [...concepto.impuestos] : [];
 		ultimoConceptoCargado = concepto;
 	}
@@ -432,16 +439,16 @@
 					<div class="space-y-4">
 						<div class="grid grid-cols-2 gap-4">
 							<div>
-								<label for="precio-unitario" class="block text-sm text-gray-600 mb-1"
-									>Precio unitario</label
+								<label for="total-con-impuestos" class="block text-sm text-gray-600 mb-1"
+									>Total (con impuestos incluidos)</label
 								>
 								<div class="relative">
 									<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
 									<input
-										id="precio-unitario"
+										id="total-con-impuestos"
 										type="number"
 										step="0.01"
-										bind:value={precioUnitario}
+										bind:value={totalConImpuestos}
 										class="w-full pl-8 pr-16 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 									/>
 									<span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
