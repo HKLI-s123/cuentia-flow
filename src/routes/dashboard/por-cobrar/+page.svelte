@@ -87,6 +87,9 @@
   let cargando = true;
   let error = '';
 
+  // Estadísticas de recordatorios por factura
+  let recordatoriosStats: Record<number, { total: number; vistos: number; noVistos: number }> = {};
+
   // Métricas calculadas dinámicamente
   $: metricas = {
     totalPorCobrar: agingData?.montoTotal || 0,
@@ -188,7 +191,42 @@
   }
 
   function handleRecordatorioCreado(event: any) {
-    // Aquí podrías actualizar el contador de recordatorios
+    // Recargar las estadísticas de recordatorios
+    if (facturaSeleccionada) {
+      cargarRecordatoriosFactura(facturaSeleccionada.id);
+    }
+  }
+
+  // Función para cargar recordatorios de una factura específica
+  async function cargarRecordatoriosFactura(facturaId: number) {
+    try {
+      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      if (!organizacionId) return;
+
+      const response = await authFetch(`/api/facturas/${facturaId}/recordatorios?organizacionId=${organizacionId}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          recordatoriosStats[facturaId] = {
+            total: data.stats.Total || 0,
+            vistos: data.stats.Vistos || 0,
+            noVistos: data.stats.NoVistos || 0
+          };
+          // Forzar actualización reactiva
+          recordatoriosStats = recordatoriosStats;
+        }
+      }
+    } catch (error) {
+      console.error('Error al cargar recordatorios:', error);
+    }
+  }
+
+  // Función para cargar recordatorios de todas las facturas visibles
+  async function cargarTodosLosRecordatorios() {
+    for (const factura of facturas) {
+      await cargarRecordatoriosFactura(factura.id);
+    }
   }
 
   // Funciones para el menú dropdown
@@ -270,6 +308,9 @@
 
         agingData = data.aging;
         paginacion = { ...paginacion, ...data.pagination };
+
+        // Cargar estadísticas de recordatorios para las facturas cargadas
+        cargarTodosLosRecordatorios();
       } else {
         error = data.error || 'Error al cargar facturas';
       }
@@ -592,13 +633,19 @@
                 <!-- Recordatorios -->
                 <td class="px-6 py-4 text-center">
                   <div class="flex items-center justify-center gap-3">
-                    <div class="flex items-center gap-1">
+                    <!-- Contador de recordatorios enviados -->
+                    <div class="flex items-center gap-1" title="Recordatorios enviados">
                       <Send class="w-3 h-3 text-blue-500" />
-                      <span class="text-xs text-gray-600 font-medium">1</span>
+                      <span class="text-xs text-gray-600 font-medium">
+                        {recordatoriosStats[factura.id]?.total || 0}
+                      </span>
                     </div>
-                    <div class="flex items-center gap-1">
-                      <Eye class="w-3 h-3 text-gray-400" />
-                      <span class="text-xs text-gray-600">0</span>
+                    <!-- Contador de recordatorios vistos -->
+                    <div class="flex items-center gap-1" title="Correos abiertos">
+                      <Eye class="w-3 h-3 {recordatoriosStats[factura.id]?.vistos > 0 ? 'text-green-500' : 'text-gray-400'}" />
+                      <span class="text-xs {recordatoriosStats[factura.id]?.vistos > 0 ? 'text-green-600 font-medium' : 'text-gray-600'}">
+                        {recordatoriosStats[factura.id]?.vistos || 0}
+                      </span>
                     </div>
                   </div>
                 </td>

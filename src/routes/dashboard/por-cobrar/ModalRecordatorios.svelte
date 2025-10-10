@@ -16,16 +16,9 @@
   let mensajeError = '';
   let cargandoDatos = false;
 
-  // Lista de recordatorios (mock - debería venir de la API)
-  let recordatorios = [
-    {
-      id: 1,
-      tipo: 'CORREO',
-      fecha: '02/oct./2025',
-      metodo: 'Manual',
-      estado: 'Rechazado'
-    }
-  ];
+  // Lista de recordatorios desde la API
+  let recordatorios: any[] = [];
+  let cargandoRecordatorios = false;
 
   // Estado del formulario de nuevo recordatorio
   let mostrarFormulario = false;
@@ -39,15 +32,73 @@
     }
   }
 
+  // Cargar recordatorios cuando se abre el modal
+  $: if (abierto && factura) {
+    cargarRecordatorios();
+  }
+
   let tipoMensaje: 'SMS' | 'CORREO' | 'URL' = 'CORREO';
   let nuevoRecordatorio = {
     tipoMensaje: 'Recordatorio de pago',
-    destinatario: '',
-    cc: '',
+    destinatarios: [] as string[],
+    cc: [] as string[],
     asunto: '',
     mensaje: '',
     etiquetas: [] as string[]
   };
+
+  // Estados para inputs temporales
+  let inputDestinatario = '';
+  let inputCC = '';
+  let mostrarCampoCC = false;
+
+  // Funciones para manejar destinatarios
+  function agregarDestinatario(event: KeyboardEvent) {
+    if (event.key === 'Enter' || event.key === ',') {
+      event.preventDefault();
+      const email = inputDestinatario.trim().replace(/,$/g, '');
+
+      if (email && validarEmail(email)) {
+        if (!nuevoRecordatorio.destinatarios.includes(email)) {
+          nuevoRecordatorio.destinatarios = [...nuevoRecordatorio.destinatarios, email];
+        }
+        inputDestinatario = '';
+      } else if (email) {
+        mensajeError = 'El correo electrónico no tiene un formato válido';
+        setTimeout(() => { mensajeError = ''; }, 3000);
+      }
+    }
+  }
+
+  function removerDestinatario(email: string) {
+    nuevoRecordatorio.destinatarios = nuevoRecordatorio.destinatarios.filter(e => e !== email);
+  }
+
+  function agregarCC(event: KeyboardEvent) {
+    if (event.key === 'Enter' || event.key === ',') {
+      event.preventDefault();
+      const email = inputCC.trim().replace(/,$/g, '');
+
+      if (email && validarEmail(email)) {
+        if (!nuevoRecordatorio.cc.includes(email)) {
+          nuevoRecordatorio.cc = [...nuevoRecordatorio.cc, email];
+        }
+        inputCC = '';
+      } else if (email) {
+        mensajeError = 'El correo electrónico no tiene un formato válido';
+        setTimeout(() => { mensajeError = ''; }, 3000);
+      }
+    }
+  }
+
+  function removerCC(email: string) {
+    nuevoRecordatorio.cc = nuevoRecordatorio.cc.filter(e => e !== email);
+  }
+
+  function validarEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
 
   // Función para obtener el nombre del cliente
   function getNombreCliente(): string {
@@ -71,6 +122,30 @@
       month: 'long',
       day: 'numeric'
     });
+  }
+
+  async function cargarRecordatorios() {
+    if (!factura) return;
+
+    cargandoRecordatorios = true;
+
+    try {
+      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      if (!organizacionId) return;
+
+      const response = await authFetch(`/api/facturas/${factura.id}/recordatorios?organizacionId=${organizacionId}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          recordatorios = data.recordatorios;
+        }
+      }
+    } catch (error) {
+      console.error('Error al cargar recordatorios:', error);
+    } finally {
+      cargandoRecordatorios = false;
+    }
   }
 
   async function cargarDatosCliente() {
@@ -109,7 +184,9 @@
       }
 
       // Pre-llenar el destinatario con el correo del cliente
-      nuevoRecordatorio.destinatario = cliente.CorreoPrincipal || '';
+      if (cliente.CorreoPrincipal) {
+        nuevoRecordatorio.destinatarios = [cliente.CorreoPrincipal];
+      }
 
       // Pre-llenar asunto y mensaje con datos reales
       const nombreCliente = cliente.NombreComercial || cliente.RazonSocial || 'Estimado cliente';
@@ -141,12 +218,15 @@
     // Limpiar formulario
     nuevoRecordatorio = {
       tipoMensaje: 'Recordatorio de pago',
-      destinatario: '',
-      cc: '',
+      destinatarios: [],
+      cc: [],
       asunto: '',
       mensaje: '',
       etiquetas: []
     };
+    inputDestinatario = '';
+    inputCC = '';
+    mostrarCampoCC = false;
     dispatch('cerrar');
   }
 
@@ -159,7 +239,7 @@
   }
 
   function actualizarRecordatorios() {
-    // Aquí se haría la llamada a la API para actualizar
+    cargarRecordatorios();
   }
 
   async function guardarRecordatorio() {
@@ -189,30 +269,55 @@
         return;
       }
 
-      // Llamar al endpoint de envío de correo
+      // Validar campos del formulario
+      if (nuevoRecordatorio.destinatarios.length === 0) {
+        mensajeError = 'Debes agregar al menos un destinatario';
+        enviando = false;
+        return;
+      }
+
+      if (!nuevoRecordatorio.asunto.trim()) {
+        mensajeError = 'El asunto es requerido';
+        enviando = false;
+        return;
+      }
+
+      if (!nuevoRecordatorio.mensaje.trim()) {
+        mensajeError = 'El mensaje es requerido';
+        enviando = false;
+        return;
+      }
+
+      // Llamar al endpoint de envío de correo con los datos del formulario
       const response = await authFetch(`/api/facturas/${factura.id}/enviar-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          organizacionId: parseInt(organizacionId)
+          organizacionId: parseInt(organizacionId),
+          destinatario: nuevoRecordatorio.destinatarios.join(', '),
+          cc: nuevoRecordatorio.cc.join(', '),
+          asunto: nuevoRecordatorio.asunto.trim(),
+          mensaje: nuevoRecordatorio.mensaje.trim()
         })
       });
 
       const data = await response.json();
 
-      if (data.success) {
-        // Agregar a la lista de recordatorios enviados
-        recordatorios = [{
-          id: recordatorios.length + 1,
-          tipo: tipoMensaje,
-          fecha: new Date().toLocaleDateString('es-ES'),
-          metodo: 'Manual',
-          estado: 'Enviado'
-        }, ...recordatorios];
+      if (!response.ok) {
+        // Error del servidor (400, 500, etc.)
+        mensajeError = data.error || data.details || 'Error al enviar el correo';
+        console.error('Error del servidor:', data);
+        enviando = false;
+        return;
+      }
 
+      if (data.success) {
         mensajeExito = `Correo enviado exitosamente a ${data.destinatario}`;
+
+        // Recargar la lista de recordatorios
+        await cargarRecordatorios();
 
         // Limpiar formulario después de 2 segundos
         setTimeout(() => {
@@ -369,35 +474,66 @@
                 <div>
                   <label for="email-destinatario" class="block text-sm font-medium text-gray-700 mb-2">Para:</label>
                   <div class="flex items-center gap-2">
-                    <div class="flex-1 flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg">
-                      {#if nuevoRecordatorio.destinatario}
-                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-700 rounded text-sm">
-                          {nuevoRecordatorio.destinatario}
+                    <div class="flex-1 flex flex-wrap items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg min-h-[42px]">
+                      {#each nuevoRecordatorio.destinatarios as email}
+                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm">
+                          {email}
                           <button
                             type="button"
-                            on:click={() => nuevoRecordatorio.destinatario = ''}
-                            class="text-gray-500 hover:text-gray-700"
+                            on:click={() => removerDestinatario(email)}
+                            class="text-blue-600 hover:text-blue-800"
                           >
                             ✕
                           </button>
                         </span>
-                      {/if}
+                      {/each}
                       <input
                         id="email-destinatario"
                         type="email"
-                        bind:value={nuevoRecordatorio.destinatario}
-                        placeholder="Correo del cliente"
-                        class="flex-1 outline-none text-sm"
+                        bind:value={inputDestinatario}
+                        on:keydown={agregarDestinatario}
+                        placeholder={nuevoRecordatorio.destinatarios.length === 0 ? 'Correo del cliente (presiona Enter o coma para agregar)' : ''}
+                        class="flex-1 outline-none text-sm min-w-[200px]"
                       />
                     </div>
                     <button
                       type="button"
-                      class="px-3 py-2 text-sm text-blue-600 hover:text-blue-800"
+                      on:click={() => mostrarCampoCC = !mostrarCampoCC}
+                      class="px-3 py-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
                     >
-                      CC
+                      {mostrarCampoCC ? 'Ocultar CC' : 'CC'}
                     </button>
                   </div>
                 </div>
+
+                <!-- CC (condicional) -->
+                {#if mostrarCampoCC}
+                  <div>
+                    <label for="email-cc" class="block text-sm font-medium text-gray-700 mb-2">CC (Copia):</label>
+                    <div class="flex flex-wrap items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg min-h-[42px]">
+                      {#each nuevoRecordatorio.cc as email}
+                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 text-gray-700 rounded text-sm">
+                          {email}
+                          <button
+                            type="button"
+                            on:click={() => removerCC(email)}
+                            class="text-gray-600 hover:text-gray-800"
+                          >
+                            ✕
+                          </button>
+                        </span>
+                      {/each}
+                      <input
+                        id="email-cc"
+                        type="email"
+                        bind:value={inputCC}
+                        on:keydown={agregarCC}
+                        placeholder={nuevoRecordatorio.cc.length === 0 ? 'Correos en copia (presiona Enter o coma para agregar)' : ''}
+                        class="flex-1 outline-none text-sm min-w-[200px]"
+                      />
+                    </div>
+                  </div>
+                {/if}
 
                 <!-- Asunto -->
                 <div>
@@ -535,7 +671,12 @@
 
         <!-- Lista de recordatorios -->
         <div class="space-y-3">
-          {#if recordatorios.length === 0}
+          {#if cargandoRecordatorios}
+            <div class="text-center py-12">
+              <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <p class="mt-2 text-gray-600">Cargando recordatorios...</p>
+            </div>
+          {:else if recordatorios.length === 0}
             <div class="text-center py-12">
               <Mail class="w-12 h-12 text-gray-400 mx-auto mb-3" />
               <p class="text-gray-600">No hay recordatorios</p>
@@ -543,28 +684,61 @@
             </div>
           {:else}
             {#each recordatorios as recordatorio}
-              <div class="flex items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
+              <div class="flex items-start gap-4 p-4 bg-white border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
                 <!-- Icono -->
-                <div class="p-3 bg-green-100 rounded-lg">
-                  <Mail class="w-6 h-6 text-green-600" />
+                <div class="p-3 {recordatorio.Visto ? 'bg-green-100' : 'bg-blue-100'} rounded-lg">
+                  <Mail class="w-6 h-6 {recordatorio.Visto ? 'text-green-600' : 'text-blue-600'}" />
                 </div>
 
                 <!-- Información -->
                 <div class="flex-1">
-                  <h4 class="font-medium text-gray-900">{recordatorio.tipo}</h4>
-                  <p class="text-sm text-gray-600">{recordatorio.fecha} / {recordatorio.metodo}</p>
+                  <div class="flex items-center gap-2 mb-1">
+                    <h4 class="font-medium text-gray-900">{recordatorio.TipoMensaje}</h4>
+                    {#if recordatorio.Visto}
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-700 rounded">
+                        ✓ Visto
+                      </span>
+                    {/if}
+                  </div>
+                  <p class="text-sm text-gray-900 font-medium mb-1">{recordatorio.Asunto}</p>
+                  <p class="text-xs text-gray-600">
+                    Para: {recordatorio.Destinatario}
+                    {#if recordatorio.CC}
+                      • CC: {recordatorio.CC}
+                    {/if}
+                  </p>
+                  <p class="text-xs text-gray-500 mt-1">
+                    {new Date(recordatorio.FechaEnvio).toLocaleDateString('es-MX', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })} • {recordatorio.MetodoEnvio}
+                  </p>
+                  {#if recordatorio.Visto && recordatorio.FechaVisto}
+                    <p class="text-xs text-green-600 mt-1">
+                      Abierto: {new Date(recordatorio.FechaVisto).toLocaleDateString('es-MX', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </p>
+                  {/if}
                 </div>
 
                 <!-- Estado -->
                 <div class="text-right">
                   <span class={`inline-flex px-3 py-1 text-xs font-medium rounded-full ${
-                    recordatorio.estado === 'Rechazado'
+                    recordatorio.Estado === 'Fallido'
                       ? 'bg-red-100 text-red-700'
-                      : recordatorio.estado === 'Enviado'
+                      : recordatorio.Estado === 'Enviado'
                       ? 'bg-green-100 text-green-700'
                       : 'bg-yellow-100 text-yellow-700'
                   }`}>
-                    {recordatorio.estado}
+                    {recordatorio.Estado}
                   </span>
                 </div>
               </div>
