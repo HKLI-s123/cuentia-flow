@@ -73,7 +73,7 @@ export async function cargarClientes(search: string = '', page: number = 1): Pro
 			organizacionId: organizacionId.toString(),
 			search: search,
 			page: page.toString(),
-			pageSize: '5'
+			pageSize: '20'
 		});
 
 		const response = await authFetch(`/api/clientes?${params}`);
