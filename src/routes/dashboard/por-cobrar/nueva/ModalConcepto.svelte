@@ -72,19 +72,18 @@
 	];
 
 	const tiposImpuesto = [
-		// ISR
-		{ value: 'ISR 0%', tasa: 0, label: 'ISR 0%' },
-		{ value: 'ISR 1.25%', tasa: 0.0125, label: 'ISR 1.25%' },
-		{ value: 'ISR 10%', tasa: 0.10, label: 'ISR 10%' },
-		{ value: 'ISR 10.666%', tasa: 0.10666, label: 'ISR 10.666%' },
-		{ value: 'ISR 2%', tasa: 0.02, label: 'ISR 2%' },
-		{ value: 'ISR 20%', tasa: 0.20, label: 'ISR 20%' },
-		// IVA
+		// IVA (Traslado) - Estos son impuestos que se cobran al cliente
 		{ value: 'IVA 0%', tasa: 0, label: 'IVA 0%' },
 		{ value: 'IVA 16%', tasa: 0.16, label: 'IVA 16%' },
 		{ value: 'IVA 8%', tasa: 0.08, label: 'IVA 8%' },
 		{ value: 'IVA Exento 0%', tasa: 0, label: 'IVA Exento 0%' },
-		// IVA Retenido
+		// ISR Retenido - El ISR es SIEMPRE una retención que se hace al proveedor
+		{ value: 'ISR Retenido 1.25%', tasa: 0.0125, label: 'ISR Retenido 1.25%' },
+		{ value: 'ISR Retenido 2%', tasa: 0.02, label: 'ISR Retenido 2%' },
+		{ value: 'ISR Retenido 10%', tasa: 0.10, label: 'ISR Retenido 10%' },
+		{ value: 'ISR Retenido 10.666%', tasa: 0.10666, label: 'ISR Retenido 10.666%' },
+		{ value: 'ISR Retenido 20%', tasa: 0.20, label: 'ISR Retenido 20%' },
+		// IVA Retenido - Retención que se hace al proveedor
 		{ value: 'IVA Retenido 0%', tasa: 0, label: 'IVA Retenido 0%' },
 		{ value: 'IVA Retenido 0.2%', tasa: 0.002, label: 'IVA Retenido 0.2%' },
 		{ value: 'IVA Retenido 0.5%', tasa: 0.005, label: 'IVA Retenido 0.5%' },
