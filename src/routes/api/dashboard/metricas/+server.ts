@@ -1,18 +1,26 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
 import { getConnection } from '$lib/server/db';
+import { requireOrganizationAccess, getOrganizationIdFromHeader } from '$lib/server/auth';
 import sql from 'mssql';
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async (event) => {
 	try {
-		const organizacionId = url.searchParams.get('organizacionId');
+		// Obtener organizacionId del header X-Organization-Id o del query param (backwards compatibility)
+		const orgIdFromHeader = getOrganizationIdFromHeader(event);
+		const orgIdFromQuery = event.url.searchParams.get('organizacionId');
+		const organizacionId = orgIdFromHeader || orgIdFromQuery;
 
-		if (!organizacionId) {
-			return json({
-				success: false,
-				error: 'organizacionId es requerido'
-			}, { status: 400 });
+		// Validar autenticación y acceso a la organización
+		const authResult = await requireOrganizationAccess(event, organizacionId);
+
+		// Si authResult es una Response, significa que hubo un error de autorización
+		if (authResult instanceof Response) {
+			return authResult;
 		}
+
+		// Destructurar el usuario y organizacionId validados
+		const { user, organizacionId: validatedOrgId } = authResult;
 
 		const pool = await getConnection();
 		const hoy = new Date();
@@ -31,7 +39,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		const totalPorCobrar = await pool
 			.request()
-			.input('OrganizacionId', sql.Int, parseInt(organizacionId))
+			.input('OrganizacionId', sql.Int, validatedOrgId)
 			.query(totalPorCobrarQuery);
 
 		// 2. Saldo Vencido: Suma de SaldoPendiente donde FechaVencimiento < HOY y SaldoPendiente > 0
@@ -49,7 +57,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		const saldoVencido = await pool
 			.request()
-			.input('OrganizacionId', sql.Int, parseInt(organizacionId))
+			.input('OrganizacionId', sql.Int, validatedOrgId)
 			.input('Hoy', sql.DateTime, hoy)
 			.query(saldoVencidoQuery);
 
@@ -66,7 +74,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		const totalFacturado = await pool
 			.request()
-			.input('OrganizacionId', sql.Int, parseInt(organizacionId))
+			.input('OrganizacionId', sql.Int, validatedOrgId)
 			.query(totalFacturadoQuery);
 
 		// 4. Total Cobrado: Suma de Monto de la tabla Pagos (dinero real que ingresó)
@@ -84,7 +92,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		const totalCobrado = await pool
 			.request()
-			.input('OrganizacionId', sql.Int, parseInt(organizacionId))
+			.input('OrganizacionId', sql.Int, validatedOrgId)
 			.query(totalCobradoQuery);
 
 		// 5. Aging: Distribución por antigüedad de saldo vencido (0-30, 31-60, 61-90, +90 días)
@@ -116,7 +124,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		const aging = await pool
 			.request()
-			.input('OrganizacionId', sql.Int, parseInt(organizacionId))
+			.input('OrganizacionId', sql.Int, validatedOrgId)
 			.input('Hoy', sql.DateTime, hoy)
 			.query(agingQuery);
 
@@ -174,7 +182,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		const ventasPorMes = await pool
 			.request()
-			.input('OrganizacionId', sql.Int, parseInt(organizacionId))
+			.input('OrganizacionId', sql.Int, validatedOrgId)
 			.input('Hoy', sql.DateTime, hoy)
 			.query(ventasPorMesQuery);
 
@@ -196,7 +204,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		const resumenCobranza = await pool
 			.request()
-			.input('OrganizacionId', sql.Int, parseInt(organizacionId))
+			.input('OrganizacionId', sql.Int, validatedOrgId)
 			.input('Hoy', sql.DateTime, hoy)
 			.query(resumenCobranzaQuery);
 
@@ -218,7 +226,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		const topSaldoVencido = await pool
 			.request()
-			.input('OrganizacionId', sql.Int, parseInt(organizacionId))
+			.input('OrganizacionId', sql.Int, validatedOrgId)
 			.input('Hoy', sql.DateTime, hoy)
 			.query(topSaldoVencidoQuery);
 

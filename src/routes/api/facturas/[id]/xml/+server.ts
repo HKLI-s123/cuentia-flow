@@ -2,7 +2,6 @@ import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
-import { FACTURAPI_KEY } from '$env/static/private';
 import axios from 'axios';
 
 export const GET: RequestHandler = async (event) => {
@@ -12,18 +11,25 @@ export const GET: RequestHandler = async (event) => {
     return unauthorizedResponse('Token de autenticación requerido');
   }
 
-  const { params } = event;
+  const { params, url } = event;
   const { id } = params;
+  const organizacionId = url.searchParams.get('organizacionId');
+
+  if (!organizacionId) {
+    throw error(400, 'organizacionId es requerido');
+  }
 
   try {
-    // Obtener la URL del XML de la base de datos
+    // Obtener la URL del XML y la API key de la base de datos
     const query = `
-      SELECT XMLUrl, numero_factura
-      FROM Facturas
-      WHERE Id = ?
+      SELECT f.XMLUrl, f.numero_factura, co.facturapi_key as FacturapiKey
+      FROM Facturas f
+      INNER JOIN Clientes c ON f.ClienteId = c.Id
+      INNER JOIN configuracion_organizacion co ON c.OrganizacionId = co.organizacion_id
+      WHERE f.Id = ? AND c.OrganizacionId = ?
     `;
 
-    const result = await db.query(query, [id]);
+    const result = await db.query(query, [id, organizacionId]);
 
     if (!result || result.length === 0) {
       throw error(404, 'Factura no encontrada');
@@ -35,10 +41,14 @@ export const GET: RequestHandler = async (event) => {
       throw error(404, 'XML no disponible para esta factura');
     }
 
-    // Descargar el XML desde Facturapi usando autenticación
+    if (!factura.FacturapiKey) {
+      throw error(400, 'La organización no tiene configurada una API key de Facturapi');
+    }
+
+    // Descargar el XML desde Facturapi usando la API key de la organización
     const xmlResponse = await axios.get(factura.XMLUrl, {
       auth: {
-        username: FACTURAPI_KEY,
+        username: factura.FacturapiKey,
         password: ''
       },
       responseType: 'arraybuffer'

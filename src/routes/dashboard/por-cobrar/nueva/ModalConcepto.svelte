@@ -210,6 +210,19 @@
 			return;
 		}
 
+		if (!productoServicio || productoServicio.trim() === '') {
+			alert('Debe seleccionar una clave de producto/servicio SAT de la lista.\n\nNo se permite escribir directamente, debe buscar y seleccionar de las opciones.');
+			guardando = false;
+			return;
+		}
+
+		// Validar que sea una clave válida (8 dígitos)
+		if (!/^\d{8}$/.test(productoServicio)) {
+			alert('La clave de producto/servicio debe tener 8 dígitos.\n\nPor favor, seleccione una opción válida de la lista.');
+			guardando = false;
+			return;
+		}
+
 		if (!unidadMedida) {
 			alert('La unidad de medida es requerida');
 			guardando = false;
@@ -303,7 +316,16 @@
 		timeoutBusqueda = setTimeout(async () => {
 			cargandoProductosSAT = true;
 			try {
-				const response = await authFetch(`/api/catalogs/productos-sat?q=${encodeURIComponent(busquedaProductoSAT)}&limit=20`);
+				// Obtener organizacionId desde sessionStorage
+				const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+				const organizacionId = userData.organizacionId;
+
+				if (!organizacionId) {
+					console.error('No se encontró organizacionId');
+					return;
+				}
+
+				const response = await authFetch(`/api/catalogs/productos-sat?q=${encodeURIComponent(busquedaProductoSAT)}&limit=20&organizacionId=${organizacionId}`);
 				if (response.ok) {
 					const data = await response.json();
 					productosSATFiltrados = data.data || [];
@@ -321,6 +343,22 @@
 		productoServicio = producto.key;
 		busquedaProductoSAT = `${producto.key} - ${producto.description}`;
 		mostrarListaProductosSAT = false;
+	}
+
+	// Validar que el usuario no intente pegar o escribir directamente
+	function validarInputProductoSAT() {
+		// Si el usuario borra todo, limpiar también productoServicio
+		if (!busquedaProductoSAT.trim()) {
+			productoServicio = '';
+			return;
+		}
+
+		// Si el texto no coincide con el formato "XXXXXXXX - descripción", limpiar productoServicio
+		const regex = /^\d{8}\s-\s/;
+		if (!regex.test(busquedaProductoSAT)) {
+			// El usuario está escribiendo, limpiar productoServicio para forzar selección
+			productoServicio = '';
+		}
 	}
 </script>
 
@@ -393,17 +431,26 @@
 						<div class="grid grid-cols-2 gap-4">
 							<div>
 								<label for="producto-servicio" class="block text-sm text-gray-600 mb-1"
-									>Clave producto/servicio SAT</label
-								>
+									>Clave producto/servicio SAT
+									{#if productoServicio}
+										<span class="text-green-600 text-xs ml-2">✓ Seleccionado</span>
+									{:else}
+										<span class="text-red-600 text-xs ml-2">* Requerido</span>
+									{/if}
+								</label>
 								<div class="relative">
 									<input
 										id="producto-servicio"
 										type="text"
 										bind:value={busquedaProductoSAT}
-										on:input={buscarProductosSAT}
+										on:input={() => {
+											validarInputProductoSAT();
+											buscarProductosSAT();
+										}}
 										on:focus={buscarProductosSAT}
+										on:blur={validarInputProductoSAT}
 										placeholder="Buscar por clave o descripción..."
-										class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+										class="w-full px-4 py-2 border {productoServicio ? 'border-green-500 bg-green-50' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 									/>
 									{#if cargandoProductosSAT}
 										<div class="absolute right-3 top-1/2 -translate-y-1/2">
@@ -432,8 +479,12 @@
 										</div>
 									{/if}
 								</div>
-								<p class="text-xs text-gray-500 mt-1">
-									Busque por clave (ej: 84111506) o por descripción (ej: honorarios)
+								<p class="text-xs mt-1 {productoServicio ? 'text-green-600' : 'text-amber-600'}">
+									{#if productoServicio}
+										✓ Clave válida seleccionada: {productoServicio}
+									{:else}
+										⚠️ Busque y SELECCIONE de la lista. No escriba directamente.
+									{/if}
 								</p>
 							</div>
 

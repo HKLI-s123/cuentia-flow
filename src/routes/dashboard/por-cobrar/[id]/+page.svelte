@@ -4,9 +4,11 @@
   import { onMount } from 'svelte';
   import { ChevronLeft, Trash2, Download, Copy, Camera, RefreshCw, FileText } from 'lucide-svelte';
   import { authFetch } from '$lib/api';
+  import { Button } from '$lib/components/ui';
   import ModalRecordatorios from '../ModalRecordatorios.svelte';
   import type { Factura } from '../types';
   import { formatearMoneda, formatearFecha } from '../utils';
+  import Swal from 'sweetalert2';
 
   // Obtener ID de la factura desde la URL
   $: facturaId = $page.params.id;
@@ -102,20 +104,61 @@
   async function visualizarPDF() {
     if (!factura) return;
     try {
-      const response = await authFetch(`/api/facturas/${factura.id}/pdf`);
+      const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+      const organizacionId = userData.organizacionId;
+
+      if (!organizacionId) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se encontró la información de la organización',
+          confirmButtonColor: '#3b82f6'
+        });
+        return;
+      }
+
+      const response = await authFetch(`/api/facturas/${factura.id}/pdf?organizacionId=${organizacionId}`);
+
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       window.open(url, '_blank');
     } catch (err) {
       console.error('Error al visualizar PDF:', err);
-      alert('Error al visualizar el PDF');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error al visualizar el PDF',
+        confirmButtonColor: '#3b82f6'
+      });
     }
   }
 
   async function descargarXML() {
     if (!factura) return;
     try {
-      const response = await authFetch(`/api/facturas/${factura.id}/xml`);
+      const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+      const organizacionId = userData.organizacionId;
+
+      if (!organizacionId) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se encontró la información de la organización',
+          confirmButtonColor: '#3b82f6'
+        });
+        return;
+      }
+
+      const response = await authFetch(`/api/facturas/${factura.id}/xml?organizacionId=${organizacionId}`);
+
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -123,9 +166,94 @@
       a.download = `factura-${factura.numero_factura}.xml`;
       a.click();
       URL.revokeObjectURL(url);
+
+      // Mensaje de éxito
+      Swal.fire({
+        icon: 'success',
+        title: 'Descarga exitosa',
+        text: `El archivo XML de la factura ${factura.numero_factura} se ha descargado correctamente`,
+        timer: 2000,
+        showConfirmButton: false
+      });
     } catch (err) {
       console.error('Error al descargar XML:', err);
-      alert('Error al descargar el XML');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error al descargar el XML',
+        confirmButtonColor: '#3b82f6'
+      });
+    }
+  }
+
+  async function enviarFactura() {
+    if (!factura) return;
+
+    const result = await Swal.fire({
+      title: 'Enviar Factura',
+      html: `¿Deseas enviar la factura <strong>${factura.numero_factura}</strong> al cliente <strong>${factura.cliente?.razonSocial}</strong>?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3b82f6',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, enviar',
+      cancelButtonText: 'Cancelar'
+    });
+
+    if (!result.isConfirmed) return;
+
+    // Mostrar loading
+    Swal.fire({
+      title: 'Enviando factura...',
+      html: 'Por favor espera mientras se envía la factura al cliente',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    try {
+      const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+      const organizacionId = userData.organizacionId;
+
+      if (!organizacionId) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se encontró la información de la organización'
+        });
+        return;
+      }
+
+      const response = await authFetch(`/api/facturas/${factura.id}/enviar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ organizacionId })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Factura Enviada',
+          html: `La factura ha sido enviada exitosamente a:<br><strong>${data.destinatario}</strong>`,
+          confirmButtonColor: '#3b82f6'
+        });
+      } else {
+        throw new Error(data.error || 'Error al enviar la factura');
+      }
+    } catch (err: any) {
+      console.error('Error al enviar factura:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al enviar',
+        text: err.message || 'Error al enviar la factura',
+        confirmButtonColor: '#3b82f6'
+      });
     }
   }
 
@@ -142,16 +270,15 @@
   {:else if error}
     <div class="flex flex-col items-center justify-center h-screen">
       <p class="text-red-600 font-medium">{error}</p>
-      <button
-        on:click={volver}
-        class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-      >
-        Volver
-      </button>
+      <div class="mt-4">
+        <Button variant="primary" size="md" on:click={volver}>
+          Volver
+        </Button>
+      </div>
     </div>
   {:else if factura}
     <!-- Header con breadcrumb y botones -->
-    <div class="bg-white border-b border-gray-200 sticky top-0 z-10">
+    <div class="bg-white border-b border-gray-200">
       <div class="max-w-7xl mx-auto px-6 py-4">
         <!-- Breadcrumb -->
         <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
@@ -171,38 +298,29 @@
             >
               <ChevronLeft class="w-5 h-5" />
             </button>
-            <h1 class="text-2xl font-bold text-gray-900">Nota de Venta {factura.numero_factura}</h1>
+            <h1 class="text-2xl font-bold text-gray-900">Factura {factura.numero_factura}</h1>
           </div>
 
           <div class="flex gap-3">
             {#if factura.timbrado}
-              <button
-                on:click={visualizarPDF}
-                class="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center gap-2"
-              >
+              <Button variant="danger" size="md" on:click={visualizarPDF}>
                 <FileText class="w-4 h-4" />
                 VER PDF
-              </button>
-              <button
-                on:click={descargarXML}
-                class="px-5 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium flex items-center gap-2"
-              >
+              </Button>
+              <Button variant="secondary" size="md" on:click={descargarXML}>
                 <Download class="w-4 h-4" />
                 DESCARGAR XML
-              </button>
+              </Button>
             {/if}
-            <button class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
-              ENVIAR NOTA DE VENTA
-            </button>
-            <button
-              on:click={() => abrirModalRecordatorios(false)}
-              class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-            >
+            <Button variant="primary" size="md" on:click={enviarFactura}>
+              ENVIAR FACTURA
+            </Button>
+            <Button variant="primary" size="md" on:click={() => abrirModalRecordatorios(false)}>
               ENVIAR RECORDATORIO
-            </button>
-            <button class="px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
+            </Button>
+            <Button variant="success" size="md">
               AGREGAR PAGO
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -346,10 +464,10 @@
                     <p class="text-sm text-gray-900">{formatearFormaPago(factura.formaPago || '')}</p>
                   </div>
 
-                  <!-- Nota de venta -->
+                  <!-- Factura -->
                   <div>
                     <div class="flex items-center justify-between mb-2">
-                      <h4 class="text-xs font-medium text-blue-600 uppercase">Nota de Venta</h4>
+                      <h4 class="text-xs font-medium text-blue-600 uppercase">Factura</h4>
                       <p class="text-xs text-gray-500">EMITIDA POR:</p>
                     </div>
                     <p class="text-xs text-blue-600">{factura.usuarioCreadorCorreo || 'N/A'}</p>
@@ -443,10 +561,10 @@
             </table>
           </div>
 
-          <!-- NOTA DE VENTA -->
+          <!-- FACTURA -->
           <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div class="flex items-center justify-between mb-6">
-              <h3 class="text-sm font-bold text-gray-700 uppercase">NOTA DE VENTA</h3>
+              <h3 class="text-sm font-bold text-gray-700 uppercase">FACTURA</h3>
               <div class="flex items-center gap-4">
                 <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors" title="Eliminar">
                   <Trash2 class="w-4 h-4 text-gray-600" />

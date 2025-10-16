@@ -13,6 +13,22 @@ export function obtenerDatosUsuario() {
     }
 }
 
+// Función helper para obtener SOLO el organizacionId actual (más rápida y directa)
+export function obtenerOrganizacionIdActual(): number | null {
+    if (typeof window === 'undefined') return null;
+
+    try {
+        const userData = sessionStorage.getItem('userData');
+        if (userData) {
+            const user = JSON.parse(userData);
+            return user.organizacionId || null;
+        }
+        return null;
+    } catch (error) {
+        return null;
+    }
+}
+
 // Función para obtener organizacionId del usuario desde la BD
 export async function obtenerOrganizacionId(): Promise<number> {
     const userData = obtenerDatosUsuario();
@@ -86,6 +102,7 @@ export function limpiarDatosUsuario() {
     try {
         sessionStorage.removeItem('userData');
         sessionStorage.removeItem('jwt');
+        sessionStorage.removeItem('organizacionActualId');
     } catch (error) {
     }
 }
@@ -129,6 +146,8 @@ export async function loginExterno(correo: string, contrasena: string) {
                 // Actualizar sessionStorage con la información completa
                 if (typeof window !== 'undefined') {
                     sessionStorage.setItem('userData', JSON.stringify(completeUserData));
+                    // Establecer organizacionActualId para que coincida con organizacionId
+                    sessionStorage.setItem('organizacionActualId', orgData.organizacionId.toString());
                 }
 
                 return completeUserData;

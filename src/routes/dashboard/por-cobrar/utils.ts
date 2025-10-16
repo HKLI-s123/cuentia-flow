@@ -8,7 +8,16 @@ import type {
 } from './types';
 
 // Formatear moneda mexicana
-export function formatearMoneda(monto: number | string): string {
+export function formatearMoneda(monto: number | string | undefined): string {
+  // Si es undefined o null, retornar 0
+  if (monto === undefined || monto === null) {
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+      minimumFractionDigits: 2
+    }).format(0);
+  }
+
   const numero = typeof monto === 'string' ? parseFloat(monto) : monto;
 
   // Verificar que sea un número válido

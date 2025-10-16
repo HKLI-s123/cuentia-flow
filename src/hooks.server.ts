@@ -8,8 +8,15 @@ const PUBLIC_ROUTES = [
 	// '/api/auth/register',
 	// '/api/test-db', // Solo para desarrollo, remover en producción
 	// '/api/analyze-db', // Solo para desarrollo, remover en producción
-	'/api/analyze-db', // Solo para desarrollo, remover en producción
+	// '/api/analyze-db', // Solo para desarrollo, remover en producción
 	// '/api/facturas/fix-taxes', // ✅ Ejecutado correctamente, removido por seguridad
+];
+
+// Rutas que requieren rol de administrador (rolId: 3)
+// La protección se maneja en el cliente (sessionStorage) ya que el JWT se guarda ahí
+export const ADMIN_ONLY_ROUTES = [
+	'/dashboard/organizaciones/nueva',
+	'/dashboard/usuarios',
 ];
 
 export const handle: Handle = async ({ event, resolve }) => {

@@ -259,24 +259,12 @@ export async function eliminarClienteAPI(clienteId: number, apiEndpoint: string)
 }
 
 export async function descargarClientesExcel(apiEndpoint: string): Promise<Blob> {
-	const token = obtenerToken();
-	if (!token) {
-		throw new Error('No se encontró token de autenticación');
-	}
+	// Obtener organizacionId del usuario actual
+	const { obtenerOrganizacionId } = await import('$lib/auth');
+	const organizacionId = await obtenerOrganizacionId();
 
-	// Usar la variable de entorno apiEndpoint
-	const baseEndpoint = apiEndpoint || 'http://192.168.0.30:3000';
-	const fullUrl = `${baseEndpoint}/api/clientes/`;
-	
-
-	// Obtener todos los datos de clientes desde la API
-	const response = await fetch(fullUrl, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${token}`
-		}
-	});
+	// Usar authFetch para validar organización mediante middleware
+	const response = await authFetch(`/api/clientes/excel?organizacionId=${organizacionId}`);
 
 	if (!response.ok) {
 		throw new Error(`Error ${response.status}: ${response.statusText}`);

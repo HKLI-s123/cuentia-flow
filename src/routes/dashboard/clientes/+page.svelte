@@ -1317,7 +1317,7 @@
 				Cancelar
 			</Button>
 			<Button
-				variant={modoEdicion ? 'primary' : 'success'}
+				variant="primary"
 				size="md"
 				on:click={modoEdicion ? actualizarCliente : agregarCliente}
 				disabled={isSubmitting}

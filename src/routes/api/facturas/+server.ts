@@ -151,7 +151,7 @@ export const GET: RequestHandler = async (event) => {
         GROUP BY FacturaId
       ) pagos ON f.Id = pagos.FacturaId
       ${whereClause}
-      ORDER BY ${campoOrden} ${direccion}
+      ORDER BY ${campoOrden} ${direccion}, f.Id DESC
       OFFSET ? ROWS FETCH NEXT ? ROWS ONLY
     `;
 
@@ -456,6 +456,27 @@ export const POST: RequestHandler = async (event) => {
 
     const facturaResult = await facturaRequest.query(insertFacturaQuery);
     const facturaId = facturaResult.recordset[0].Id;
+
+    // Validar conceptos antes de insertar
+    for (const concepto of data.conceptos) {
+      // Validar que tenga clave de producto/servicio
+      if (!concepto.productoServicio || concepto.productoServicio.trim() === '') {
+        await transaction.rollback();
+        return json({
+          success: false,
+          error: `El concepto "${concepto.nombre}" no tiene una clave de producto/servicio SAT válida. Debe seleccionar una opción de la lista.`
+        }, { status: 400 });
+      }
+
+      // Validar formato de clave (8 dígitos)
+      if (!/^\d{8}$/.test(concepto.productoServicio)) {
+        await transaction.rollback();
+        return json({
+          success: false,
+          error: `El concepto "${concepto.nombre}" tiene una clave de producto/servicio inválida: "${concepto.productoServicio}". Debe ser de 8 dígitos.`
+        }, { status: 400 });
+      }
+    }
 
     // Insertar conceptos e impuestos
     for (const concepto of data.conceptos) {

@@ -1,8 +1,8 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import axios from 'axios';
-import { FACTURAPI_KEY } from '$env/static/private';
 import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
+import { db } from '$lib/server/db';
 
 export const GET: RequestHandler = async (event) => {
 	// Verificar autenticación
@@ -18,12 +18,45 @@ export const GET: RequestHandler = async (event) => {
 	const q = searchParams.get('q') || '';
 	const page = parseInt(searchParams.get('page') || '1');
 	const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100);
+	const organizacionId = searchParams.get('organizacionId');
+
+	if (!organizacionId) {
+		return json({
+			success: false,
+			error: 'organizacionId es requerido'
+		}, { status: 400 });
+	}
 
 	try {
+		// Obtener la API key de la organización
+		const orgQuery = `
+			SELECT facturapi_key as FacturapiKey
+			FROM configuracion_organizacion
+			WHERE organizacion_id = ?
+		`;
+
+		const orgResult = await db.query(orgQuery, [organizacionId]);
+
+		if (!orgResult || orgResult.length === 0) {
+			return json({
+				success: false,
+				error: 'Organización no encontrada'
+			}, { status: 404 });
+		}
+
+		const apiKey = orgResult[0].FacturapiKey;
+
+		if (!apiKey) {
+			return json({
+				success: false,
+				error: 'La organización no tiene configurada una API key de Facturapi'
+			}, { status: 400 });
+		}
+
 		// Llamar al API de Facturapi para obtener productos del catálogo SAT
 		const response = await axios.get('https://www.facturapi.io/v2/catalogs/products', {
 			auth: {
-				username: FACTURAPI_KEY,
+				username: apiKey,
 				password: ''
 			},
 			params: {

@@ -2,7 +2,6 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import axios from 'axios';
-import { FACTURAPI_KEY } from '$env/static/private';
 import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
 import nodemailer from 'nodemailer';
 import {
@@ -29,7 +28,7 @@ export const POST: RequestHandler = async (event) => {
       return json({ success: false, error: 'facturaId es requerido' }, { status: 400 });
     }
 
-    // Obtener información completa de la factura
+    // Obtener información completa de la factura y la API key de la organización
     const facturaQuery = `
       SELECT
         f.Id,
@@ -57,6 +56,7 @@ export const POST: RequestHandler = async (event) => {
         o.RazonSocial as OrganizacionRazonSocial,
         o.RFC as OrganizacionRFC,
         co.nombre_comercial as OrganizacionNombreComercial,
+        co.facturapi_key as FacturapiKey,
         rOrg.Codigo as OrganizacionRegimenFiscalCodigo
       FROM Facturas f
       INNER JOIN Clientes c ON f.ClienteId = c.Id
@@ -78,6 +78,13 @@ export const POST: RequestHandler = async (event) => {
     const factura = facturaResult[0];
 
     // Validaciones de datos requeridos
+    if (!factura.FacturapiKey) {
+      return json({
+        success: false,
+        error: 'La organización no tiene configurada una API key de Facturapi'
+      }, { status: 400 });
+    }
+
     if (!factura.ClienteEmail) {
       return json({
         success: false,
@@ -282,13 +289,13 @@ export const POST: RequestHandler = async (event) => {
       };
     }
 
-    // Crear factura en Facturapi
+    // Crear factura en Facturapi usando la API key de la organización
     const { data: invoice } = await axios.post(
       'https://www.facturapi.io/v2/invoices',
       facturapiPayload,
       {
         auth: {
-          username: FACTURAPI_KEY,
+          username: factura.FacturapiKey,
           password: ''
         }
       }
@@ -298,20 +305,20 @@ export const POST: RequestHandler = async (event) => {
     const pdfUrl = `https://www.facturapi.io/v2/invoices/${invoice.id}/pdf`;
     const xmlUrl = `https://www.facturapi.io/v2/invoices/${invoice.id}/xml`;
 
-    // Descargar PDF en base64
+    // Descargar PDF en base64 usando la API key de la organización
     const pdfResponse = await axios.get(pdfUrl, {
       auth: {
-        username: FACTURAPI_KEY,
+        username: factura.FacturapiKey,
         password: ''
       },
       responseType: 'arraybuffer'
     });
     const pdfBase64 = Buffer.from(pdfResponse.data).toString('base64');
 
-    // Descargar XML en base64
+    // Descargar XML en base64 usando la API key de la organización
     const xmlResponse = await axios.get(xmlUrl, {
       auth: {
-        username: FACTURAPI_KEY,
+        username: factura.FacturapiKey,
         password: ''
       },
       responseType: 'arraybuffer'

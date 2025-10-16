@@ -3,11 +3,30 @@ export async function authFetch(url: string, options: RequestInit = {}) {
 	// Obtener token del sessionStorage
 	const token = typeof window !== 'undefined' ? sessionStorage.getItem('jwt') : null;
 
+	// Obtener organizacionId para multi-tenant
+	let organizacionId: string | null = null;
+	if (typeof window !== 'undefined') {
+		const userData = sessionStorage.getItem('userData');
+		if (userData) {
+			try {
+				const user = JSON.parse(userData);
+				organizacionId = user.organizacionId?.toString() || null;
+			} catch (e) {
+				// Ignorar errores de parsing
+			}
+		}
+	}
+
 	// Agregar headers de autenticación
 	const headers = new Headers(options.headers || {});
 
 	if (token) {
 		headers.set('Authorization', `Bearer ${token}`);
+	}
+
+	// Agregar header de organización para multi-tenant (solo si existe)
+	if (organizacionId) {
+		headers.set('X-Organization-Id', organizacionId);
 	}
 
 	if (!headers.has('Content-Type') && options.method !== 'GET') {

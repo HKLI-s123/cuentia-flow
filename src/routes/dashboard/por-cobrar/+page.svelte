@@ -22,6 +22,7 @@
     MoreVertical
   } from 'lucide-svelte';
   import { authFetch } from '$lib/api';
+  import { Button, Input, Badge } from '$lib/components/ui';
   import ModalPago from './ModalPago.svelte';
   import ModalGestion from './ModalGestion.svelte';
   import ModalDetalle from './ModalDetalle.svelte';
@@ -43,6 +44,26 @@
   let filtroEstado = '';
   let filtroPrioridad = '';
   let filtroVencimiento = '';
+
+  // Filtros de checkbox
+  let filtrosEstadoCheckbox = {
+    pagada: false,
+    vigente: false,
+    vencida: false,
+    cancelada: false
+  };
+  let mostrarFiltros = false;
+
+  // Contador de facturas por estado
+  $: contadorEstados = {
+    pagada: facturas.filter(f => f.estado_factura_id === 3).length,
+    vigente: facturas.filter(f => f.estado_factura_id === 1).length,
+    vencida: facturas.filter(f => f.estado_factura_id === 4).length,
+    cancelada: facturas.filter(f => f.estado_factura_id === 5).length
+  };
+
+  // Contar filtros activos
+  $: filtrosActivos = Object.values(filtrosEstadoCheckbox).filter(v => v).length;
 
   // Estado de ordenamiento
   let ordenCampo: string = 'FechaEmision'; // Campo por defecto - ordenar por fecha de emisión
@@ -257,7 +278,7 @@
 
       // Construir query string con filtros
       const params = new URLSearchParams();
-      params.append('organizacionId', organizacionId.toString());
+      params.append('organizacionId', organizacionId);
       params.append('page', paginacion.page.toString());
       params.append('limit', paginacion.limit.toString());
 
@@ -274,6 +295,17 @@
       }
       if (filtroPrioridad) {
         params.append('prioridad', filtroPrioridad);
+      }
+
+      // Agregar filtros de checkbox
+      const estadosSeleccionados = [];
+      if (filtrosEstadoCheckbox.pagada) estadosSeleccionados.push('3'); // Estado 3 = Pagada
+      if (filtrosEstadoCheckbox.vigente) estadosSeleccionados.push('1'); // Estado 1 = Vigente/Pendiente
+      if (filtrosEstadoCheckbox.vencida) estadosSeleccionados.push('4'); // Estado 4 = Vencida
+      if (filtrosEstadoCheckbox.cancelada) estadosSeleccionados.push('5'); // Estado 5 = Cancelada
+
+      if (estadosSeleccionados.length > 0) {
+        params.append('estados', estadosSeleccionados.join(','));
       }
 
       const response = await authFetch(`/api/facturas?${params.toString()}`);
@@ -332,6 +364,15 @@
     filtroEstado = '';
     filtroPrioridad = '';
     aplicarFiltros();
+  }
+
+  function toggleFiltros() {
+    mostrarFiltros = !mostrarFiltros;
+  }
+
+  function aplicarFiltrosCheckbox() {
+    paginacion.page = 1;
+    cargarFacturas();
   }
 
   // Funciones de navegación de páginas
@@ -402,17 +443,16 @@
       <p class="text-sm text-gray-600 mt-1">Impulsa el crecimiento de tu empresa, revisa el estado de tus facturas, envía recordatorios a tus clientes y cobra tus facturas a tiempo.</p>
     </div>
     <div class="flex gap-3">
-      <button
-        class="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-      >
+      <!-- <Button variant="primary" size="md">
         IMPORTAR
-      </button>
-      <button
+      </Button> -->
+      <Button
+        variant="success"
+        size="md"
         on:click={() => goto('/dashboard/por-cobrar/nueva')}
-        class="inline-flex items-center px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
       >
-        COBRAR
-      </button>
+        Generar Factura
+      </Button>
     </div>
   </div>
 
@@ -422,18 +462,18 @@
       <div class="flex flex-col sm:flex-row gap-3">
         <!-- Búsqueda -->
         <div class="relative flex-1">
-          <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none z-10" />
           <input
             type="text"
             placeholder="Buscar por cliente, folio o uuid"
             bind:value={filtroTexto}
             on:input={aplicarFiltros}
-            class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
+            class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full transition-all duration-200"
           />
         </div>
 
         <!-- Filtro Periodo -->
-        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-w-[140px]">
+        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-w-[140px] transition-all duration-200">
           <option value="">Periodo</option>
           <option value="hoy">Hoy</option>
           <option value="semana">Esta semana</option>
@@ -442,11 +482,55 @@
         </select>
 
         <!-- Botón Filtros -->
-        <button class="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+        <Button variant="secondary" size="md" on:click={toggleFiltros}>
           <Filter class="w-4 h-4" />
-          Filtros(0)
-        </button>
+          Filtros({filtrosActivos})
+        </Button>
       </div>
+
+      <!-- Panel de filtros desplegable -->
+      {#if mostrarFiltros}
+        <div class="px-4 py-3 bg-gray-50 border-t border-gray-200">
+          <div class="flex flex-col gap-2">
+            <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded">
+              <input
+                type="checkbox"
+                bind:checked={filtrosEstadoCheckbox.pagada}
+                on:change={aplicarFiltrosCheckbox}
+                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <span class="text-sm text-gray-700">Pagada ({contadorEstados.pagada})</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded">
+              <input
+                type="checkbox"
+                bind:checked={filtrosEstadoCheckbox.vigente}
+                on:change={aplicarFiltrosCheckbox}
+                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <span class="text-sm text-gray-700">Vigente ({contadorEstados.vigente})</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded">
+              <input
+                type="checkbox"
+                bind:checked={filtrosEstadoCheckbox.vencida}
+                on:change={aplicarFiltrosCheckbox}
+                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <span class="text-sm text-gray-700">Vencida ({contadorEstados.vencida})</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded">
+              <input
+                type="checkbox"
+                bind:checked={filtrosEstadoCheckbox.cancelada}
+                on:change={aplicarFiltrosCheckbox}
+                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <span class="text-sm text-gray-700">Cancelada ({contadorEstados.cancelada})</span>
+            </label>
+          </div>
+        </div>
+      {/if}
     </div>
 
     <!-- Tabla de facturas -->
@@ -572,12 +656,15 @@
                   <AlertTriangle class="w-12 h-12 mx-auto mb-2" />
                   <p class="font-medium">Error al cargar facturas</p>
                   <p class="text-sm text-gray-600 mt-1">{error}</p>
-                  <button
-                    on:click={cargarFacturas}
-                    class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    Reintentar
-                  </button>
+                  <div class="mt-4 flex justify-center">
+                    <Button
+                      variant="primary"
+                      size="md"
+                      on:click={cargarFacturas}
+                    >
+                      Reintentar
+                    </Button>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -716,30 +803,26 @@
           <!-- Controles de paginación -->
           <div class="flex items-center gap-2">
             <!-- Botón Anterior -->
-            <button
+            <Button
+              variant="secondary"
+              size="sm"
               on:click={paginaAnterior}
               disabled={paginacion.page === 1}
-              class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium transition-colors
-                {paginacion.page === 1
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-white text-gray-700 hover:bg-gray-50'}"
             >
               <ChevronLeft class="w-4 h-4" />
-            </button>
+            </Button>
 
             <!-- Números de página -->
             <div class="flex items-center gap-1">
               {#each Array.from({ length: paginacion.totalPages }, (_, i) => i + 1) as numeroPagina}
                 {#if numeroPagina === 1 || numeroPagina === paginacion.totalPages || (numeroPagina >= paginacion.page - 1 && numeroPagina <= paginacion.page + 1)}
-                  <button
+                  <Button
+                    variant={paginacion.page === numeroPagina ? 'primary' : 'secondary'}
+                    size="sm"
                     on:click={() => irAPagina(numeroPagina)}
-                    class="px-3 py-2 border rounded-lg text-sm font-medium transition-colors
-                      {paginacion.page === numeroPagina
-                        ? 'bg-blue-600 text-white border-blue-600'
-                        : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}"
                   >
                     {numeroPagina}
-                  </button>
+                  </Button>
                 {:else if numeroPagina === paginacion.page - 2 || numeroPagina === paginacion.page + 2}
                   <span class="px-2 text-gray-500">...</span>
                 {/if}
@@ -747,16 +830,14 @@
             </div>
 
             <!-- Botón Siguiente -->
-            <button
+            <Button
+              variant="secondary"
+              size="sm"
               on:click={paginaSiguiente}
               disabled={paginacion.page === paginacion.totalPages}
-              class="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium transition-colors
-                {paginacion.page === paginacion.totalPages
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-white text-gray-700 hover:bg-gray-50'}"
             >
               <ChevronRight class="w-4 h-4" />
-            </button>
+            </Button>
           </div>
         </div>
       </div>

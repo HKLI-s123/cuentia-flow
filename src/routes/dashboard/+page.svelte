@@ -1,12 +1,19 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { goto } from '$app/navigation';
+  import { browser } from '$app/environment';
   import { HelpCircle } from 'lucide-svelte';
   import { authFetch } from '$lib/api';
+  import { organizacionCambio } from '$lib/stores/organizacion';
 
   let canvasVentas: HTMLCanvasElement;
   let canvasResumenCobranza: HTMLCanvasElement;
   let canvasTopSaldoVencido: HTMLCanvasElement;
+
+  // Instancias de los gráficos para poder destruirlos antes de recrearlos
+  let chartVentas: any;
+  let chartResumenCobranza: any;
+  let chartTopSaldoVencido: any;
 
   // Datos de métricas
   let metricas = {
@@ -41,6 +48,9 @@
 
   // Cargar datos desde API
   async function cargarDatos() {
+    // Solo ejecutar en el navegador
+    if (!browser) return;
+
     try {
       const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
       const organizacionId = userData.organizacionId;
@@ -91,6 +101,11 @@
     // import dinámico de Chart.js solo en cliente
     const Chart = (await import("chart.js/auto")).default;
 
+    // Destruir gráficos existentes antes de crear nuevos
+    if (chartVentas) chartVentas.destroy();
+    if (chartResumenCobranza) chartResumenCobranza.destroy();
+    if (chartTopSaldoVencido) chartTopSaldoVencido.destroy();
+
     // Gráfico de Ventas - Usar datos del backend
     if (canvasVentas && ventasPorMes) {
       const hoy = new Date();
@@ -108,7 +123,7 @@
         datos.push(datosDelMes?.TotalVentas || 0);
       }
 
-      new Chart(canvasVentas, {
+      chartVentas = new Chart(canvasVentas, {
         type: "bar",
         data: {
           labels: labels,
@@ -158,7 +173,7 @@
       const datosVencido = resumenCobranza.map(r => r.Vencido || 0);
       const datosPagado = resumenCobranza.map(r => r.Pagado || 0);
 
-      new Chart(canvasResumenCobranza, {
+      chartResumenCobranza = new Chart(canvasResumenCobranza, {
         type: "bar",
         data: {
           labels: labels,
@@ -227,7 +242,7 @@
       });
       const datos = topSaldoVencido.map(c => c.TotalSaldoVencido || 0);
 
-      new Chart(canvasTopSaldoVencido, {
+      chartTopSaldoVencido = new Chart(canvasTopSaldoVencido, {
         type: "bar",
         data: {
           labels: labels,
@@ -281,6 +296,14 @@
   onMount(() => {
     cargarDatos();
   });
+
+  // Escuchar cambios en la organización para recargar datos automáticamente
+  $: if ($organizacionCambio >= 0) {
+    // Resetear estado de carga
+    cargando = true;
+    // Recargar datos cuando cambie la organización
+    cargarDatos();
+  }
 </script>
 
 <div class="space-y-6">

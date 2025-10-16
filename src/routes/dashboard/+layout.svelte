@@ -1,14 +1,19 @@
 <script lang="ts">
   import { Home, DollarSign, BarChart3, CreditCard, Users, UserCog, FileText, PieChart, Settings, LogOut, Menu, X, Building2, ChevronDown } from "lucide-svelte";
-  import { goto } from '$app/navigation';
+  import { goto, invalidateAll } from '$app/navigation';
   import { onMount } from 'svelte';
+  import { browser } from '$app/environment';
   import { page } from '$app/stores';
+  import { notificarCambioOrganizacion, organizacionStore } from '$lib/stores/organizacion';
 
   // Estado del sidebar móvil
   let sidebarOpen = false;
 
   // Estado del dropdown de organizaciones
   let organizacionDropdownOpen = false;
+
+  // Estado de carga al cambiar organización
+  let cambiandoOrganizacion = false;
 
   // Lista de organizaciones del usuario
   let organizaciones: Array<{
@@ -36,6 +41,8 @@
 
   // Cargar lista de organizaciones del usuario
   async function loadOrganizaciones(userId: number) {
+    if (!browser) return null;
+
     try {
       const { authFetch } = await import('$lib/api');
       const response = await authFetch(`/api/usuario/${userId}/organizaciones`);
@@ -74,22 +81,66 @@
   }
 
   // Cambiar organización
-  function cambiarOrganizacion(org: typeof organizaciones[0]) {
-    organizacionActual = {
-      id: org.id,
-      razonSocial: org.razonSocial
-    };
-    userInfo.organizacion = org.razonSocial;
-    userInfo.rol = org.rolNombre;
-    sessionStorage.setItem('organizacionActualId', org.id.toString());
+  async function cambiarOrganizacion(org: typeof organizaciones[0]) {
+    // Mostrar indicador de carga
+    cambiandoOrganizacion = true;
     organizacionDropdownOpen = false;
 
-    // Recargar la página para actualizar datos según la organización
-    window.location.reload();
+    try {
+      // Actualizar información local
+      organizacionActual = {
+        id: org.id,
+        razonSocial: org.razonSocial
+      };
+      userInfo.organizacion = org.razonSocial;
+      userInfo.rol = org.rolNombre;
+      sessionStorage.setItem('organizacionActualId', org.id.toString());
+
+      // Actualizar el userData en sessionStorage con la nueva organización
+      const userDataStr = sessionStorage.getItem('userData');
+      if (userDataStr) {
+        const userData = JSON.parse(userDataStr);
+        userData.organizacionId = org.id;
+        userData.organizacionNombre = org.razonSocial;
+        userData.rolId = org.rolId;
+        userData.rolNombre = org.rolNombre;
+        sessionStorage.setItem('userData', JSON.stringify(userData));
+      }
+
+      // Actualizar el store reactivo con la nueva organización
+      organizacionStore.actualizar({
+        id: org.id,
+        nombre: org.razonSocial,
+        rolId: org.rolId,
+        rolNombre: org.rolNombre
+      });
+
+      // Notificar a todos los componentes que la organización cambió
+      notificarCambioOrganizacion();
+
+      // Invalidar todos los datos
+      await invalidateAll();
+
+      // Redirigir al dashboard principal para que todo se recargue correctamente
+      await goto('/dashboard', { replaceState: true });
+
+      // Esperar un poco más para asegurar que la navegación y recarga de datos se complete
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      // Ocultar indicador de carga
+      cambiandoOrganizacion = false;
+    } catch (error) {
+      console.error('Error al cambiar de organización:', error);
+      // Mantener la animación visible un momento antes de ocultar en caso de error
+      await new Promise(resolve => setTimeout(resolve, 500));
+      cambiandoOrganizacion = false;
+    }
   }
 
   // Cargar información del usuario desde sessionStorage
   async function loadUserInfo() {
+    if (!browser) return;
+
     try {
       const userData = sessionStorage.getItem('userData');
       if (userData) {
@@ -105,6 +156,16 @@
           rol: orgSeleccionada ? orgSeleccionada.rolNombre : 'Usuario',
           iniciales: `${user.nombre?.[0] || 'U'}${user.apellido?.[0] || ''}`
         };
+
+        // Verificar consistencia entre organizacionId y organizacionActualId
+        const organizacionActualId = sessionStorage.getItem('organizacionActualId');
+        if (user.organizacionId && organizacionActualId &&
+            parseInt(organizacionActualId) !== user.organizacionId) {
+          console.warn(`⚠️ Inconsistencia detectada: organizacionId=${user.organizacionId}, organizacionActualId=${organizacionActualId}`);
+          // Corregir: usar organizacionId como la fuente de verdad
+          sessionStorage.setItem('organizacionActualId', user.organizacionId.toString());
+          organizacionActual.id = user.organizacionId;
+        }
       }
     } catch (error) {
       // En caso de error, mantener valores por defecto
@@ -117,6 +178,9 @@
     if (!token) {
       goto('/');
     } else {
+      // Inicializar el store de organización
+      organizacionStore.init();
+
       // Cargar info del usuario sin bloquear
       loadUserInfo();
     }
@@ -134,6 +198,8 @@
   const logout = () => {
     sessionStorage.removeItem('jwt');
     sessionStorage.removeItem('userData');
+    sessionStorage.removeItem('organizacionActualId');
+    organizacionStore.limpiar();
     goto('/');
   };
 
@@ -349,6 +415,26 @@
     </main>
   </div>
 </div>
+
+<!-- Overlay de carga al cambiar organización -->
+{#if cambiandoOrganizacion}
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm mx-4 text-center">
+      <div class="mb-4">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full animate-pulse">
+          <Building2 class="w-8 h-8 text-white" />
+        </div>
+      </div>
+      <h3 class="text-xl font-bold text-slate-900 mb-2">Cambiando organización</h3>
+      <p class="text-slate-600 text-sm">Actualizando información...</p>
+      <div class="mt-4 flex justify-center gap-2">
+        <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+        <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+        <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+      </div>
+    </div>
+  </div>
+{/if}
 
 <style>
   /* Estilos adicionales para mejorar la experiencia */

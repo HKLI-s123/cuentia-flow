@@ -16,6 +16,7 @@
     Bell,
     Palette
   } from 'lucide-svelte';
+  import { Button, Input, Badge } from '$lib/components/ui';
 
   // Estado de la configuración
   let organizacionActual: any = {};
@@ -350,30 +351,9 @@ Teléfono: {telefono_empresa}
 
 <div class="space-y-6">
   <!-- Header -->
-  <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-6 border border-purple-200">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900">Configuración</h1>
-        <p class="text-sm text-gray-600">Gestiona la configuración de tu organización y sistemas</p>
-      </div>
-      <div class="flex space-x-2">
-        <button
-          on:click={cargarConfiguracion}
-          disabled={cargando}
-          class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 transition-colors"
-        >
-          <RefreshCw class="w-4 h-4 mr-2 {cargando ? 'animate-spin' : ''}" />
-          Actualizar
-        </button>
-        <button
-          on:click={guardarConfiguracion}
-          disabled={guardando || cargando}
-          class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 transition-colors"
-        >
-          <Save class="w-4 h-4 mr-2" />
-          {guardando ? 'Guardando...' : 'Guardar Cambios'}
-        </button>
-      </div>
+  <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+    <div class="mb-4">
+      <p class="text-sm text-gray-600">Gestiona la configuración de tu organización</p>
     </div>
 
     <!-- Selector de Organización -->
@@ -388,7 +368,7 @@ Teléfono: {telefono_empresa}
                 bind:value={organizacionSeleccionada}
                 on:change={cambiarOrganizacion}
                 disabled={cargando || organizacionesDisponibles.length === 0}
-                class="w-full px-3 py-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <option value="">Seleccionar organización...</option>
                 {#each organizacionesDisponibles as org}
@@ -437,7 +417,7 @@ Teléfono: {telefono_empresa}
             <Building2 class="w-4 h-4 inline mr-2" />
             Organización
           </button>
-          <button
+          <!-- <button
             on:click={() => tabActivo = 'cobranza'}
             class="py-4 px-3 border-b-2 font-medium text-sm whitespace-nowrap transition-colors {tabActivo === 'cobranza' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}"
           >
@@ -450,7 +430,7 @@ Teléfono: {telefono_empresa}
           >
             <FileText class="w-4 h-4 inline mr-2" />
             Plantillas
-          </button>
+          </button> -->
         </nav>
       </div>
 
@@ -462,62 +442,43 @@ Teléfono: {telefono_empresa}
             <div>
               <h2 class="text-lg font-semibold text-gray-900 mb-4">Información de la Empresa</h2>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label for="razon-social" class="block text-sm font-medium text-gray-700 mb-2">Razón Social *</label>
-                  <input
-                    id="razon-social"
-                    type="text"
-                    bind:value={datosOrganizacion.razonSocial}
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    placeholder="Mi Empresa S.A. de C.V."
-                  />
-                </div>
-                <div>
-                  <label for="rfc" class="block text-sm font-medium text-gray-700 mb-2">RFC *</label>
-                  <input
-                    id="rfc"
-                    type="text"
-                    bind:value={datosOrganizacion.rfc}
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    placeholder="ABC123456789"
-                  />
-                </div>
-                <div>
-                  <label for="nombre-comercial" class="block text-sm font-medium text-gray-700 mb-2">Nombre Comercial</label>
-                  <input
-                    id="nombre-comercial"
-                    type="text"
-                    bind:value={datosOrganizacion.nombre}
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    placeholder="Mi Empresa"
-                  />
-                </div>
-                <div>
-                  <label for="email-corporativo" class="block text-sm font-medium text-gray-700 mb-2">Email Corporativo</label>
-                  <div class="relative">
-                    <Mail class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <input
-                      id="email-corporativo"
-                      type="email"
-                      bind:value={datosOrganizacion.correoElectronico}
-                      class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                      placeholder="contacto@miempresa.com"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label for="telefono" class="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
-                  <div class="relative">
-                    <Phone class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <input
-                      id="telefono"
-                      type="tel"
-                      bind:value={datosOrganizacion.telefono}
-                      class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                      placeholder="+52 55 1234 5678"
-                    />
-                  </div>
-                </div>
+                <Input
+                  id="razon-social"
+                  type="text"
+                  bind:value={datosOrganizacion.razonSocial}
+                  label="Razón Social"
+                  placeholder="Mi Empresa S.A. de C.V."
+                  required
+                />
+                <Input
+                  id="rfc"
+                  type="text"
+                  bind:value={datosOrganizacion.rfc}
+                  label="RFC"
+                  placeholder="ABC123456789"
+                  required
+                />
+                <Input
+                  id="nombre-comercial"
+                  type="text"
+                  bind:value={datosOrganizacion.nombre}
+                  label="Nombre Comercial"
+                  placeholder="Mi Empresa"
+                />
+                <Input
+                  id="email-corporativo"
+                  type="email"
+                  bind:value={datosOrganizacion.correoElectronico}
+                  label="Email Corporativo"
+                  placeholder="contacto@miempresa.com"
+                />
+                <Input
+                  id="telefono"
+                  type="tel"
+                  bind:value={datosOrganizacion.telefono}
+                  label="Teléfono"
+                  placeholder="+52 55 1234 5678"
+                />
               </div>
             </div>
 
@@ -528,86 +489,62 @@ Teléfono: {telefono_empresa}
                 Dirección Fiscal
               </h2>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div>
-                  <label for="calle" class="block text-sm font-medium text-gray-700 mb-2">Calle</label>
-                  <input
-                    id="calle"
-                    type="text"
-                    bind:value={datosOrganizacion.direccion.calle}
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    placeholder="Av. Reforma"
-                  />
-                </div>
-                <div>
-                  <label for="numero-exterior" class="block text-sm font-medium text-gray-700 mb-2">No. Exterior</label>
-                  <input
-                    id="numero-exterior"
-                    type="text"
-                    bind:value={datosOrganizacion.direccion.numeroExterior}
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    placeholder="123"
-                  />
-                </div>
-                <div>
-                  <label for="numero-interior" class="block text-sm font-medium text-gray-700 mb-2">No. Interior</label>
-                  <input
-                    id="numero-interior"
-                    type="text"
-                    bind:value={datosOrganizacion.direccion.numeroInterior}
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    placeholder="A"
-                  />
-                </div>
-                <div>
-                  <label for="colonia" class="block text-sm font-medium text-gray-700 mb-2">Colonia</label>
-                  <input
-                    id="colonia"
-                    type="text"
-                    bind:value={datosOrganizacion.direccion.colonia}
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    placeholder="Centro"
-                  />
-                </div>
-                <div>
-                  <label for="ciudad" class="block text-sm font-medium text-gray-700 mb-2">Ciudad</label>
-                  <input
-                    id="ciudad"
-                    type="text"
-                    bind:value={datosOrganizacion.direccion.ciudad}
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    placeholder="Ciudad de México"
-                  />
-                </div>
-                <div>
-                  <label for="estado" class="block text-sm font-medium text-gray-700 mb-2">Estado</label>
-                  <input
-                    id="estado"
-                    type="text"
-                    bind:value={datosOrganizacion.direccion.estado}
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    placeholder="CDMX"
-                  />
-                </div>
-                <div>
-                  <label for="codigo-postal" class="block text-sm font-medium text-gray-700 mb-2">Código Postal</label>
-                  <input
-                    id="codigo-postal"
-                    type="text"
-                    bind:value={datosOrganizacion.direccion.codigoPostal}
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    placeholder="01000"
-                  />
-                </div>
-                <div>
-                  <label for="pais" class="block text-sm font-medium text-gray-700 mb-2">País</label>
-                  <input
-                    id="pais"
-                    type="text"
-                    bind:value={datosOrganizacion.direccion.pais}
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    placeholder="México"
-                  />
-                </div>
+                <Input
+                  id="calle"
+                  type="text"
+                  bind:value={datosOrganizacion.direccion.calle}
+                  label="Calle"
+                  placeholder="Av. Reforma"
+                />
+                <Input
+                  id="numero-exterior"
+                  type="text"
+                  bind:value={datosOrganizacion.direccion.numeroExterior}
+                  label="No. Exterior"
+                  placeholder="123"
+                />
+                <Input
+                  id="numero-interior"
+                  type="text"
+                  bind:value={datosOrganizacion.direccion.numeroInterior}
+                  label="No. Interior"
+                  placeholder="A"
+                />
+                <Input
+                  id="colonia"
+                  type="text"
+                  bind:value={datosOrganizacion.direccion.colonia}
+                  label="Colonia"
+                  placeholder="Centro"
+                />
+                <Input
+                  id="ciudad"
+                  type="text"
+                  bind:value={datosOrganizacion.direccion.ciudad}
+                  label="Ciudad"
+                  placeholder="Ciudad de México"
+                />
+                <Input
+                  id="estado"
+                  type="text"
+                  bind:value={datosOrganizacion.direccion.estado}
+                  label="Estado"
+                  placeholder="CDMX"
+                />
+                <Input
+                  id="codigo-postal"
+                  type="text"
+                  bind:value={datosOrganizacion.direccion.codigoPostal}
+                  label="Código Postal"
+                  placeholder="01000"
+                />
+                <Input
+                  id="pais"
+                  type="text"
+                  bind:value={datosOrganizacion.direccion.pais}
+                  label="País"
+                  placeholder="México"
+                />
               </div>
             </div>
 
@@ -638,6 +575,20 @@ Teléfono: {telefono_empresa}
                   {/if}
                 </div>
               </div>
+            </div>
+
+            <!-- Botón Guardar -->
+            <div class="border-t pt-6 flex justify-end">
+              <Button
+                variant="primary"
+                size="lg"
+                on:click={guardarConfiguracion}
+                disabled={guardando || cargando}
+                loading={guardando}
+              >
+                <Save class="w-5 h-5 mr-2" />
+                {guardando ? '' : 'Guardar Cambios'}
+              </Button>
             </div>
           </div>
 

@@ -39,13 +39,18 @@
 <svelte:window on:keydown={handleKeydown} />
 
 {#if open}
+  <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <div
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-fadeIn"
     on:click={handleOverlayClick}
+    on:keydown={(e) => e.key === 'Enter' && handleOverlayClick()}
     role="dialog"
     aria-modal="true"
     aria-labelledby="modal-title"
+    tabindex="-1"
   >
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
       class="bg-white rounded-lg shadow-xl w-full {sizeClasses[size]} max-h-[90vh] overflow-hidden flex flex-col animate-scaleIn"
       on:click|stopPropagation

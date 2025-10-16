@@ -24,21 +24,13 @@ export const POST: RequestHandler = async (event) => {
 	const facturaId = params.id;
 
 	try {
-		// Obtener organizacionId y datos del formulario del body
-		const { organizacionId, destinatario, cc, asunto, mensaje } = await request.json();
+		// Obtener organizacionId del body
+		const { organizacionId } = await request.json();
 
 		if (!organizacionId) {
 			return json({
 				success: false,
 				error: 'organizacionId es requerido para sistema multi-tenant'
-			}, { status: 400 });
-		}
-
-		// Validar campos requeridos
-		if (!destinatario || !asunto || !mensaje) {
-			return json({
-				success: false,
-				error: 'Los campos destinatario, asunto y mensaje son requeridos'
 			}, { status: 400 });
 		}
 
@@ -50,6 +42,7 @@ export const POST: RequestHandler = async (event) => {
 				f.numero_factura,
 				f.MontoTotal,
 				f.FechaEmision,
+				f.FechaVencimiento,
 				f.UUID,
 				f.Timbrado,
 				f.PDFUrl,
@@ -81,8 +74,13 @@ export const POST: RequestHandler = async (event) => {
 			}, { status: 400 });
 		}
 
-		// Ya no validamos el correo del cliente porque lo recibimos del formulario
-		// El usuario puede personalizar el destinatario
+		// Validar que el cliente tenga correo
+		if (!factura.ClienteEmail) {
+			return json({
+				success: false,
+				error: 'El cliente no tiene un correo electrónico registrado'
+			}, { status: 400 });
+		}
 
 		// Validar que la organización tenga API key configurada
 		if (!factura.FacturapiKey) {
@@ -124,21 +122,56 @@ export const POST: RequestHandler = async (event) => {
 		const transporter = nodemailer.createTransport({
 			host: SMTP_HOST,
 			port: parseInt(SMTP_PORT),
-			secure: false, // true para 465, false para otros puertos
+			secure: false,
 			auth: {
 				user: SMTP_USER,
 				pass: SMTP_PASSWORD
 			},
 			tls: {
-				// No fallar en certificados inválidos
 				rejectUnauthorized: false
 			}
 		});
 
 		const numeroFactura = factura.numero_factura;
+		const destinatario = factura.ClienteEmail;
 
-		// Convertir el mensaje de texto plano a HTML con saltos de línea
-		const mensajeHtml = mensaje.replace(/\n/g, '<br>');
+		// Formatear fechas
+		const formatFecha = (fecha: string) => {
+			if (!fecha) return '';
+			const date = new Date(fecha);
+			return date.toLocaleDateString('es-MX', {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric'
+			});
+		};
+
+		// Formatear moneda
+		const formatMoneda = (monto: number) => {
+			return new Intl.NumberFormat('es-MX', {
+				style: 'currency',
+				currency: 'MXN'
+			}).format(monto);
+		};
+
+		const asunto = `Factura ${numeroFactura} - ${factura.ClienteRazonSocial}`;
+		const mensaje = `Estimado cliente ${factura.ClienteNombreComercial || factura.ClienteRazonSocial},
+
+Por medio del presente, le hacemos llegar su factura ${numeroFactura} con los siguientes detalles:
+
+• Número de Factura: ${numeroFactura}
+• Fecha de Emisión: ${formatFecha(factura.FechaEmision)}
+• Fecha de Vencimiento: ${formatFecha(factura.FechaVencimiento)}
+• Monto Total: ${formatMoneda(factura.MontoTotal)}
+• UUID: ${factura.UUID || 'N/A'}
+
+Adjunto encontrará los archivos PDF y XML correspondientes a esta factura.
+
+Si tiene alguna pregunta o requiere información adicional, no dude en contactarnos.
+
+Quedamos a sus órdenes.
+
+Saludos cordiales.`;
 
 		// Primero guardar el recordatorio en la base de datos para obtener el ID
 		const insertQuery = `
@@ -146,7 +179,6 @@ export const POST: RequestHandler = async (event) => {
 				FacturaId,
 				TipoMensaje,
 				Destinatario,
-				CC,
 				Asunto,
 				Mensaje,
 				FechaEnvio,
@@ -155,17 +187,16 @@ export const POST: RequestHandler = async (event) => {
 				CreadoPor
 			)
 			OUTPUT INSERTED.Id
-			VALUES (?, ?, ?, ?, ?, ?, GETDATE(), ?, ?, ?)
+			VALUES (?, ?, ?, ?, ?, GETDATE(), ?, ?, ?)
 		`;
 
 		const recordatorioResult = await db.query(insertQuery, [
 			facturaId,
-			'CORREO',
+			'FACTURA',
 			destinatario,
-			cc || null,
 			asunto,
 			mensaje,
-			'Manual',
+			'Automatico',
 			'Enviado',
 			user.id || null
 		]);
@@ -178,11 +209,13 @@ export const POST: RequestHandler = async (event) => {
 		const baseUrl = `${protocol}//${host}`;
 		const trackingPixelUrl = `${baseUrl}/api/tracking/email/${recordatorioId}`;
 
-		// Configurar el correo con los datos del formulario y tracking pixel
+		// Convertir saltos de línea a HTML
+		const mensajeHtml = mensaje.replace(/\n/g, '<br>');
+
+		// Configurar el correo
 		const mailOptions = {
 			from: `"${SMTP_FROM_NAME}" <${SMTP_FROM_EMAIL}>`,
 			to: destinatario,
-			cc: cc || undefined, // Solo agregar CC si existe
 			subject: asunto,
 			html: `
 				<!DOCTYPE html>
@@ -193,6 +226,7 @@ export const POST: RequestHandler = async (event) => {
 				</head>
 				<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
 					<div style="background-color: #f8f9fa; border-radius: 10px; padding: 30px; margin-bottom: 20px;">
+						<h2 style="color: #1f2937; margin-top: 0;">Factura ${numeroFactura}</h2>
 						<div style="font-size: 14px; white-space: pre-wrap;">${mensajeHtml}</div>
 					</div>
 
@@ -244,16 +278,16 @@ export const POST: RequestHandler = async (event) => {
 
 		return json({
 			success: true,
-			message: 'Correo enviado exitosamente',
+			message: 'Factura enviada exitosamente',
 			messageId: info.messageId,
 			destinatario: destinatario
 		});
 
 	} catch (error) {
-		console.error('Error al enviar correo:', error);
+		console.error('Error al enviar factura:', error);
 		return json({
 			success: false,
-			error: 'Error al enviar el correo electrónico',
+			error: 'Error al enviar la factura',
 			details: error instanceof Error ? error.message : 'Error desconocido'
 		}, { status: 500 });
 	}
