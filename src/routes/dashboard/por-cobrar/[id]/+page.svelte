@@ -125,7 +125,16 @@
 
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
+
+      // Crear un link temporal para forzar la descarga con el nombre UUID
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${factura.uuid}.pdf`;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Error al visualizar PDF:', err);
       Swal.fire({
@@ -163,7 +172,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `factura-${factura.numero_factura}.xml`;
+      a.download = `${factura.uuid}.xml`;
       a.click();
       URL.revokeObjectURL(url);
 
@@ -304,12 +313,12 @@
           <div class="flex gap-3">
             {#if factura.timbrado}
               <Button variant="danger" size="md" on:click={visualizarPDF}>
-                <FileText class="w-4 h-4" />
-                VER PDF
+                <Download class="w-4 h-4" />
+                PDF
               </Button>
               <Button variant="secondary" size="md" on:click={descargarXML}>
                 <Download class="w-4 h-4" />
-                DESCARGAR XML
+                XML
               </Button>
             {/if}
             <Button variant="primary" size="md" on:click={enviarFactura}>

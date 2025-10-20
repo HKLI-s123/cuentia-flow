@@ -22,7 +22,7 @@ export const GET: RequestHandler = async (event) => {
   try {
     // Obtener la URL del PDF y la API key de la base de datos
     const query = `
-      SELECT f.PDFUrl, f.numero_factura, co.facturapi_key as FacturapiKey
+      SELECT f.PDFUrl, f.numero_factura, f.UUID, co.facturapi_key as FacturapiKey
       FROM Facturas f
       INNER JOIN Clientes c ON f.ClienteId = c.Id
       INNER JOIN configuracion_organizacion co ON c.OrganizacionId = co.organizacion_id
@@ -59,7 +59,7 @@ export const GET: RequestHandler = async (event) => {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `inline; filename="factura-${factura.numero_factura}.pdf"`,
+        'Content-Disposition': `inline; filename="${factura.UUID}.pdf"`,
         'Cache-Control': 'public, max-age=3600'
       }
     });
