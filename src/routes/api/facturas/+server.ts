@@ -18,6 +18,7 @@ export const GET: RequestHandler = async (event) => {
     // Parámetros de filtrado
     const cliente = searchParams.get('cliente') || '';
     const estado = searchParams.get('estado') || '';
+    const estados = searchParams.get('estados') || ''; // Múltiples estados separados por coma
     const fechaInicio = searchParams.get('fechaInicio') || '';
     const fechaFin = searchParams.get('fechaFin') || '';
     const montoMin = searchParams.get('montoMin') || '';
@@ -76,7 +77,17 @@ export const GET: RequestHandler = async (event) => {
       queryParams.push(clientePattern, clientePattern, clientePattern);
     }
 
-    if (estado) {
+    // Filtro por estado (único o múltiple)
+    if (estados) {
+      // Si viene el parámetro 'estados' con múltiples IDs separados por coma
+      const estadosArray = estados.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+      if (estadosArray.length > 0) {
+        const placeholders = estadosArray.map(() => '?').join(',');
+        whereConditions.push(`f.estado_factura_id IN (${placeholders})`);
+        queryParams.push(...estadosArray);
+      }
+    } else if (estado) {
+      // Si viene el parámetro 'estado' con código de estado (compatibilidad hacia atrás)
       whereConditions.push('ef.codigo = ?');
       queryParams.push(estado);
     }
@@ -191,6 +202,32 @@ export const GET: RequestHandler = async (event) => {
     const agingResult = await db.query(agingQuery, queryParams);
     const aging = agingResult[0] || {};
 
+    // Query para contar facturas por estado (sin filtros de estado para mostrar totales reales)
+    const conteoEstadosQuery = `
+      SELECT
+        ef.id as EstadoId,
+        COUNT(*) as Total
+      FROM Facturas f
+      INNER JOIN Clientes c ON f.ClienteId = c.Id
+      LEFT JOIN estados_factura ef ON f.estado_factura_id = ef.id
+      WHERE c.OrganizacionId = ?
+      GROUP BY ef.id
+    `;
+
+    const conteoEstadosResult = await db.query(conteoEstadosQuery, [organizacionId]);
+    const conteoEstados = {
+      1: 0, // Pendiente
+      3: 0, // Pagada
+      4: 0, // Vencida
+      6: 0  // Cancelada
+    };
+
+    conteoEstadosResult.forEach((row: any) => {
+      if (row.EstadoId in conteoEstados) {
+        conteoEstados[row.EstadoId as keyof typeof conteoEstados] = row.Total;
+      }
+    });
+
     // Formatear respuesta
     const facturasFormateadas = facturas.map(factura => ({
       id: factura.Id,
@@ -250,7 +287,8 @@ export const GET: RequestHandler = async (event) => {
           monto: parseFloat(aging.aging91_mas || 0),
           count: aging.count91_mas || 0
         }
-      }
+      },
+      conteoEstados: conteoEstados
     });
 
   } catch (error) {

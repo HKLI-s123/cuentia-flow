@@ -54,12 +54,12 @@
   };
   let mostrarFiltros = false;
 
-  // Contador de facturas por estado
-  $: contadorEstados = {
-    pagada: facturas.filter(f => f.estado_factura_id === 3).length,
-    vigente: facturas.filter(f => f.estado_factura_id === 1).length,
-    vencida: facturas.filter(f => f.estado_factura_id === 4).length,
-    cancelada: facturas.filter(f => f.estado_factura_id === 5).length
+  // Contador de facturas por estado (viene del backend)
+  let contadorEstados = {
+    pagada: 0,
+    vigente: 0,
+    vencida: 0,
+    cancelada: 0
   };
 
   // Contar filtros activos
@@ -87,7 +87,8 @@
     { id: 2, codigo: 'parcial', nombre: 'Pago Parcial' },
     { id: 3, codigo: 'pagada', nombre: 'Pagada' },
     { id: 4, codigo: 'vencida', nombre: 'Vencida' },
-    { id: 5, codigo: 'incobrable', nombre: 'Incobrable' }
+    { id: 5, codigo: 'incobrable', nombre: 'Incobrable' },
+    { id: 6, codigo: 'cancelada', nombre: 'Cancelada' }
   ];
 
   let prioridadesCobranza = [
@@ -302,7 +303,7 @@
       if (filtrosEstadoCheckbox.pagada) estadosSeleccionados.push('3'); // Estado 3 = Pagada
       if (filtrosEstadoCheckbox.vigente) estadosSeleccionados.push('1'); // Estado 1 = Vigente/Pendiente
       if (filtrosEstadoCheckbox.vencida) estadosSeleccionados.push('4'); // Estado 4 = Vencida
-      if (filtrosEstadoCheckbox.cancelada) estadosSeleccionados.push('5'); // Estado 5 = Cancelada
+      if (filtrosEstadoCheckbox.cancelada) estadosSeleccionados.push('6'); // Estado 6 = Cancelada
 
       if (estadosSeleccionados.length > 0) {
         params.append('estados', estadosSeleccionados.join(','));
@@ -340,6 +341,16 @@
 
         agingData = data.aging;
         paginacion = { ...paginacion, ...data.pagination };
+
+        // Actualizar contadores de estados desde el backend
+        if (data.conteoEstados) {
+          contadorEstados = {
+            pagada: data.conteoEstados[3] || 0,
+            vigente: data.conteoEstados[1] || 0,
+            vencida: data.conteoEstados[4] || 0,
+            cancelada: data.conteoEstados[6] || 0
+          };
+        }
 
         // Cargar estadísticas de recordatorios para las facturas cargadas
         cargarTodosLosRecordatorios();
@@ -508,7 +519,7 @@
                 on:change={aplicarFiltrosCheckbox}
                 class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               />
-              <span class="text-sm text-gray-700">Vigente ({contadorEstados.vigente})</span>
+              <span class="text-sm text-gray-700">Pendiente ({contadorEstados.vigente})</span>
             </label>
             <label class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded">
               <input
