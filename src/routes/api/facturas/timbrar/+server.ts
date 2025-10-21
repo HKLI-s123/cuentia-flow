@@ -40,6 +40,8 @@ export const POST: RequestHandler = async (event) => {
         f.FormaPago,
         f.UsoCFDI,
         f.CondicionesPago,
+        f.Moneda,
+        f.TipoCambio,
         c.RazonSocial as ClienteRazonSocial,
         c.RFC as ClienteRFC,
         c.CorreoPrincipal as ClienteEmail,
@@ -204,6 +206,8 @@ export const POST: RequestHandler = async (event) => {
 
     // Construir payload para Facturapi según documentación
     const facturapiPayload: any = {
+      currency: factura.Moneda || 'MXN', // Usar moneda de la factura, default MXN
+      exchange: factura.Moneda && factura.Moneda !== 'MXN' ? parseFloat(factura.TipoCambio) : 1, // Tipo de cambio respecto a MXN
       customer: {
         legal_name: limpiarRazonSocial(factura.ClienteRazonSocial, factura.ClienteRFC),
         tax_id: factura.ClienteRFC,
@@ -300,6 +304,12 @@ export const POST: RequestHandler = async (event) => {
         }
       }
     );
+
+    console.log('Respuesta de Facturapi al crear factura:', {
+      id: invoice.id,
+      uuid: invoice.uuid,
+      allKeys: Object.keys(invoice)
+    });
 
     // Descargar PDF y XML desde Facturapi con autenticación
     const pdfUrl = `https://www.facturapi.io/v2/invoices/${invoice.id}/pdf`;
@@ -409,7 +419,7 @@ export const POST: RequestHandler = async (event) => {
                   <tr style="border-top: 2px solid #e5e7eb;">
                     <td style="padding: 12px 0; color: #6b7280; font-size: 16px;"><strong>Total:</strong></td>
                     <td style="padding: 12px 0; text-align: right; font-size: 18px; color: #2563eb; font-weight: bold;">
-                      $${parseFloat(factura.MontoTotal).toFixed(2)} MXN
+                      $${parseFloat(factura.MontoTotal).toFixed(2)} ${factura.Moneda || 'MXN'}
                     </td>
                   </tr>
                 </table>

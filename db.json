@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-10-08T19:16:56.222Z",
+  "timestamp": "2025-10-21T18:33:18.129Z",
   "database": "Cobranza",
   "data": [
     {
       "Tipo": "RESUMEN_BD",
-      "Informacion": "Base de datos: Cobranza - Fecha: 2025-10-08 19:16:57",
+      "Informacion": "Base de datos: Cobranza - Fecha: 2025-10-21 18:33:19",
       "Valor1": "",
       "Valor2": "",
       "Valor3": "",
@@ -131,6 +131,15 @@
     {
       "Tipo": "TABLA",
       "Informacion": "prioridades_cobranza",
+      "Valor1": "",
+      "Valor2": "",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "TABLA",
+      "Informacion": "Recordatorios",
       "Valor1": "",
       "Valor2": "",
       "Valor3": "",
@@ -693,6 +702,15 @@
       "Valor2": "datetime",
       "Valor3": "YES",
       "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "configuracion_organizacion.facturapi_key",
+      "Valor1": "18",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
       "Valor5": ""
     },
     {
@@ -1534,6 +1552,141 @@
     },
     {
       "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.Id",
+      "Valor1": "1",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.FacturaId",
+      "Valor1": "2",
+      "Valor2": "int",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.TipoMensaje",
+      "Valor1": "3",
+      "Valor2": "varchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.Destinatario",
+      "Valor1": "4",
+      "Valor2": "varchar",
+      "Valor3": "NO",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.CC",
+      "Valor1": "5",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.Asunto",
+      "Valor1": "6",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.Mensaje",
+      "Valor1": "7",
+      "Valor2": "text",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.FechaEnvio",
+      "Valor1": "8",
+      "Valor2": "datetime",
+      "Valor3": "NO",
+      "Valor4": "(getdate())",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.Visto",
+      "Valor1": "9",
+      "Valor2": "bit",
+      "Valor3": "NO",
+      "Valor4": "((0))",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.FechaVisto",
+      "Valor1": "10",
+      "Valor2": "datetime",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.MetodoEnvio",
+      "Valor1": "11",
+      "Valor2": "varchar",
+      "Valor3": "NO",
+      "Valor4": "('Manual')",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.Estado",
+      "Valor1": "12",
+      "Valor2": "varchar",
+      "Valor3": "NO",
+      "Valor4": "('Enviado')",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.MessageId",
+      "Valor1": "13",
+      "Valor2": "varchar",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.ErrorMessage",
+      "Valor1": "14",
+      "Valor2": "text",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
+      "Informacion": "Recordatorios.CreadoPor",
+      "Valor1": "15",
+      "Valor2": "int",
+      "Valor3": "YES",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "ESTRUCTURA",
       "Informacion": "RecordatoriosProgramados.Id",
       "Valor1": "1",
       "Valor2": "int",
@@ -1939,6 +2092,24 @@
     },
     {
       "Tipo": "RELACION",
+      "Informacion": "Recordatorios.FacturaId -> Facturas.Id",
+      "Valor1": "Recordatorios",
+      "Valor2": "FacturaId",
+      "Valor3": "Facturas",
+      "Valor4": "Id",
+      "Valor5": "FK_Recordatorios_Facturas"
+    },
+    {
+      "Tipo": "RELACION",
+      "Informacion": "Recordatorios.CreadoPor -> Usuarios.Id",
+      "Valor1": "Recordatorios",
+      "Valor2": "CreadoPor",
+      "Valor3": "Usuarios",
+      "Valor4": "Id",
+      "Valor5": "FK_Recordatorios_Usuario"
+    },
+    {
+      "Tipo": "RELACION",
       "Informacion": "RecordatoriosProgramados.ClienteId -> Clientes.Id",
       "Valor1": "RecordatoriosProgramados",
       "Valor2": "ClienteId",
@@ -1985,7 +2156,7 @@
     {
       "Tipo": "REGISTROS",
       "Informacion": "Agentes_Clientes",
-      "Valor1": "203",
+      "Valor1": "215",
       "Valor2": "Datos abundantes",
       "Valor3": "",
       "Valor4": "",
@@ -1994,7 +2165,7 @@
     {
       "Tipo": "REGISTROS",
       "Informacion": "Clientes",
-      "Valor1": "201",
+      "Valor1": "215",
       "Valor2": "Datos abundantes",
       "Valor3": "",
       "Valor4": "",
@@ -2003,7 +2174,7 @@
     {
       "Tipo": "REGISTROS",
       "Informacion": "ConceptosFactura",
-      "Valor1": "45",
+      "Valor1": "70",
       "Valor2": "Datos de prueba",
       "Valor3": "",
       "Valor4": "",
@@ -2012,7 +2183,7 @@
     {
       "Tipo": "REGISTROS",
       "Informacion": "configuracion_organizacion",
-      "Valor1": "2",
+      "Valor1": "3",
       "Valor2": "Pocos datos",
       "Valor3": "",
       "Valor4": "",
@@ -2021,7 +2192,7 @@
     {
       "Tipo": "REGISTROS",
       "Informacion": "ConfiguracionCobranza",
-      "Valor1": "2",
+      "Valor1": "3",
       "Valor2": "Pocos datos",
       "Valor3": "",
       "Valor4": "",
@@ -2039,7 +2210,7 @@
     {
       "Tipo": "REGISTROS",
       "Informacion": "estados_factura",
-      "Valor1": "5",
+      "Valor1": "6",
       "Valor2": "Pocos datos",
       "Valor3": "",
       "Valor4": "",
@@ -2048,7 +2219,7 @@
     {
       "Tipo": "REGISTROS",
       "Informacion": "Facturas",
-      "Valor1": "2604",
+      "Valor1": "2629",
       "Valor2": "Datos abundantes",
       "Valor3": "",
       "Valor4": "",
@@ -2066,8 +2237,8 @@
     {
       "Tipo": "REGISTROS",
       "Informacion": "ImpuestosConcepto",
-      "Valor1": "70",
-      "Valor2": "Datos de prueba",
+      "Valor1": "111",
+      "Valor2": "Datos abundantes",
       "Valor3": "",
       "Valor4": "",
       "Valor5": ""
@@ -2075,7 +2246,7 @@
     {
       "Tipo": "REGISTROS",
       "Informacion": "Organizaciones",
-      "Valor1": "2",
+      "Valor1": "3",
       "Valor2": "Pocos datos",
       "Valor3": "",
       "Valor4": "",
@@ -2110,6 +2281,15 @@
     },
     {
       "Tipo": "REGISTROS",
+      "Informacion": "Recordatorios",
+      "Valor1": "9",
+      "Valor2": "Pocos datos",
+      "Valor3": "",
+      "Valor4": "",
+      "Valor5": ""
+    },
+    {
+      "Tipo": "REGISTROS",
       "Informacion": "RecordatoriosProgramados",
       "Valor1": "1",
       "Valor2": "Pocos datos",
@@ -2129,7 +2309,7 @@
     {
       "Tipo": "REGISTROS",
       "Informacion": "Roles",
-      "Valor1": "3",
+      "Valor1": "2",
       "Valor2": "Pocos datos",
       "Valor3": "",
       "Valor4": "",
@@ -2138,7 +2318,7 @@
     {
       "Tipo": "REGISTROS",
       "Informacion": "Usuario_Organizacion",
-      "Valor1": "3",
+      "Valor1": "7",
       "Valor2": "Pocos datos",
       "Valor3": "",
       "Valor4": "",
@@ -2147,7 +2327,7 @@
     {
       "Tipo": "REGISTROS",
       "Informacion": "Usuarios",
-      "Valor1": "5",
+      "Valor1": "9",
       "Valor2": "Pocos datos",
       "Valor3": "",
       "Valor4": "",
@@ -2155,7 +2335,7 @@
     },
     {
       "Tipo": "RESUMEN_EJECUTIVO",
-      "Informacion": "ANÁLISIS COMPLETADO - 2025-10-08 19:17:00",
+      "Informacion": "ANÁLISIS COMPLETADO - 2025-10-21 18:33:25",
       "Valor1": "? BD Analizada",
       "Valor2": "?? Listo para módulo Por Cobrar",
       "Valor3": "",

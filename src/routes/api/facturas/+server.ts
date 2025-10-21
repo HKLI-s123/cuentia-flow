@@ -143,6 +143,7 @@ export const GET: RequestHandler = async (event) => {
         f.UltimaGestion,
         f.Observaciones,
         f.CreatedAt,
+        f.Timbrado,
         c.RazonSocial as ClienteRazonSocial,
         c.NombreComercial as ClienteNombreComercial,
         c.RFC as ClienteRFC,
@@ -241,6 +242,7 @@ export const GET: RequestHandler = async (event) => {
       ultimaGestion: factura.UltimaGestion,
       observaciones: factura.Observaciones,
       createdAt: factura.CreatedAt,
+      timbrado: factura.Timbrado,
       cliente: {
         id: factura.ClienteId,
         razonSocial: factura.ClienteRazonSocial,
@@ -320,6 +322,18 @@ export const POST: RequestHandler = async (event) => {
 
     if (!data.conceptos || data.conceptos.length === 0) {
       return json({ success: false, error: 'Debe incluir al menos un concepto' }, { status: 400 });
+    }
+
+    // Validar que todos los conceptos tengan la misma moneda que la factura
+    const monedaFactura = data.moneda || 'MXN';
+    for (const concepto of data.conceptos) {
+      const monedaConcepto = concepto.monedaProducto || 'MXN';
+      if (monedaConcepto !== monedaFactura) {
+        return json({
+          success: false,
+          error: `El concepto "${concepto.nombre}" está en ${monedaConcepto} pero la factura está en ${monedaFactura}. Todos los conceptos deben usar la misma moneda que la factura.`
+        }, { status: 400 });
+      }
     }
 
     const pool = await getConnection();

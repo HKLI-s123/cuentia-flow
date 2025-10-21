@@ -53,6 +53,13 @@
 	let conceptoEditando: Concepto | null = null;
 	let desglosarImpuestos = false;
 
+	// Búsqueda de conceptos guardados
+	let busquedaConceptoGuardado = '';
+	let conceptosGuardados: any[] = [];
+	let mostrarListaConceptosGuardados = false;
+	let cargandoConceptosGuardados = false;
+	let timeoutBusquedaConceptos: any = null;
+
 	// Recurrencia
 	let recurrenciaActiva = false;
 	let ordenRecurrencia = '';
@@ -135,6 +142,11 @@
 		clienteSeleccionado = cliente;
 		busquedaCliente = cliente.nombreComercial || cliente.razonSocial;
 		mostrarListaClientes = false;
+
+		// Limpiar búsqueda de conceptos al cambiar de cliente
+		busquedaConceptoGuardado = '';
+		conceptosGuardados = [];
+		mostrarListaConceptosGuardados = false;
 	}
 
 	function abrirModalConcepto() {
@@ -174,6 +186,78 @@
 		conceptos = conceptos.map((c) => (c.id === id ? { ...c, cantidad } : c));
 	}
 
+	// Función para buscar conceptos guardados por cliente
+	async function buscarConceptosGuardados() {
+		if (!busquedaConceptoGuardado.trim()) {
+			conceptosGuardados = [];
+			mostrarListaConceptosGuardados = false;
+			return;
+		}
+
+		// Solo buscar si hay un cliente seleccionado
+		if (!clienteSeleccionado?.id) {
+			conceptosGuardados = [];
+			mostrarListaConceptosGuardados = false;
+			return;
+		}
+
+		// Debounce: Esperar 300ms después de que el usuario deje de escribir
+		clearTimeout(timeoutBusquedaConceptos);
+		timeoutBusquedaConceptos = setTimeout(async () => {
+			cargandoConceptosGuardados = true;
+			try {
+				const organizacionId = sessionStorage.getItem('organizacionActualId');
+				if (!organizacionId) {
+					console.error('No se encontró organizacionId');
+					return;
+				}
+
+				const response = await authFetch(
+					`/api/conceptos?search=${encodeURIComponent(busquedaConceptoGuardado)}&limit=20&organizacionId=${organizacionId}&clienteId=${clienteSeleccionado.id}`
+				);
+
+				if (response.ok) {
+					const data = await response.json();
+					if (data.success) {
+						conceptosGuardados = data.conceptos;
+						mostrarListaConceptosGuardados = true;
+					}
+				}
+			} catch (error) {
+				console.error('Error al buscar conceptos guardados:', error);
+			} finally {
+				cargandoConceptosGuardados = false;
+			}
+		}, 300);
+	}
+
+	// Cargar concepto guardado seleccionado
+	function cargarConceptoGuardado(conceptoGuardado: any) {
+		// Crear nuevo concepto con datos del guardado
+		const nuevoConcepto: Concepto = {
+			id: crypto.randomUUID(),
+			nombre: conceptoGuardado.nombre,
+			descripcion: conceptoGuardado.descripcion,
+			productoServicio: conceptoGuardado.claveProdServ,
+			unidadMedida: conceptoGuardado.unidadMedida,
+			monedaProducto: conceptoGuardado.monedaProducto || moneda,
+			objetoImpuesto: conceptoGuardado.objetoImpuesto || '02',
+			precioUnitario: conceptoGuardado.precioUnitario,
+			cantidad: 1,
+			impuestos: conceptoGuardado.impuestos || [],
+			subtotal: conceptoGuardado.subtotal,
+			totalImpuestos: conceptoGuardado.totalImpuestos,
+			total: conceptoGuardado.total
+		};
+
+		// Agregar a la lista de conceptos
+		conceptos = [...conceptos, nuevoConcepto];
+
+		// Limpiar búsqueda
+		busquedaConceptoGuardado = '';
+		mostrarListaConceptosGuardados = false;
+	}
+
 	$: subtotalGeneral = conceptos.reduce((sum, c) => sum + c.subtotal * c.cantidad, 0);
 	$: impuestoGeneral = conceptos.reduce((sum, c) => sum + c.totalImpuestos * c.cantidad, 0);
 	$: totalGeneral = conceptos.reduce((sum, c) => sum + c.total * c.cantidad, 0);
@@ -197,7 +281,8 @@
 	}
 
 	// Obtener tipo de cambio automáticamente al cambiar moneda
-	$: if (moneda && moneda !== 'MXN') {
+	// Se ejecuta siempre que cambie la moneda (incluyendo cuando cambias a MXN)
+	$: if (moneda) {
 		obtenerTipoCambio();
 	}
 
@@ -618,6 +703,44 @@
 			</label>
 		</div>
 
+		<!-- Búsqueda de Conceptos Guardados -->
+		<div class="relative mb-6">
+			<input
+				type="text"
+				placeholder={clienteSeleccionado ? "🔍 Cargar concepto guardado - Busca por nombre, descripción o clave SAT..." : "Selecciona un cliente primero para cargar conceptos guardados"}
+				bind:value={busquedaConceptoGuardado}
+				on:input={buscarConceptosGuardados}
+				on:focus={() => {
+					if (conceptosGuardados.length > 0) mostrarListaConceptosGuardados = true;
+				}}
+				disabled={!clienteSeleccionado}
+				class="w-full px-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {clienteSeleccionado ? 'border-blue-400 bg-blue-50 placeholder-blue-400' : 'border-gray-300 bg-gray-50 placeholder-gray-400 cursor-not-allowed disabled:opacity-60'}"
+			/>
+			{#if cargandoConceptosGuardados}
+				<div class="absolute right-3 top-3.5">
+					<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+				</div>
+			{/if}
+
+			{#if mostrarListaConceptosGuardados && conceptosGuardados.length > 0}
+				<div class="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-80 overflow-y-auto z-10">
+					{#each conceptosGuardados as concepto (concepto.id)}
+						<button
+							type="button"
+							on:click={() => cargarConceptoGuardado(concepto)}
+							class="w-full text-left px-4 py-3 hover:bg-blue-50 border-b border-gray-200 last:border-b-0 transition-colors"
+						>
+							<div class="font-semibold text-gray-900">{concepto.nombre}</div>
+							<div class="text-sm text-gray-600">{concepto.descripcion}</div>
+							<div class="text-xs text-gray-500 mt-1">
+								💰 ${parseFloat(concepto.precioUnitario).toFixed(2)} × {concepto.cantidad} = ${parseFloat(concepto.total).toFixed(2)}
+							</div>
+						</button>
+					{/each}
+				</div>
+			{/if}
+		</div>
+
 		<!-- Tabla de conceptos -->
 		{#if conceptos.length > 0}
 			<div class="overflow-x-auto mb-4">
@@ -760,6 +883,7 @@
 	<ModalConcepto
 		bind:open={modalConceptoAbierto}
 		concepto={conceptoEditando}
+		monedaFactura={moneda}
 		on:guardar={handleGuardarConcepto}
 		on:cerrar={handleCerrarModal}
 	/>

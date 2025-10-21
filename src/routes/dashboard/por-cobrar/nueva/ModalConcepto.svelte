@@ -5,6 +5,7 @@
 
 	export let open = false;
 	export let concepto: any = null;
+	export let monedaFactura: string = 'MXN'; // Moneda de la factura - fuerza la moneda del concepto
 
 	const dispatch = createEventDispatcher();
 
@@ -15,6 +16,9 @@
 	let unidadMedida = '';
 	let monedaProducto = 'MXN';
 	let objetoImpuesto = '01';
+
+	// Forzar que la moneda del concepto sea igual a la de la factura
+	$: monedaProducto = monedaFactura;
 
 	// Búsqueda de productos SAT
 	let busquedaProductoSAT = '';
@@ -507,16 +511,21 @@
 
 						<div class="grid grid-cols-2 gap-4">
 							<div>
-								<label for="moneda-producto" class="block text-sm text-gray-600 mb-1">Moneda</label>
+								<label for="moneda-producto" class="block text-sm text-gray-600 mb-1">
+									Moneda
+									<span class="text-blue-600 text-xs ml-2">(Fija: {monedaFactura})</span>
+								</label>
 								<select
 									id="moneda-producto"
 									bind:value={monedaProducto}
-									class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+									disabled={true}
+									class="w-full px-4 py-2 border border-blue-500 bg-blue-50 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-75"
 								>
 									<option value="MXN">MXN - Peso mexicano</option>
 									<option value="USD">USD - Dólar americano</option>
 									<option value="EUR">EUR - Euro</option>
 								</select>
+								<p class="text-xs text-blue-600 mt-1">La moneda se fija automáticamente según la factura</p>
 							</div>
 
 							<div>

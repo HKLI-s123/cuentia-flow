@@ -1,7 +1,7 @@
 # Configuración de Netlify para SvelteKit
 [build]
   command = "npm run build"
-  publish = ".svelte-kit/netlify"
+  publish = "build"
 
 # Variables de entorno (configurar en Netlify UI)
 # Las siguientes variables deben configurarse en Netlify Dashboard:
