@@ -458,7 +458,7 @@
         IMPORTAR
       </Button> -->
       <Button
-        variant="success"
+        variant="primary"
         size="md"
         on:click={() => goto('/dashboard/por-cobrar/nueva')}
       >

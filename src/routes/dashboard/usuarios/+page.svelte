@@ -710,7 +710,7 @@
         <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
           <div class="flex items-center justify-between">
             <div>
-              <label class="block text-sm font-medium text-gray-900">
+              <label for="estado-usuario-toggle" class="block text-sm font-medium text-gray-900">
                 Estado del Usuario
               </label>
               <p class="text-sm text-gray-500 mt-1">
@@ -718,8 +718,10 @@
               </p>
             </div>
             <button
+              id="estado-usuario-toggle"
               type="button"
               on:click={toggleActivo}
+              aria-pressed={nuevoUsuario.activo === 1}
               class="relative inline-flex h-8 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 {nuevoUsuario.activo === 1 ? 'bg-blue-600' : 'bg-gray-300'}"
             >
               <span
