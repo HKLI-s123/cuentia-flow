@@ -3,9 +3,10 @@ import { getConnection } from '$lib/server/db';
 
 export const GET: RequestHandler = async ({ params, url }) => {
   try {
+    const pagoId = params.id;
     const organizacionId = url.searchParams.get('organizacionId');
 
-    if (!organizacionId) {
+    if (!pagoId || !organizacionId) {
       return new Response(
         JSON.stringify({
           success: false,
@@ -18,7 +19,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
     const pool = await getConnection();
 
     const result = await pool.request()
-      .input('id', parseInt(params.id))
+      .input('id', parseInt(pagoId))
       .input('organizacionId', organizacionId)
       .query(`
         SELECT
@@ -115,9 +116,10 @@ export const GET: RequestHandler = async ({ params, url }) => {
 export const PUT: RequestHandler = async ({ params, request: req, url }) => {
   try {
     const body = await req.json();
+    const pagoId = params.id;
     const organizacionId = url.searchParams.get('organizacionId');
 
-    if (!organizacionId) {
+    if (!pagoId || !organizacionId) {
       return new Response(
         JSON.stringify({
           success: false,
@@ -131,7 +133,7 @@ export const PUT: RequestHandler = async ({ params, request: req, url }) => {
 
     // Verificar que el pago existe y pertenece a la organización
     const checkResult = await pool.request()
-      .input('id', parseInt(params.id))
+      .input('id', parseInt(pagoId))
       .input('organizacionId', organizacionId)
       .query(`
         SELECT p.Id
@@ -152,7 +154,7 @@ export const PUT: RequestHandler = async ({ params, request: req, url }) => {
     }
 
     const request = pool.request()
-      .input('id', parseInt(params.id));
+      .input('id', parseInt(pagoId));
 
     let updateFields = [];
     if (body.monto !== undefined) {
@@ -207,9 +209,10 @@ export const PUT: RequestHandler = async ({ params, request: req, url }) => {
 
 export const DELETE: RequestHandler = async ({ params, url }) => {
   try {
+    const pagoId = params.id;
     const organizacionId = url.searchParams.get('organizacionId');
 
-    if (!organizacionId) {
+    if (!pagoId || !organizacionId) {
       return new Response(
         JSON.stringify({
           success: false,
@@ -223,7 +226,7 @@ export const DELETE: RequestHandler = async ({ params, url }) => {
 
     // Verificar que el pago existe y pertenece a la organización
     const checkResult = await pool.request()
-      .input('id', parseInt(params.id))
+      .input('id', parseInt(pagoId))
       .input('organizacionId', organizacionId)
       .query(`
         SELECT p.Id
@@ -244,7 +247,7 @@ export const DELETE: RequestHandler = async ({ params, url }) => {
     }
 
     const result = await pool.request()
-      .input('id', parseInt(params.id))
+      .input('id', parseInt(pagoId))
       .query('DELETE FROM Pagos WHERE Id = @id');
 
     return new Response(
