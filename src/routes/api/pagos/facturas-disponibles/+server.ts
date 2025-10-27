@@ -37,15 +37,13 @@ export const GET: RequestHandler = async ({ url }) => {
         f.FechaEmision as fechaEmision,
         f.FechaVencimiento as fechaVencimiento,
         f.estado_factura_id as estadoId,
+        f.UUIDFacturapi as uuid,
         DATEDIFF(DAY, f.FechaVencimiento, GETDATE()) as diasVencido
       FROM Facturas f
       INNER JOIN Clientes cl ON f.ClienteId = cl.Id
       WHERE f.ClienteId = @clienteId
         AND cl.OrganizacionId = @organizacionId
         AND f.SaldoPendiente > 0
-        AND NOT EXISTS (
-          SELECT 1 FROM Pagos p WHERE p.FacturaId = f.Id
-        )
       ORDER BY f.FechaVencimiento DESC
     `;
 
@@ -59,6 +57,7 @@ export const GET: RequestHandler = async ({ url }) => {
         success: true,
         facturas: result.recordset.map((row: any) => ({
           id: row.id,
+          uuid: row.uuid,
           numeroFactura: row.numeroFactura,
           montoTotal: row.montoTotal,
           saldoPendiente: row.saldoPendiente,

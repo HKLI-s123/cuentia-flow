@@ -113,6 +113,104 @@ export const GET: RequestHandler = async ({ params, url }) => {
   }
 };
 
+export const POST: RequestHandler = async ({ request, url }) => {
+  try {
+    const organizacionId = url.searchParams.get('organizacionId');
+    if (!organizacionId) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'El parámetro organizacionId es requerido.'
+        }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const body = await request.json();
+    const { facturaId, usuarioId, monto, fechaPago, metodo } = body;
+
+    if (!facturaId || !usuarioId || !monto || !fechaPago || !metodo) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'Todos los campos son requeridos: facturaId, usuarioId, monto, fechaPago, metodo.'
+        }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const pool = await getConnection();
+
+    // Verificar que la factura pertenezca a la organización
+    const facturaCheck = await pool.request()
+      .input('facturaId', facturaId)
+      .input('organizacionId', organizacionId)
+      .query(`
+        SELECT f.Id, f.SaldoPendiente
+        FROM Facturas f
+        INNER JOIN Clientes c ON f.ClienteId = c.Id
+        WHERE f.Id = @facturaId AND c.OrganizacionId = @organizacionId
+      `);
+
+    if (facturaCheck.recordset.length === 0) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'Factura no encontrada o no pertenece a la organización.'
+        }),
+        { status: 404, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const saldoPendienteActual = parseFloat(facturaCheck.recordset[0].SaldoPendiente);
+    const nuevoSaldoPendiente = saldoPendienteActual - parseFloat(monto);
+
+    // Insertar el pago
+    const insertResult = await pool.request()
+      .input('facturaId', facturaId)
+      .input('usuarioId', usuarioId)
+      .input('monto', monto)
+      .input('fechaPago', fechaPago)
+      .input('metodo', metodo)
+      .query(`
+        INSERT INTO Pagos (FacturaId, UsuarioId, Monto, FechaPago, Metodo, CreatedAt, UpdatedAt)
+        OUTPUT INSERTED.Id
+        VALUES (@facturaId, @usuarioId, @monto, @fechaPago, @metodo, GETDATE(), GETDATE())
+      `);
+
+    const pagoId = insertResult.recordset[0].Id;
+
+    // Actualizar el saldo pendiente de la factura
+    await pool.request()
+      .input('facturaId', facturaId)
+      .input('nuevoSaldo', Math.max(0, nuevoSaldoPendiente))
+      .query(`
+        UPDATE Facturas
+        SET SaldoPendiente = @nuevoSaldo
+        WHERE Id = @facturaId
+      `);
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: 'Pago registrado correctamente',
+        pagoId,
+        nuevoSaldoPendiente: Math.max(0, nuevoSaldoPendiente)
+      }),
+      { status: 201, headers: { 'Content-Type': 'application/json' } }
+    );
+  } catch (error) {
+    console.error('Error al registrar pago:', error);
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: error instanceof Error ? error.message : 'Error al registrar pago'
+      }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+};
+
 export const PUT: RequestHandler = async ({ params, request: req, url }) => {
   try {
     const body = await req.json();

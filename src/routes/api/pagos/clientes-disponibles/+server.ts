@@ -38,12 +38,15 @@ export const GET: RequestHandler = async ({ url }) => {
         c.RFC as rfc,
         c.CorreoPrincipal as correo,
         c.Telefono as telefono,
+        r.Codigo as regimenFiscal,
+        c.CodigoPostal as codigoPostal, 
         COUNT(DISTINCT f.Id) as totalFacturas,
         COUNT(DISTINCT CASE WHEN f.SaldoPendiente > 0 THEN f.Id END) as facturasConSaldo
       FROM Clientes c
       LEFT JOIN Facturas f ON c.Id = f.ClienteId
+      LEFT JOIN Regimen r ON c.RegimenFiscalId = r.ID_Regimen
       ${whereClause}
-      GROUP BY c.Id, c.RazonSocial, c.NombreComercial, c.RFC, c.CorreoPrincipal, c.Telefono
+      GROUP BY c.Id, c.RazonSocial, c.NombreComercial, c.RFC, c.CorreoPrincipal, c.Telefono, r.Codigo, c.CodigoPostal
       ORDER BY c.RazonSocial ASC
     `;
 
@@ -66,6 +69,8 @@ export const GET: RequestHandler = async ({ url }) => {
           rfc: row.rfc,
           correo: row.correo,
           telefono: row.telefono,
+          regimenFiscal: row.regimenFiscal,
+          codigoPostal: row.codigoPostal,
           totalFacturas: row.totalFacturas,
           facturasConSaldo: row.facturasConSaldo
         }))

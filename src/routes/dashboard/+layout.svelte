@@ -218,7 +218,7 @@
 
   // Configuración de navegación
   const navigation = [
-    { name: 'Inicio-Sergio', href: '/dashboard', icon: Home },
+    { name: 'Inicio', href: '/dashboard', icon: Home },
     { name: 'Por Cobrar', href: '/dashboard/por-cobrar', icon: DollarSign },
     { name: 'Ventas', href: '/dashboard/ventas', icon: BarChart3 },
     { name: 'Pagos', href: '/dashboard/pagos', icon: CreditCard },

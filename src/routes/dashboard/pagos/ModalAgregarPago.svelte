@@ -1,14 +1,18 @@
 <script lang="ts">
   import { authFetch } from '$lib/api';
   import { Button, Badge, Input, Modal } from '$lib/components/ui';
+  import axios from 'axios';
   import { CreditCard, AlertCircle, Loader, Trash2, Plus } from 'lucide-svelte';
   import { createEventDispatcher } from 'svelte';
+  import { onMount } from 'svelte';
+  
 
   const dispatch = createEventDispatcher();
 
   // Props
   export let open = false;
   export let organizacionId: string;
+
 
   // Estado del formulario
   let clienteSeleccionado: any = null;
@@ -35,7 +39,10 @@
   let errorMensaje: string | null = null;
 
   // Reactividad
-  $: totalPendiente = facturasSeleccionadas.reduce((sum, f) => sum + (f.saldoPendiente || 0), 0);
+  $: totalPendiente = facturasSeleccionadas.reduce(
+    (sum, f) => sum + (parseFloat(f.montoPago) || 0),
+    0
+  );
 
   // Métodos
   async function buscarClientes() {
@@ -66,6 +73,7 @@
 
   async function seleccionarCliente(cliente: any) {
     clienteSeleccionado = cliente;
+    console.log(clienteSeleccionado);
     busquedaCliente = cliente.razonSocial;
     mostrarListaClientes = false;
     clientesEncontrados = [];
@@ -149,7 +157,10 @@
 
   function agregarFactura(factura: any) {
     if (!facturasSeleccionadas.find(f => f.id === factura.id)) {
-      facturasSeleccionadas = [...facturasSeleccionadas, factura];
+      facturasSeleccionadas = [
+        ...facturasSeleccionadas,
+        { ...factura, montoPago: factura.saldoPendiente } // nuevo campo editable
+      ];
       facturasDisponibles = facturasDisponibles.filter(f => f.id !== factura.id);
     }
   }
@@ -164,60 +175,193 @@
   }
 
   async function guardarPago() {
-    errorMensaje = null;
+     try {
+       // 🔹 Validaciones básicas
+       if (!clienteSeleccionado) {
+         errorMensaje = 'Debes seleccionar un cliente.';
+         return;
+       }
+   
+       if (!metodoPago) {
+         errorMensaje = 'Debes seleccionar un método de pago.';
+         return;
+       }
+   
+       if (!fechaPago) {
+         errorMensaje = 'Debes seleccionar una fecha de pago.';
+         return;
+       }
+   
+       if (!facturasSeleccionadas.length) {
+         errorMensaje = 'Debes seleccionar al menos una factura.';
+         return;
+       }
 
-    if (!clienteSeleccionado?.id) {
-      errorMensaje = 'Selecciona un cliente';
-      return;
-    }
-
-    if (!metodoPago) {
-      errorMensaje = 'Selecciona un método de pago';
-      return;
-    }
-
-    if (facturasSeleccionadas.length === 0) {
-      errorMensaje = 'Agrega al menos una factura';
-      return;
-    }
-
-    guardando = true;
-
-    try {
-      const usuarioId = sessionStorage.getItem('usuarioId') || '1';
-
-      // Crear un pago por cada factura
-      for (const factura of facturasSeleccionadas) {
-        const response = await authFetch(`/api/pagos?organizacionId=${organizacionId}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            facturaId: factura.id,
-            usuarioId: parseInt(usuarioId),
-            monto: factura.saldoPendiente,
-            fechaPago,
-            metodo: metodoPago
-          })
-        });
-
-        const data = await response.json();
-        if (!data.success) {
-          errorMensaje = data.message || 'Error al guardar pago';
-          guardando = false;
-          return;
-        }
+      if (facturasSeleccionadas.some(f => f.montoPago <= 0)) {
+         errorMensaje = 'Todos los montos deben ser mayores a cero';
+         guardando = false;
+         return;
       }
+   
+       // 🔹 Validar montos de pago
+       const facturasConMonto = facturasSeleccionadas.filter(f => f.montoPago && f.montoPago > 0);
+       if (!facturasConMonto.length) {
+         errorMensaje = 'Debes ingresar el monto a pagar de al menos una factura.';
+         return;
+       }
 
-      // Si llegó aquí, todos los pagos se guardaron
-      dispatch('pagoGuardado');
-      cerrar();
-    } catch (err) {
-      errorMensaje = err instanceof Error ? err.message : 'Error al guardar pago';
-    } finally {
-      guardando = false;
-    }
-  }
+       // 🔹 Consultar parcialidades desde la BD
+      const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+      const usuarioId = userData.id || '1';
+       const facturasConMontoYParcialidad = await Promise.all(
+         facturasConMonto.map(async (f) => {
+           try {
+             const resp = await authFetch(
+               `/api/pagos/contador?facturaId=${f.id}&usuarioId=${usuarioId}`
+             );
+             const data = await resp.json();
+             const parcialidad = (data.success ? data.totalPagos : 0) + 1;
+             return { ...f, parcialidad };
+           } catch (err) {
+             console.error('Error al consultar parcialidad de factura', f.id, err);
+             return { ...f, parcialidad: 1 };
+           }
+         })
+       );
 
+   
+       // 🔹 Construir payload de Facturapi
+       const facturapiPayload = {
+         type: 'P',
+         customer: {
+           legal_name: clienteSeleccionado.razonSocial,
+           email: clienteSeleccionado.email,
+           tax_id: clienteSeleccionado.rfc,
+           tax_system: "626",
+           address: {
+             zip: clienteSeleccionado.codigoPostal || '00000'
+           }
+         },
+         complements: [
+           {
+             type: 'pago',
+             data: [
+               {
+                 payment_form: metodoPago, // Ejemplo: '03' transferencia
+                 date: new Date(fechaPago).toISOString(),
+                 related_documents: facturasConMontoYParcialidad.map(f => ({
+                   uuid: f.uuid, // UUID de la factura original
+                   amount: parseFloat(f.montoPago),
+                   installment: f.parcialidad || 1,
+                  ...(parseFloat(f.saldoPendiente) - parseFloat(f.montoPago) > 0
+                      ? { last_balance: parseFloat(f.saldoPendiente) - parseFloat(f.montoPago) }
+                      : {last_balance: parseFloat(f.saldoPendiente)}), // si es 0 o menor, no se envía
+                   taxes: [
+                     {
+                       base: parseFloat((f.montoPago / 1.16).toFixed(2)),
+                       type: 'IVA',
+                       rate: 0.16
+                     }
+                   ]
+                 })              
+                )
+               }
+             ]
+           }
+         ]
+       };
+   
+       console.log('📦 Payload a enviar a Facturapi:', facturapiPayload);
+   
+       guardando = true;
+       errorMensaje = null;
+   
+       const apiKey = 'REDACTED_FACTURAPI_TEST_KEY';
+       // 🔹 Llamada a Facturapi
+       const { data: invoice } = await axios.post(
+         'https://www.facturapi.io/v2/invoices',
+         facturapiPayload,
+         {
+           auth: {
+             username: apiKey, // Clave privada de la organización
+             password: ''
+           }
+         }
+       );
+
+       // 🔹 Actualizar saldo pendiente de cada factura
+       for (const f of facturasConMonto) {
+         const newSaldo = parseFloat(f.saldoPendiente) - parseFloat(f.montoPago);
+         await authFetch(`/api/facturas/${f.id}/actualizar-saldo`, {
+           method: 'PATCH',
+           headers: { 'Content-Type': 'application/json' },
+           body: JSON.stringify({ saldoPendiente: newSaldo})
+         });
+       
+         // opcional: actualizar el objeto local para reflejarlo inmediatamente en UI
+         f.saldoPendiente = newSaldo;
+       }
+   
+       console.log('✅ Respuesta de Facturapi:', {
+         id: invoice.id,
+         uuid: invoice.uuid,
+         total: invoice.total,
+         status: invoice.status,
+         url_xml: invoice.xml,
+         url_pdf: invoice.pdf
+       });
+   
+       alert(`✅ CFDI de pago creado correctamente. UUID: ${invoice.uuid}`);
+       
+     
+       try {   
+         // Crear un pago por cada factura
+         for (const factura of facturasSeleccionadas) {
+
+           const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+           const usuarioId = userData.id || '1';
+           const response = await authFetch(`/api/pagos?organizacionId=${organizacionId}`, {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({
+               facturaId: factura.id,
+               usuarioId: parseInt(usuarioId),
+               monto: factura.saldoPendiente,
+               fechaPago,
+               metodo: metodoPago
+             })
+           });
+   
+           const data = await response.json();
+           if (!data.success) {
+             errorMensaje = data.message || 'Error al guardar pago';
+             guardando = false;
+             return;
+           }
+         }
+
+   
+         // Si llegó aquí, todos los pagos se guardaron
+         dispatch('pagoGuardado');
+         cerrar();
+       } catch (err) {
+         errorMensaje = err instanceof Error ? err.message : 'Error al guardar pago';
+       } finally {
+         guardando = false;
+       }
+   
+       // 🔹 Emitir evento y cerrar modal
+       dispatch('pagoGuardado');
+       cerrar();
+   
+     } catch (error: any) {
+       console.error('❌ Error al timbrar con Facturapi:', error);
+       errorMensaje = error?.response?.data?.message || 'Error al crear el CFDI de pago en Facturapi.';
+     } finally {
+       guardando = false;
+     }
+   }
+   
   function cerrar() {
     open = false;
     resetearFormulario();
@@ -460,11 +604,29 @@
         <div class="mt-4 space-y-2 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p class="text-sm font-medium text-gray-900 mb-3">Facturas seleccionadas ({facturasSeleccionadas.length})</p>
           {#each facturasSeleccionadas as factura}
-            <div class="flex items-center justify-between p-2 bg-white border border-blue-100 rounded">
-              <div>
+            <div class="flex items-center justify-between p-3 bg-white border border-blue-100 rounded-lg">
+              <div class="flex flex-col">
                 <p class="font-medium text-gray-900">#{factura.numeroFactura}</p>
-                <p class="text-sm text-gray-600">{formatearMoneda(factura.saldoPendiente)}</p>
+                <p class="text-xs text-gray-500">Saldo pendiente: {formatearMoneda(factura.saldoPendiente)}</p>
+                <div class="mt-2 flex items-center gap-2">
+                  <label for={"monto-" + factura.id} class="text-sm text-gray-700">Monto a pagar:</label>
+                  <input
+                    id={"monto-" + factura.id}
+                    type="number"
+                    min="0"
+                    max={factura.saldoPendiente}
+                    step="0.01"
+                    bind:value={factura.montoPago}
+                    on:input={() => {
+                      // Asegura que el monto no exceda el saldo
+                      if (factura.montoPago > factura.saldoPendiente) factura.montoPago = factura.saldoPendiente;
+                      facturasSeleccionadas = [...facturasSeleccionadas];
+                    }}
+                    class="w-32 px-2 py-1 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
               </div>
+          
               <button
                 type="button"
                 on:click={() => removerFactura(factura.id)}
