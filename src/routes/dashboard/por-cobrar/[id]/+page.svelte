@@ -9,6 +9,9 @@
   import type { Factura } from '../types';
   import { formatearMoneda, formatearFecha } from '../utils';
   import Swal from 'sweetalert2';
+  import ModalPagos from '../../pagos/ModalAgregarPago.svelte';
+ 
+  let modalPagosAbierto = false;
 
   // Obtener ID de la factura desde la URL
   $: facturaId = $page.params.id;
@@ -327,13 +330,24 @@
             <Button variant="primary" size="md" on:click={() => abrirModalRecordatorios(false)}>
               ENVIAR RECORDATORIO
             </Button>
-            <Button variant="success" size="md">
-              AGREGAR PAGO
-            </Button>
+              <Button
+                variant="success"
+                size="md"
+                on:click={() => modalPagosAbierto = true}
+              >
+                AGREGAR PAGO
+              </Button>
           </div>
         </div>
       </div>
     </div>
+    <ModalPagos
+      bind:open={modalPagosAbierto}
+      organizacionId={JSON.parse(sessionStorage.getItem('userData') || '{}').organizacionId}
+      facturaInicial={factura}
+      clienteInicial={factura.cliente}
+      abrirConFactura={true}
+    />
 
     <!-- Contenido principal -->
     <div class="max-w-7xl mx-auto px-6 py-6">

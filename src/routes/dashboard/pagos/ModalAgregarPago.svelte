@@ -9,9 +9,32 @@
 
   const dispatch = createEventDispatcher();
 
+  const limpiarRazonSocial = (razonSocial: string, rfc: string): string => {
+      const esPersonaFisica = rfc && rfc.length === 13;
+    
+      let resultado = razonSocial.toUpperCase(); // SOLO mayúsculas
+    
+      // ⚠️ NO eliminar acentos ni Ñ
+    
+      // Solo eliminar régimen societario si es persona moral
+      if (!esPersonaFisica) {
+        resultado = resultado
+          .replace(/\s+S\.?\s?A\.?\s+(DE\s+)?C\.?\s?V\.?$/i, '')
+          .replace(/\s+S\.?\s?DE\s+R\.?\s?L\.?(\s+DE\s+C\.?\s?V\.?)?$/i, '')
+          .replace(/\s+S\.?\s?C\.?$/i, '')
+          .replace(/\s+A\.?\s?C\.?$/i, '');
+      }
+    
+      return resultado.trim();
+  };
+
   // Props
   export let open = false;
   export let organizacionId: string;
+  // 🔹 NUEVAS PROPS
+  export let facturaInicial: any = null;
+  export let clienteInicial: any = null;
+  export let abrirConFactura = false;
 
 
   // Estado del formulario
@@ -43,6 +66,24 @@
     (sum, f) => sum + (parseFloat(f.montoPago) || 0),
     0
   );
+
+  $: if (open && abrirConFactura && facturaInicial && clienteInicial) {
+  // Cliente
+  clienteSeleccionado = clienteInicial;
+  busquedaCliente = clienteInicial.razonSocial;
+
+  // Factura
+  facturasSeleccionadas = [
+    {
+      ...facturaInicial,
+      montoPago: facturaInicial.saldoPendiente
+    }
+  ];
+
+  // Evita que vuelva a cargarlas
+  facturasDisponibles = [];
+}
+
 
   // Métodos
   async function buscarClientes() {
@@ -228,13 +269,14 @@
            }
          })
        );
-
+       
+       console.log(clienteSeleccionado.razonSocial);
    
        // 🔹 Construir payload de Facturapi
        const facturapiPayload = {
          type: 'P',
          customer: {
-           legal_name: clienteSeleccionado.razonSocial,
+           legal_name: clienteSeleccionado.razonSocial.toUpperCase(),
            email: clienteSeleccionado.email,
            tax_id: clienteSeleccionado.rfc,
            tax_system: "626",
@@ -272,13 +314,25 @@
        };
    
        console.log('📦 Payload a enviar a Facturapi:', facturapiPayload);
+
+       const payloadString = JSON.stringify(facturapiPayload);
+       console.log('📤 JSON ENVIADO A FACTURAPI:', payloadString);
    
        guardando = true;
        errorMensaje = null;
    
-       const apiKey = 'REDACTED_FACTURAPI_TEST_KEY';
+       const apiKey = 'REDACTED_FACTURAPI_LIVE_KEY';
+
+       console.log(
+        'LEGAL_NAME:',
+        facturapiPayload.customer.legal_name,
+        [...facturapiPayload.customer.legal_name].map(
+          c => `${c}(${c.charCodeAt(0)})`
+        )
+      );
+
        // 🔹 Llamada a Facturapi
-       const { data: invoice } = await axios.post(
+       const response = await axios.post(
          'https://www.facturapi.io/v2/invoices',
          facturapiPayload,
          {
@@ -288,6 +342,8 @@
            }
          }
        );
+
+       console.log('🧾 RESPUESTA COMPLETA FACTURAPI:', response);
 
        // 🔹 Actualizar saldo pendiente de cada factura
        for (const f of facturasConMonto) {
@@ -301,18 +357,7 @@
          // opcional: actualizar el objeto local para reflejarlo inmediatamente en UI
          f.saldoPendiente = newSaldo;
        }
-   
-       console.log('✅ Respuesta de Facturapi:', {
-         id: invoice.id,
-         uuid: invoice.uuid,
-         total: invoice.total,
-         status: invoice.status,
-         url_xml: invoice.xml,
-         url_pdf: invoice.pdf
-       });
-   
-       alert(`✅ CFDI de pago creado correctamente. UUID: ${invoice.uuid}`);
-       
+          
      
        try {   
          // Crear un pago por cada factura
@@ -326,7 +371,7 @@
              body: JSON.stringify({
                facturaId: factura.id,
                usuarioId: parseInt(usuarioId),
-               monto: factura.saldoPendiente,
+               monto: factura.montoPago,
                fechaPago,
                metodo: metodoPago
              })
@@ -377,6 +422,10 @@
     facturasDisponibles = [];
     errorMensaje = null;
     mostrarListaClientes = false;
+
+    facturaInicial = null;
+    clienteInicial = null;
+    abrirConFactura = false;
   }
 
   function formatearMoneda(monto: number): string {
@@ -438,6 +487,7 @@
               type="text"
               placeholder="Escribe para buscar cliente"
               bind:value={busquedaCliente}
+              disabled={!!clienteInicial}
               on:input={buscarClientes}
               on:focus={() => busquedaCliente && buscarClientes()}
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"

@@ -33,8 +33,8 @@ export const GET: RequestHandler = async ({ url }) => {
     const query = `
       SELECT TOP 20
         c.Id as id,
-        c.RazonSocial as razonSocial,
-        c.NombreComercial as nombreComercial,
+        c.RazonSocial COLLATE Latin1_General_CS_AS as razonSocial,
+        c.NombreComercial COLLATE Latin1_General_CS_AS as nombreComercial,
         c.RFC as rfc,
         c.CorreoPrincipal as correo,
         c.Telefono as telefono,

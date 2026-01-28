@@ -167,24 +167,24 @@ export const POST: RequestHandler = async (event) => {
     // - Eliminar acentos
     // - Eliminar regímenes societarios SOLO para personas morales
     const limpiarRazonSocial = (razonSocial: string, rfc: string): string => {
-      // Detectar si es persona física (RFC de 13 caracteres)
       const esPersonaFisica = rfc && rfc.length === 13;
-
-      let resultado = razonSocial
-        .toUpperCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // Eliminar acentos
-
-      // Solo eliminar regímenes societarios si es persona moral
+    
+      let resultado = razonSocial.toUpperCase(); // SOLO mayúsculas
+    
+      // ⚠️ NO eliminar acentos ni Ñ
+    
+      // Solo eliminar régimen societario si es persona moral
       if (!esPersonaFisica) {
         resultado = resultado
-          .replace(/\s+S\.?\s?A\.?\s+(DE\s+)?C\.?\s?V\.?$/i, '') // S.A. DE C.V., SA DE CV, S.A. de C.V.
-          .replace(/\s+S\.?\s?DE\s+R\.?\s?L\.?(\s+DE\s+C\.?\s?V\.?)?$/i, '') // S. DE R.L., S DE RL DE CV
-          .replace(/\s+S\.?\s?C\.?$/i, '') // S.C.
-          .replace(/\s+A\.?\s?C\.?$/i, ''); // A.C.
+          .replace(/\s+S\.?\s?A\.?\s+(DE\s+)?C\.?\s?V\.?$/i, '')
+          .replace(/\s+S\.?\s?DE\s+R\.?\s?L\.?(\s+DE\s+C\.?\s?V\.?)?$/i, '')
+          .replace(/\s+S\.?\s?C\.?$/i, '')
+          .replace(/\s+A\.?\s?C\.?$/i, '');
       }
-
+    
       return resultado.trim();
     };
+
 
     // Extraer serie y folio del número de factura
     // Formato esperado: CAM-2373 -> Serie: CAM, Folio: 2373
@@ -298,6 +298,9 @@ export const POST: RequestHandler = async (event) => {
       'https://www.facturapi.io/v2/invoices',
       facturapiPayload,
       {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
         auth: {
           username: factura.FacturapiKey,
           password: ''
