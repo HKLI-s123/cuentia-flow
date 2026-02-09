@@ -271,6 +271,8 @@
        );
        
        console.log(clienteSeleccionado.razonSocial);
+       console.log("Regimen fiscal del cliente",clienteSeleccionado.regimenFiscal);
+       console.log("longitud rfc", clienteSeleccionado.rfc.length);
    
        // 🔹 Construir payload de Facturapi
        const facturapiPayload = {
@@ -279,7 +281,7 @@
            legal_name: clienteSeleccionado.razonSocial.toUpperCase(),
            email: clienteSeleccionado.email,
            tax_id: clienteSeleccionado.rfc,
-           tax_system: "626",
+           tax_system: `${clienteSeleccionado.regimenFiscal}`.trim(),
            address: {
              zip: clienteSeleccionado.codigoPostal || '00000'
            }
