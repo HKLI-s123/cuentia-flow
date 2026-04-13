@@ -1,0 +1,86 @@
+[
+  {
+    "Id": 1,
+    "FacturaId": 3739,
+    "OrganizacionId": 45,
+    "ClienteId": 504,
+    "Canal": "whatsapp",
+    "EstadoEnvio": "enviado",
+    "MensajeError": null,
+    "FechaCreacion": "2026-03-23T22:21:29.713Z",
+    "FechaEnvio": "2026-03-23T22:21:29.713Z",
+    "IdMensajeWhatsApp": "3EB0354E0940DCCD87197B"
+  },
+  {
+    "Id": 2,
+    "FacturaId": 3741,
+    "OrganizacionId": 45,
+    "ClienteId": 504,
+    "Canal": "whatsapp",
+    "EstadoEnvio": "enviado",
+    "MensajeError": null,
+    "FechaCreacion": "2026-03-23T22:30:44.680Z",
+    "FechaEnvio": "2026-03-23T22:30:44.680Z",
+    "IdMensajeWhatsApp": "3EB0CCB5EE775321D5D7BD"
+  },
+  {
+    "Id": 3,
+    "FacturaId": 3745,
+    "OrganizacionId": 45,
+    "ClienteId": 504,
+    "Canal": "whatsapp",
+    "EstadoEnvio": "error",
+    "MensajeError": "Connection Closed",
+    "FechaCreacion": "2026-03-23T22:44:55.733Z",
+    "FechaEnvio": null,
+    "IdMensajeWhatsApp": null
+  },
+  {
+    "Id": 4,
+    "FacturaId": 3746,
+    "OrganizacionId": 45,
+    "ClienteId": 504,
+    "Canal": "whatsapp",
+    "EstadoEnvio": "enviado",
+    "MensajeError": null,
+    "FechaCreacion": "2026-03-23T22:49:49.753Z",
+    "FechaEnvio": "2026-03-23T22:49:49.753Z",
+    "IdMensajeWhatsApp": "3EB0E8C70A189DF4B2594C"
+  },
+  {
+    "Id": 5,
+    "FacturaId": 3747,
+    "OrganizacionId": 45,
+    "ClienteId": 504,
+    "Canal": "whatsapp",
+    "EstadoEnvio": "error",
+    "MensajeError": "Connection Closed",
+    "FechaCreacion": "2026-03-23T22:53:21.130Z",
+    "FechaEnvio": null,
+    "IdMensajeWhatsApp": null
+  },
+  {
+    "Id": 6,
+    "FacturaId": 3748,
+    "OrganizacionId": 45,
+    "ClienteId": 504,
+    "Canal": "whatsapp",
+    "EstadoEnvio": "enviado",
+    "MensajeError": null,
+    "FechaCreacion": "2026-03-23T22:54:11.960Z",
+    "FechaEnvio": "2026-03-23T22:54:11.960Z",
+    "IdMensajeWhatsApp": "3EB06330A1CDECD0806F85"
+  },
+  {
+    "Id": 7,
+    "FacturaId": 3749,
+    "OrganizacionId": 45,
+    "ClienteId": 504,
+    "Canal": "whatsapp",
+    "EstadoEnvio": "enviado",
+    "MensajeError": null,
+    "FechaCreacion": "2026-03-23T23:01:27.657Z",
+    "FechaEnvio": "2026-03-23T23:01:27.657Z",
+    "IdMensajeWhatsApp": "3EB0D81AD20CDAA180B3D4"
+  }
+]

@@ -1,0 +1,7072 @@
+[
+  {
+    "Id": 1,
+    "ConceptoId": 1,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 740.74
+  },
+  {
+    "Id": 2,
+    "ConceptoId": 2,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 111.11
+  },
+  {
+    "Id": 3,
+    "ConceptoId": 3,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 4,
+    "ConceptoId": 4,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 5,
+    "ConceptoId": 5,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 148.15
+  },
+  {
+    "Id": 6,
+    "ConceptoId": 6,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 777.78
+  },
+  {
+    "Id": 7,
+    "ConceptoId": 7,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.12
+  },
+  {
+    "Id": 8,
+    "ConceptoId": 8,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.12
+  },
+  {
+    "Id": 9,
+    "ConceptoId": 9,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.12
+  },
+  {
+    "Id": 10,
+    "ConceptoId": 10,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.12
+  },
+  {
+    "Id": 11,
+    "ConceptoId": 11,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.12
+  },
+  {
+    "Id": 12,
+    "ConceptoId": 12,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.12
+  },
+  {
+    "Id": 13,
+    "ConceptoId": 13,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.12
+  },
+  {
+    "Id": 14,
+    "ConceptoId": 14,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.12
+  },
+  {
+    "Id": 15,
+    "ConceptoId": 15,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.12
+  },
+  {
+    "Id": 16,
+    "ConceptoId": 16,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.12
+  },
+  {
+    "Id": 17,
+    "ConceptoId": 17,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.12
+  },
+  {
+    "Id": 18,
+    "ConceptoId": 18,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.12
+  },
+  {
+    "Id": 19,
+    "ConceptoId": 19,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 0.65
+  },
+  {
+    "Id": 20,
+    "ConceptoId": 19,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.29
+  },
+  {
+    "Id": 21,
+    "ConceptoId": 20,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 0.65
+  },
+  {
+    "Id": 22,
+    "ConceptoId": 20,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.29
+  },
+  {
+    "Id": 23,
+    "ConceptoId": 21,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 0.06
+  },
+  {
+    "Id": 24,
+    "ConceptoId": 21,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.13
+  },
+  {
+    "Id": 25,
+    "ConceptoId": 21,
+    "Tipo": "ISR 0%",
+    "Tasa": 0,
+    "Monto": 0
+  },
+  {
+    "Id": 26,
+    "ConceptoId": 22,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 0.6
+  },
+  {
+    "Id": 27,
+    "ConceptoId": 22,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.19
+  },
+  {
+    "Id": 28,
+    "ConceptoId": 22,
+    "Tipo": "ISR 10%",
+    "Tasa": 0.1,
+    "Monto": 0.75
+  },
+  {
+    "Id": 29,
+    "ConceptoId": 23,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 0.06
+  },
+  {
+    "Id": 30,
+    "ConceptoId": 23,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.11
+  },
+  {
+    "Id": 31,
+    "ConceptoId": 24,
+    "Tipo": "ISR 10%",
+    "Tasa": 0.1,
+    "Monto": 8.93
+  },
+  {
+    "Id": 32,
+    "ConceptoId": 24,
+    "Tipo": "ISR 2%",
+    "Tasa": 0.02,
+    "Monto": 1.79
+  },
+  {
+    "Id": 33,
+    "ConceptoId": 25,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 0.65
+  },
+  {
+    "Id": 34,
+    "ConceptoId": 25,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.29
+  },
+  {
+    "Id": 35,
+    "ConceptoId": 25,
+    "Tipo": "IVA 0%",
+    "Tasa": 0,
+    "Monto": 0
+  },
+  {
+    "Id": 36,
+    "ConceptoId": 26,
+    "Tipo": "ISR 0%",
+    "Tasa": 0,
+    "Monto": 0
+  },
+  {
+    "Id": 37,
+    "ConceptoId": 26,
+    "Tipo": "ISR 10%",
+    "Tasa": 0.1,
+    "Monto": 76.92
+  },
+  {
+    "Id": 38,
+    "ConceptoId": 26,
+    "Tipo": "ISR 20%",
+    "Tasa": 0.2,
+    "Monto": 153.85
+  },
+  {
+    "Id": 39,
+    "ConceptoId": 27,
+    "Tipo": "ISR 0%",
+    "Tasa": 0,
+    "Monto": 0
+  },
+  {
+    "Id": 40,
+    "ConceptoId": 27,
+    "Tipo": "ISR 1.25%",
+    "Tasa": 0.0125,
+    "Monto": 10.25
+  },
+  {
+    "Id": 41,
+    "ConceptoId": 27,
+    "Tipo": "ISR 10%",
+    "Tasa": 0.1,
+    "Monto": 82.02
+  },
+  {
+    "Id": 42,
+    "ConceptoId": 27,
+    "Tipo": "ISR 10.666%",
+    "Tasa": 0.1067,
+    "Monto": 87.51
+  },
+  {
+    "Id": 43,
+    "ConceptoId": 28,
+    "Tipo": "IVA 0%",
+    "Tasa": 0,
+    "Monto": 0
+  },
+  {
+    "Id": 44,
+    "ConceptoId": 28,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.11
+  },
+  {
+    "Id": 45,
+    "ConceptoId": 28,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 0.05
+  },
+  {
+    "Id": 46,
+    "ConceptoId": 28,
+    "Tipo": "IVA Exento 0%",
+    "Tasa": 0,
+    "Monto": 0
+  },
+  {
+    "Id": 47,
+    "ConceptoId": 29,
+    "Tipo": "IEPS 0%",
+    "Tasa": 0,
+    "Monto": 0
+  },
+  {
+    "Id": 48,
+    "ConceptoId": 29,
+    "Tipo": "IEPS 0.2%",
+    "Tasa": 0.002,
+    "Monto": 1.99
+  },
+  {
+    "Id": 49,
+    "ConceptoId": 29,
+    "Tipo": "IEPS 0.5%",
+    "Tasa": 0.005,
+    "Monto": 4.97
+  },
+  {
+    "Id": 50,
+    "ConceptoId": 30,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 0.65
+  },
+  {
+    "Id": 51,
+    "ConceptoId": 30,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.29
+  },
+  {
+    "Id": 52,
+    "ConceptoId": 31,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.29
+  },
+  {
+    "Id": 53,
+    "ConceptoId": 31,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 0.65
+  },
+  {
+    "Id": 54,
+    "ConceptoId": 32,
+    "Tipo": "IEPS 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 55,
+    "ConceptoId": 32,
+    "Tipo": "IEPS 0%",
+    "Tasa": 0,
+    "Monto": 0
+  },
+  {
+    "Id": 56,
+    "ConceptoId": 33,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 0.74
+  },
+  {
+    "Id": 57,
+    "ConceptoId": 34,
+    "Tipo": "ISR 10%",
+    "Tasa": 0.1,
+    "Monto": 9.09
+  },
+  {
+    "Id": 58,
+    "ConceptoId": 35,
+    "Tipo": "IEPS 6%",
+    "Tasa": 0.06,
+    "Monto": 5.66
+  },
+  {
+    "Id": 59,
+    "ConceptoId": 36,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 60,
+    "ConceptoId": 37,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 677.97
+  },
+  {
+    "Id": 61,
+    "ConceptoId": 37,
+    "Tipo": "ISR 10%",
+    "Tasa": 0.1,
+    "Monto": 847.46
+  },
+  {
+    "Id": 62,
+    "ConceptoId": 38,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 70.34
+  },
+  {
+    "Id": 63,
+    "ConceptoId": 38,
+    "Tipo": "IEPS 8%",
+    "Tasa": 0.08,
+    "Monto": 70.34
+  },
+  {
+    "Id": 67,
+    "ConceptoId": 42,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 740.74
+  },
+  {
+    "Id": 69,
+    "ConceptoId": 44,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 70,
+    "ConceptoId": 45,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 77,
+    "ConceptoId": 52,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 8
+  },
+  {
+    "Id": 80,
+    "ConceptoId": 55,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 7.41
+  },
+  {
+    "Id": 81,
+    "ConceptoId": 56,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 7.41
+  },
+  {
+    "Id": 91,
+    "ConceptoId": 66,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 8
+  },
+  {
+    "Id": 92,
+    "ConceptoId": 67,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 8
+  },
+  {
+    "Id": 93,
+    "ConceptoId": 68,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 13.79
+  },
+  {
+    "Id": 94,
+    "ConceptoId": 69,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 13.79
+  },
+  {
+    "Id": 95,
+    "ConceptoId": 70,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 6.9
+  },
+  {
+    "Id": 108,
+    "ConceptoId": 77,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 137.93
+  },
+  {
+    "Id": 109,
+    "ConceptoId": 77,
+    "Tipo": "ISR Retenido 10%",
+    "Tasa": 0.1,
+    "Monto": 86.21
+  },
+  {
+    "Id": 110,
+    "ConceptoId": 78,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 137.93
+  },
+  {
+    "Id": 111,
+    "ConceptoId": 79,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 137.93
+  },
+  {
+    "Id": 112,
+    "ConceptoId": 80,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 137.93
+  },
+  {
+    "Id": 113,
+    "ConceptoId": 80,
+    "Tipo": "ISR Retenido 10%",
+    "Tasa": 0.1,
+    "Monto": 86.21
+  },
+  {
+    "Id": 115,
+    "ConceptoId": 82,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.38
+  },
+  {
+    "Id": 118,
+    "ConceptoId": 84,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 119,
+    "ConceptoId": 84,
+    "Tipo": "ISR Retenido 1.25%",
+    "Tasa": 0.0125,
+    "Monto": 21.55
+  },
+  {
+    "Id": 127,
+    "ConceptoId": 90,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.38
+  },
+  {
+    "Id": 128,
+    "ConceptoId": 91,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.38
+  },
+  {
+    "Id": 131,
+    "ConceptoId": 94,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.38
+  },
+  {
+    "Id": 132,
+    "ConceptoId": 102,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 1.11
+  },
+  {
+    "Id": 133,
+    "ConceptoId": 102,
+    "Tipo": "ISR Retenido 1.25%",
+    "Tasa": 0.0125,
+    "Monto": 0.17
+  },
+  {
+    "Id": 134,
+    "ConceptoId": 103,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2.76
+  },
+  {
+    "Id": 135,
+    "ConceptoId": 104,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2.76
+  },
+  {
+    "Id": 136,
+    "ConceptoId": 104,
+    "Tipo": "ISR Retenido 1.25%",
+    "Tasa": 0.0125,
+    "Monto": 0.22
+  },
+  {
+    "Id": 137,
+    "ConceptoId": 105,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2.76
+  },
+  {
+    "Id": 138,
+    "ConceptoId": 105,
+    "Tipo": "IVA Retenido 0.5%",
+    "Tasa": 0.005,
+    "Monto": 0.09
+  },
+  {
+    "Id": 139,
+    "ConceptoId": 106,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.38
+  },
+  {
+    "Id": 140,
+    "ConceptoId": 106,
+    "Tipo": "IVA Retenido 10.6667%",
+    "Tasa": 0.1067,
+    "Monto": 0.92
+  },
+  {
+    "Id": 141,
+    "ConceptoId": 106,
+    "Tipo": "ISR Retenido 1.25%",
+    "Tasa": 0.0125,
+    "Monto": 0.11
+  },
+  {
+    "Id": 142,
+    "ConceptoId": 107,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.52
+  },
+  {
+    "Id": 143,
+    "ConceptoId": 107,
+    "Tipo": "ISR Retenido 10%",
+    "Tasa": 0.1,
+    "Monto": 0.95
+  },
+  {
+    "Id": 144,
+    "ConceptoId": 107,
+    "Tipo": "IVA Retenido 10.6667%",
+    "Tasa": 0.1067,
+    "Monto": 1.01
+  },
+  {
+    "Id": 145,
+    "ConceptoId": 108,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.28
+  },
+  {
+    "Id": 146,
+    "ConceptoId": 108,
+    "Tipo": "ISR Retenido 10%",
+    "Tasa": 0.1,
+    "Monto": 0.17
+  },
+  {
+    "Id": 147,
+    "ConceptoId": 108,
+    "Tipo": "IVA Retenido 10.6667%",
+    "Tasa": 0.1067,
+    "Monto": 0.18
+  },
+  {
+    "Id": 148,
+    "ConceptoId": 109,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 0.74
+  },
+  {
+    "Id": 149,
+    "ConceptoId": 110,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 37.04
+  },
+  {
+    "Id": 150,
+    "ConceptoId": 110,
+    "Tipo": "IVA Retenido 10.6667%",
+    "Tasa": 0.1067,
+    "Monto": 49.38
+  },
+  {
+    "Id": 151,
+    "ConceptoId": 111,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 6.9
+  },
+  {
+    "Id": 152,
+    "ConceptoId": 111,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 3.45
+  },
+  {
+    "Id": 153,
+    "ConceptoId": 112,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 13.79
+  },
+  {
+    "Id": 154,
+    "ConceptoId": 112,
+    "Tipo": "ISR Retenido 1.25%",
+    "Tasa": 0.0125,
+    "Monto": 1.08
+  },
+  {
+    "Id": 155,
+    "ConceptoId": 112,
+    "Tipo": "IVA Retenido 10.6667%",
+    "Tasa": 0.1067,
+    "Monto": 9.2
+  },
+  {
+    "Id": 157,
+    "ConceptoId": 114,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 137.93
+  },
+  {
+    "Id": 159,
+    "ConceptoId": 116,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.38
+  },
+  {
+    "Id": 160,
+    "ConceptoId": 117,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.38
+  },
+  {
+    "Id": 161,
+    "ConceptoId": 119,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1.38
+  },
+  {
+    "Id": 162,
+    "ConceptoId": 121,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 163,
+    "ConceptoId": 122,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 13.79
+  },
+  {
+    "Id": 164,
+    "ConceptoId": 124,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 13.79
+  },
+  {
+    "Id": 165,
+    "ConceptoId": 126,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 13.79
+  },
+  {
+    "Id": 166,
+    "ConceptoId": 142,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 0.14
+  },
+  {
+    "Id": 167,
+    "ConceptoId": 143,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 168,
+    "ConceptoId": 145,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 169,
+    "ConceptoId": 146,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 170,
+    "ConceptoId": 147,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 171,
+    "ConceptoId": 149,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 172,
+    "ConceptoId": 150,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 173,
+    "ConceptoId": 152,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 249.93
+  },
+  {
+    "Id": 174,
+    "ConceptoId": 153,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1397.47
+  },
+  {
+    "Id": 175,
+    "ConceptoId": 154,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 176,
+    "ConceptoId": 155,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 177,
+    "ConceptoId": 157,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 178,
+    "ConceptoId": 158,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1600
+  },
+  {
+    "Id": 179,
+    "ConceptoId": 159,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 180,
+    "ConceptoId": 161,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 181,
+    "ConceptoId": 162,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 182,
+    "ConceptoId": 163,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 960
+  },
+  {
+    "Id": 183,
+    "ConceptoId": 164,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 110.34
+  },
+  {
+    "Id": 184,
+    "ConceptoId": 166,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 142.76
+  },
+  {
+    "Id": 185,
+    "ConceptoId": 168,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 186,
+    "ConceptoId": 169,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 187,
+    "ConceptoId": 170,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 188,
+    "ConceptoId": 171,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 189,
+    "ConceptoId": 172,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 190,
+    "ConceptoId": 173,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 191,
+    "ConceptoId": 175,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 192,
+    "ConceptoId": 176,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 193,
+    "ConceptoId": 178,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 194,
+    "ConceptoId": 180,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 372.41
+  },
+  {
+    "Id": 195,
+    "ConceptoId": 182,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 196,
+    "ConceptoId": 183,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 267.86
+  },
+  {
+    "Id": 197,
+    "ConceptoId": 184,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 620.69
+  },
+  {
+    "Id": 198,
+    "ConceptoId": 185,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 199,
+    "ConceptoId": 186,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 200,
+    "ConceptoId": 187,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 201,
+    "ConceptoId": 188,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 551.72
+  },
+  {
+    "Id": 202,
+    "ConceptoId": 189,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 321.38
+  },
+  {
+    "Id": 203,
+    "ConceptoId": 190,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 267.59
+  },
+  {
+    "Id": 204,
+    "ConceptoId": 191,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 205,
+    "ConceptoId": 192,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 206,
+    "ConceptoId": 193,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 230.9
+  },
+  {
+    "Id": 207,
+    "ConceptoId": 194,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 230.9
+  },
+  {
+    "Id": 208,
+    "ConceptoId": 195,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 209,
+    "ConceptoId": 196,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 441.38
+  },
+  {
+    "Id": 210,
+    "ConceptoId": 197,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 441.38
+  },
+  {
+    "Id": 211,
+    "ConceptoId": 198,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1141.11
+  },
+  {
+    "Id": 212,
+    "ConceptoId": 199,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 862.88
+  },
+  {
+    "Id": 213,
+    "ConceptoId": 200,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 214,
+    "ConceptoId": 201,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 249.93
+  },
+  {
+    "Id": 215,
+    "ConceptoId": 202,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 216,
+    "ConceptoId": 203,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1103.45
+  },
+  {
+    "Id": 217,
+    "ConceptoId": 204,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1120
+  },
+  {
+    "Id": 218,
+    "ConceptoId": 205,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 219,
+    "ConceptoId": 206,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1120
+  },
+  {
+    "Id": 220,
+    "ConceptoId": 207,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 221,
+    "ConceptoId": 208,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 44.83
+  },
+  {
+    "Id": 222,
+    "ConceptoId": 209,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 223,
+    "ConceptoId": 210,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 62.07
+  },
+  {
+    "Id": 224,
+    "ConceptoId": 211,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 225,
+    "ConceptoId": 212,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 142.76
+  },
+  {
+    "Id": 226,
+    "ConceptoId": 213,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 89.38
+  },
+  {
+    "Id": 227,
+    "ConceptoId": 214,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 228,
+    "ConceptoId": 215,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 229,
+    "ConceptoId": 216,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 53.79
+  },
+  {
+    "Id": 230,
+    "ConceptoId": 217,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 46.21
+  },
+  {
+    "Id": 231,
+    "ConceptoId": 218,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 232,
+    "ConceptoId": 219,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2172.69
+  },
+  {
+    "Id": 233,
+    "ConceptoId": 220,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 234,
+    "ConceptoId": 221,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2172.69
+  },
+  {
+    "Id": 235,
+    "ConceptoId": 222,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 236,
+    "ConceptoId": 223,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2172.69
+  },
+  {
+    "Id": 237,
+    "ConceptoId": 224,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 238,
+    "ConceptoId": 225,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 115.86
+  },
+  {
+    "Id": 239,
+    "ConceptoId": 226,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2172.69
+  },
+  {
+    "Id": 240,
+    "ConceptoId": 227,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 13.79
+  },
+  {
+    "Id": 241,
+    "ConceptoId": 228,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 242,
+    "ConceptoId": 229,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1280
+  },
+  {
+    "Id": 243,
+    "ConceptoId": 230,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 53.79
+  },
+  {
+    "Id": 244,
+    "ConceptoId": 231,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 3680
+  },
+  {
+    "Id": 245,
+    "ConceptoId": 232,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 246,
+    "ConceptoId": 233,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 461.52
+  },
+  {
+    "Id": 247,
+    "ConceptoId": 234,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 482.76
+  },
+  {
+    "Id": 248,
+    "ConceptoId": 235,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 249,
+    "ConceptoId": 236,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 250,
+    "ConceptoId": 237,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 71.45
+  },
+  {
+    "Id": 251,
+    "ConceptoId": 238,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 714.24
+  },
+  {
+    "Id": 252,
+    "ConceptoId": 239,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 253,
+    "ConceptoId": 240,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 71.45
+  },
+  {
+    "Id": 254,
+    "ConceptoId": 241,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 71.45
+  },
+  {
+    "Id": 255,
+    "ConceptoId": 242,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 256,
+    "ConceptoId": 243,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1241.38
+  },
+  {
+    "Id": 257,
+    "ConceptoId": 244,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1172.41
+  },
+  {
+    "Id": 258,
+    "ConceptoId": 245,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 259,
+    "ConceptoId": 246,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1014.48
+  },
+  {
+    "Id": 260,
+    "ConceptoId": 247,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1668.97
+  },
+  {
+    "Id": 261,
+    "ConceptoId": 248,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 896.55
+  },
+  {
+    "Id": 262,
+    "ConceptoId": 249,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1931.03
+  },
+  {
+    "Id": 263,
+    "ConceptoId": 250,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2758.62
+  },
+  {
+    "Id": 264,
+    "ConceptoId": 251,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 827.59
+  },
+  {
+    "Id": 265,
+    "ConceptoId": 252,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 266,
+    "ConceptoId": 253,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 267,
+    "ConceptoId": 254,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 268,
+    "ConceptoId": 255,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 269,
+    "ConceptoId": 256,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 270,
+    "ConceptoId": 257,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 551.72
+  },
+  {
+    "Id": 271,
+    "ConceptoId": 258,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 92.41
+  },
+  {
+    "Id": 272,
+    "ConceptoId": 259,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 92.41
+  },
+  {
+    "Id": 273,
+    "ConceptoId": 260,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 110.34
+  },
+  {
+    "Id": 274,
+    "ConceptoId": 261,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 124.14
+  },
+  {
+    "Id": 275,
+    "ConceptoId": 262,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 147.59
+  },
+  {
+    "Id": 276,
+    "ConceptoId": 263,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 147.59
+  },
+  {
+    "Id": 277,
+    "ConceptoId": 264,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 278,
+    "ConceptoId": 265,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 240
+  },
+  {
+    "Id": 279,
+    "ConceptoId": 266,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 184.83
+  },
+  {
+    "Id": 280,
+    "ConceptoId": 267,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 192
+  },
+  {
+    "Id": 281,
+    "ConceptoId": 268,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 282,
+    "ConceptoId": 269,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 482.76
+  },
+  {
+    "Id": 283,
+    "ConceptoId": 270,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2172.69
+  },
+  {
+    "Id": 284,
+    "ConceptoId": 271,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 458.62
+  },
+  {
+    "Id": 285,
+    "ConceptoId": 272,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 267.59
+  },
+  {
+    "Id": 286,
+    "ConceptoId": 273,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 287,
+    "ConceptoId": 274,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 288,
+    "ConceptoId": 275,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 289,
+    "ConceptoId": 276,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 290,
+    "ConceptoId": 277,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 291,
+    "ConceptoId": 278,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 292,
+    "ConceptoId": 279,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 293,
+    "ConceptoId": 280,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 230.9
+  },
+  {
+    "Id": 294,
+    "ConceptoId": 281,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 295,
+    "ConceptoId": 282,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 296,
+    "ConceptoId": 283,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 297,
+    "ConceptoId": 284,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 298,
+    "ConceptoId": 285,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 137.93
+  },
+  {
+    "Id": 299,
+    "ConceptoId": 286,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 300,
+    "ConceptoId": 287,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 301,
+    "ConceptoId": 288,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 896.55
+  },
+  {
+    "Id": 302,
+    "ConceptoId": 289,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 303,
+    "ConceptoId": 290,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 304,
+    "ConceptoId": 291,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 305,
+    "ConceptoId": 292,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 306,
+    "ConceptoId": 293,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 307,
+    "ConceptoId": 294,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 240
+  },
+  {
+    "Id": 308,
+    "ConceptoId": 295,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1120
+  },
+  {
+    "Id": 309,
+    "ConceptoId": 296,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1120
+  },
+  {
+    "Id": 310,
+    "ConceptoId": 297,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 19120
+  },
+  {
+    "Id": 311,
+    "ConceptoId": 298,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 179.31
+  },
+  {
+    "Id": 312,
+    "ConceptoId": 299,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 4480.2
+  },
+  {
+    "Id": 313,
+    "ConceptoId": 300,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 5197.04
+  },
+  {
+    "Id": 314,
+    "ConceptoId": 301,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 379.31
+  },
+  {
+    "Id": 315,
+    "ConceptoId": 303,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 316,
+    "ConceptoId": 304,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1397.47
+  },
+  {
+    "Id": 317,
+    "ConceptoId": 305,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1600
+  },
+  {
+    "Id": 318,
+    "ConceptoId": 306,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 960
+  },
+  {
+    "Id": 319,
+    "ConceptoId": 307,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 240
+  },
+  {
+    "Id": 320,
+    "ConceptoId": 308,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 321,
+    "ConceptoId": 309,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 322,
+    "ConceptoId": 310,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 323,
+    "ConceptoId": 311,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 372.41
+  },
+  {
+    "Id": 324,
+    "ConceptoId": 312,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 620.69
+  },
+  {
+    "Id": 325,
+    "ConceptoId": 314,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1103.45
+  },
+  {
+    "Id": 326,
+    "ConceptoId": 315,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1120
+  },
+  {
+    "Id": 327,
+    "ConceptoId": 316,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1120
+  },
+  {
+    "Id": 328,
+    "ConceptoId": 317,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 329,
+    "ConceptoId": 318,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2172.69
+  },
+  {
+    "Id": 330,
+    "ConceptoId": 319,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 3680
+  },
+  {
+    "Id": 331,
+    "ConceptoId": 321,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 482.76
+  },
+  {
+    "Id": 332,
+    "ConceptoId": 322,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 714.24
+  },
+  {
+    "Id": 333,
+    "ConceptoId": 323,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 334,
+    "ConceptoId": 324,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 335,
+    "ConceptoId": 325,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1241.38
+  },
+  {
+    "Id": 336,
+    "ConceptoId": 326,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 337,
+    "ConceptoId": 327,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1668.97
+  },
+  {
+    "Id": 338,
+    "ConceptoId": 329,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 137.93
+  },
+  {
+    "Id": 339,
+    "ConceptoId": 330,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 340,
+    "ConceptoId": 331,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 341,
+    "ConceptoId": 332,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 342,
+    "ConceptoId": 333,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 343,
+    "ConceptoId": 334,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 344,
+    "ConceptoId": 335,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 345,
+    "ConceptoId": 336,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 346,
+    "ConceptoId": 337,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 347,
+    "ConceptoId": 338,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 348,
+    "ConceptoId": 339,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 349,
+    "ConceptoId": 340,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 142.76
+  },
+  {
+    "Id": 350,
+    "ConceptoId": 341,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 351,
+    "ConceptoId": 342,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 352,
+    "ConceptoId": 343,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 353,
+    "ConceptoId": 344,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 267.86
+  },
+  {
+    "Id": 354,
+    "ConceptoId": 345,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 321.38
+  },
+  {
+    "Id": 355,
+    "ConceptoId": 346,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 356,
+    "ConceptoId": 347,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 357,
+    "ConceptoId": 348,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 358,
+    "ConceptoId": 349,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 441.38
+  },
+  {
+    "Id": 359,
+    "ConceptoId": 350,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 441.38
+  },
+  {
+    "Id": 360,
+    "ConceptoId": 351,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1141.11
+  },
+  {
+    "Id": 361,
+    "ConceptoId": 352,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 362,
+    "ConceptoId": 353,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 249.93
+  },
+  {
+    "Id": 363,
+    "ConceptoId": 354,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 364,
+    "ConceptoId": 355,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 365,
+    "ConceptoId": 356,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 366,
+    "ConceptoId": 357,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 44.83
+  },
+  {
+    "Id": 367,
+    "ConceptoId": 358,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 62.07
+  },
+  {
+    "Id": 368,
+    "ConceptoId": 359,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 369,
+    "ConceptoId": 360,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 370,
+    "ConceptoId": 361,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 92.41
+  },
+  {
+    "Id": 371,
+    "ConceptoId": 362,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 92.41
+  },
+  {
+    "Id": 372,
+    "ConceptoId": 363,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 110.34
+  },
+  {
+    "Id": 373,
+    "ConceptoId": 364,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 124.14
+  },
+  {
+    "Id": 374,
+    "ConceptoId": 365,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 147.59
+  },
+  {
+    "Id": 375,
+    "ConceptoId": 366,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 147.59
+  },
+  {
+    "Id": 376,
+    "ConceptoId": 367,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 377,
+    "ConceptoId": 369,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 184.83
+  },
+  {
+    "Id": 378,
+    "ConceptoId": 370,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 192
+  },
+  {
+    "Id": 379,
+    "ConceptoId": 371,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 380,
+    "ConceptoId": 372,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 267.59
+  },
+  {
+    "Id": 381,
+    "ConceptoId": 373,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 382,
+    "ConceptoId": 374,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 383,
+    "ConceptoId": 375,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 384,
+    "ConceptoId": 377,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 385,
+    "ConceptoId": 378,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 482.76
+  },
+  {
+    "Id": 386,
+    "ConceptoId": 379,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 551.72
+  },
+  {
+    "Id": 387,
+    "ConceptoId": 380,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 388,
+    "ConceptoId": 381,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 389,
+    "ConceptoId": 382,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 827.59
+  },
+  {
+    "Id": 390,
+    "ConceptoId": 383,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 896.55
+  },
+  {
+    "Id": 391,
+    "ConceptoId": 384,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 896.55
+  },
+  {
+    "Id": 392,
+    "ConceptoId": 385,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1014.48
+  },
+  {
+    "Id": 393,
+    "ConceptoId": 386,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1172.41
+  },
+  {
+    "Id": 394,
+    "ConceptoId": 387,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 71.45
+  },
+  {
+    "Id": 395,
+    "ConceptoId": 389,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 396,
+    "ConceptoId": 390,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 397,
+    "ConceptoId": 391,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 398,
+    "ConceptoId": 392,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 399,
+    "ConceptoId": 393,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 400,
+    "ConceptoId": 394,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 53.79
+  },
+  {
+    "Id": 401,
+    "ConceptoId": 395,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 402,
+    "ConceptoId": 396,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 403,
+    "ConceptoId": 397,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 115.86
+  },
+  {
+    "Id": 404,
+    "ConceptoId": 398,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 405,
+    "ConceptoId": 399,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 406,
+    "ConceptoId": 400,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 407,
+    "ConceptoId": 401,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 53.79
+  },
+  {
+    "Id": 408,
+    "ConceptoId": 402,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 409,
+    "ConceptoId": 403,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 89.38
+  },
+  {
+    "Id": 410,
+    "ConceptoId": 404,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 142.76
+  },
+  {
+    "Id": 411,
+    "ConceptoId": 405,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 230.9
+  },
+  {
+    "Id": 412,
+    "ConceptoId": 406,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 551.72
+  },
+  {
+    "Id": 413,
+    "ConceptoId": 407,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 414,
+    "ConceptoId": 408,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 415,
+    "ConceptoId": 409,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 416,
+    "ConceptoId": 410,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 237.04
+  },
+  {
+    "Id": 417,
+    "ConceptoId": 411,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 418,
+    "ConceptoId": 412,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 96.55
+  },
+  {
+    "Id": 419,
+    "ConceptoId": 413,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 420,
+    "ConceptoId": 414,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 248.28
+  },
+  {
+    "Id": 421,
+    "ConceptoId": 415,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 249.93
+  },
+  {
+    "Id": 422,
+    "ConceptoId": 416,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 423,
+    "ConceptoId": 417,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 620.69
+  },
+  {
+    "Id": 424,
+    "ConceptoId": 418,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 425,
+    "ConceptoId": 419,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 179.31
+  },
+  {
+    "Id": 426,
+    "ConceptoId": 420,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2172.69
+  },
+  {
+    "Id": 427,
+    "ConceptoId": 421,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 147.59
+  },
+  {
+    "Id": 439,
+    "ConceptoId": 433,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 53.79
+  },
+  {
+    "Id": 440,
+    "ConceptoId": 436,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 13.79
+  },
+  {
+    "Id": 441,
+    "ConceptoId": 437,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 0.14
+  },
+  {
+    "Id": 442,
+    "ConceptoId": 438,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 443,
+    "ConceptoId": 440,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 0.14
+  },
+  {
+    "Id": 444,
+    "ConceptoId": 441,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 445,
+    "ConceptoId": 443,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 446,
+    "ConceptoId": 445,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 344.83
+  },
+  {
+    "Id": 447,
+    "ConceptoId": 446,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 448,
+    "ConceptoId": 448,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 249.93
+  },
+  {
+    "Id": 449,
+    "ConceptoId": 449,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1397.47
+  },
+  {
+    "Id": 450,
+    "ConceptoId": 450,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 451,
+    "ConceptoId": 451,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 452,
+    "ConceptoId": 452,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 453,
+    "ConceptoId": 453,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1600
+  },
+  {
+    "Id": 454,
+    "ConceptoId": 454,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 68.97
+  },
+  {
+    "Id": 455,
+    "ConceptoId": 455,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 82.76
+  },
+  {
+    "Id": 456,
+    "ConceptoId": 456,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 82.76
+  },
+  {
+    "Id": 457,
+    "ConceptoId": 457,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 960
+  },
+  {
+    "Id": 458,
+    "ConceptoId": 458,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 110.34
+  },
+  {
+    "Id": 459,
+    "ConceptoId": 460,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 142.76
+  },
+  {
+    "Id": 460,
+    "ConceptoId": 462,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 165.52
+  },
+  {
+    "Id": 461,
+    "ConceptoId": 463,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 206.9
+  },
+  {
+    "Id": 462,
+    "ConceptoId": 464,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 275.86
+  },
+  {
+    "Id": 463,
+    "ConceptoId": 465,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 275.86
+  },
+  {
+    "Id": 464,
+    "ConceptoId": 468,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 344.83
+  },
+  {
+    "Id": 465,
+    "ConceptoId": 470,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 372.41
+  },
+  {
+    "Id": 466,
+    "ConceptoId": 472,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 267.86
+  },
+  {
+    "Id": 467,
+    "ConceptoId": 473,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 620.69
+  },
+  {
+    "Id": 468,
+    "ConceptoId": 474,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 469,
+    "ConceptoId": 475,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 303.45
+  },
+  {
+    "Id": 470,
+    "ConceptoId": 476,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 471,
+    "ConceptoId": 477,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 551.72
+  },
+  {
+    "Id": 472,
+    "ConceptoId": 478,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 321.38
+  },
+  {
+    "Id": 473,
+    "ConceptoId": 479,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 267.59
+  },
+  {
+    "Id": 474,
+    "ConceptoId": 480,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 344.83
+  },
+  {
+    "Id": 475,
+    "ConceptoId": 481,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 413.79
+  },
+  {
+    "Id": 476,
+    "ConceptoId": 482,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 413.79
+  },
+  {
+    "Id": 477,
+    "ConceptoId": 483,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 441.38
+  },
+  {
+    "Id": 478,
+    "ConceptoId": 484,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 441.38
+  },
+  {
+    "Id": 479,
+    "ConceptoId": 485,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1141.11
+  },
+  {
+    "Id": 480,
+    "ConceptoId": 486,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 862.88
+  },
+  {
+    "Id": 481,
+    "ConceptoId": 487,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 249.93
+  },
+  {
+    "Id": 482,
+    "ConceptoId": 488,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 483,
+    "ConceptoId": 489,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1103.45
+  },
+  {
+    "Id": 484,
+    "ConceptoId": 490,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1120
+  },
+  {
+    "Id": 485,
+    "ConceptoId": 491,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 486,
+    "ConceptoId": 492,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1120
+  },
+  {
+    "Id": 487,
+    "ConceptoId": 493,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 488,
+    "ConceptoId": 494,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 44.83
+  },
+  {
+    "Id": 489,
+    "ConceptoId": 495,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 62.07
+  },
+  {
+    "Id": 490,
+    "ConceptoId": 496,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 68.97
+  },
+  {
+    "Id": 491,
+    "ConceptoId": 497,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 142.76
+  },
+  {
+    "Id": 492,
+    "ConceptoId": 498,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 89.38
+  },
+  {
+    "Id": 493,
+    "ConceptoId": 499,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 494,
+    "ConceptoId": 500,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 495,
+    "ConceptoId": 501,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 53.79
+  },
+  {
+    "Id": 496,
+    "ConceptoId": 502,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 46.21
+  },
+  {
+    "Id": 497,
+    "ConceptoId": 503,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 165.52
+  },
+  {
+    "Id": 498,
+    "ConceptoId": 504,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 115.86
+  },
+  {
+    "Id": 499,
+    "ConceptoId": 505,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 500,
+    "ConceptoId": 506,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1280
+  },
+  {
+    "Id": 501,
+    "ConceptoId": 507,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 53.79
+  },
+  {
+    "Id": 502,
+    "ConceptoId": 508,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 3680
+  },
+  {
+    "Id": 503,
+    "ConceptoId": 509,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 41.38
+  },
+  {
+    "Id": 504,
+    "ConceptoId": 510,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 461.52
+  },
+  {
+    "Id": 505,
+    "ConceptoId": 511,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 482.76
+  },
+  {
+    "Id": 506,
+    "ConceptoId": 512,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 165.52
+  },
+  {
+    "Id": 507,
+    "ConceptoId": 513,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 344.83
+  },
+  {
+    "Id": 508,
+    "ConceptoId": 514,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 714.24
+  },
+  {
+    "Id": 509,
+    "ConceptoId": 515,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 758.62
+  },
+  {
+    "Id": 510,
+    "ConceptoId": 516,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 71.45
+  },
+  {
+    "Id": 511,
+    "ConceptoId": 517,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 758.62
+  },
+  {
+    "Id": 512,
+    "ConceptoId": 518,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1241.38
+  },
+  {
+    "Id": 513,
+    "ConceptoId": 519,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1172.41
+  },
+  {
+    "Id": 514,
+    "ConceptoId": 520,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1014.48
+  },
+  {
+    "Id": 515,
+    "ConceptoId": 521,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1668.97
+  },
+  {
+    "Id": 516,
+    "ConceptoId": 522,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 896.55
+  },
+  {
+    "Id": 517,
+    "ConceptoId": 523,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1931.03
+  },
+  {
+    "Id": 518,
+    "ConceptoId": 524,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 2758.62
+  },
+  {
+    "Id": 519,
+    "ConceptoId": 525,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 827.59
+  },
+  {
+    "Id": 520,
+    "ConceptoId": 526,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 758.62
+  },
+  {
+    "Id": 521,
+    "ConceptoId": 527,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 522,
+    "ConceptoId": 528,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 82.76
+  },
+  {
+    "Id": 523,
+    "ConceptoId": 529,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 551.72
+  },
+  {
+    "Id": 524,
+    "ConceptoId": 530,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 92.41
+  },
+  {
+    "Id": 525,
+    "ConceptoId": 531,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 92.41
+  },
+  {
+    "Id": 526,
+    "ConceptoId": 532,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 110.34
+  },
+  {
+    "Id": 527,
+    "ConceptoId": 533,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 124.14
+  },
+  {
+    "Id": 528,
+    "ConceptoId": 534,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 147.59
+  },
+  {
+    "Id": 529,
+    "ConceptoId": 535,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 165.52
+  },
+  {
+    "Id": 530,
+    "ConceptoId": 536,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 240
+  },
+  {
+    "Id": 531,
+    "ConceptoId": 537,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 184.83
+  },
+  {
+    "Id": 532,
+    "ConceptoId": 538,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 192
+  },
+  {
+    "Id": 533,
+    "ConceptoId": 539,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 206.9
+  },
+  {
+    "Id": 534,
+    "ConceptoId": 540,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 482.76
+  },
+  {
+    "Id": 535,
+    "ConceptoId": 541,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 458.62
+  },
+  {
+    "Id": 536,
+    "ConceptoId": 542,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 267.59
+  },
+  {
+    "Id": 537,
+    "ConceptoId": 543,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 303.45
+  },
+  {
+    "Id": 538,
+    "ConceptoId": 544,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 275.86
+  },
+  {
+    "Id": 539,
+    "ConceptoId": 545,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 275.86
+  },
+  {
+    "Id": 540,
+    "ConceptoId": 546,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 206.9
+  },
+  {
+    "Id": 541,
+    "ConceptoId": 547,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 413.79
+  },
+  {
+    "Id": 542,
+    "ConceptoId": 548,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 344.83
+  },
+  {
+    "Id": 543,
+    "ConceptoId": 549,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 165.52
+  },
+  {
+    "Id": 544,
+    "ConceptoId": 550,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 240
+  },
+  {
+    "Id": 545,
+    "ConceptoId": 551,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1120
+  },
+  {
+    "Id": 546,
+    "ConceptoId": 552,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 1120
+  },
+  {
+    "Id": 547,
+    "ConceptoId": 553,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 179.31
+  },
+  {
+    "Id": 548,
+    "ConceptoId": 554,
+    "Tipo": "IVA 16%",
+    "Tasa": 0,
+    "Monto": 379.31
+  },
+  {
+    "Id": 549,
+    "ConceptoId": 555,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 550,
+    "ConceptoId": 556,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 551,
+    "ConceptoId": 557,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 110.34
+  },
+  {
+    "Id": 552,
+    "ConceptoId": 558,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 553,
+    "ConceptoId": 559,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 554,
+    "ConceptoId": 560,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 555,
+    "ConceptoId": 561,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 556,
+    "ConceptoId": 562,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 55.17
+  },
+  {
+    "Id": 557,
+    "ConceptoId": 563,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 137.93
+  },
+  {
+    "Id": 558,
+    "ConceptoId": 564,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 551.72
+  },
+  {
+    "Id": 559,
+    "ConceptoId": 565,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 560,
+    "ConceptoId": 566,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 561,
+    "ConceptoId": 567,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 562,
+    "ConceptoId": 568,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 563,
+    "ConceptoId": 569,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 564,
+    "ConceptoId": 570,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 55.17
+  },
+  {
+    "Id": 565,
+    "ConceptoId": 571,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1931.03
+  },
+  {
+    "Id": 566,
+    "ConceptoId": 572,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1931.03
+  },
+  {
+    "Id": 567,
+    "ConceptoId": 573,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 568,
+    "ConceptoId": 574,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 569,
+    "ConceptoId": 575,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 570,
+    "ConceptoId": 576,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 458.62
+  },
+  {
+    "Id": 571,
+    "ConceptoId": 577,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 46.21
+  },
+  {
+    "Id": 572,
+    "ConceptoId": 578,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 230.9
+  },
+  {
+    "Id": 573,
+    "ConceptoId": 579,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 574,
+    "ConceptoId": 580,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 575,
+    "ConceptoId": 581,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 576,
+    "ConceptoId": 582,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1120
+  },
+  {
+    "Id": 577,
+    "ConceptoId": 583,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1120
+  },
+  {
+    "Id": 578,
+    "ConceptoId": 584,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 579,
+    "ConceptoId": 585,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 372.41
+  },
+  {
+    "Id": 580,
+    "ConceptoId": 586,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 53.79
+  },
+  {
+    "Id": 581,
+    "ConceptoId": 587,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 620.69
+  },
+  {
+    "Id": 582,
+    "ConceptoId": 588,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 583,
+    "ConceptoId": 589,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1014.48
+  },
+  {
+    "Id": 584,
+    "ConceptoId": 590,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 585,
+    "ConceptoId": 591,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1241.38
+  },
+  {
+    "Id": 586,
+    "ConceptoId": 592,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1103.45
+  },
+  {
+    "Id": 587,
+    "ConceptoId": 593,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 44.83
+  },
+  {
+    "Id": 588,
+    "ConceptoId": 594,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 589,
+    "ConceptoId": 595,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 267.59
+  },
+  {
+    "Id": 590,
+    "ConceptoId": 596,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 591,
+    "ConceptoId": 597,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 53.79
+  },
+  {
+    "Id": 592,
+    "ConceptoId": 598,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 137.93
+  },
+  {
+    "Id": 593,
+    "ConceptoId": 599,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 594,
+    "ConceptoId": 600,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2172.69
+  },
+  {
+    "Id": 595,
+    "ConceptoId": 601,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1600
+  },
+  {
+    "Id": 596,
+    "ConceptoId": 602,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 597,
+    "ConceptoId": 603,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 248.28
+  },
+  {
+    "Id": 598,
+    "ConceptoId": 604,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 110.34
+  },
+  {
+    "Id": 599,
+    "ConceptoId": 605,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 827.59
+  },
+  {
+    "Id": 600,
+    "ConceptoId": 606,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 179.31
+  },
+  {
+    "Id": 601,
+    "ConceptoId": 607,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 602,
+    "ConceptoId": 608,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 603,
+    "ConceptoId": 609,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 604,
+    "ConceptoId": 610,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 605,
+    "ConceptoId": 611,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 606,
+    "ConceptoId": 612,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 607,
+    "ConceptoId": 613,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 714.24
+  },
+  {
+    "Id": 608,
+    "ConceptoId": 614,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 124.14
+  },
+  {
+    "Id": 609,
+    "ConceptoId": 615,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 240
+  },
+  {
+    "Id": 610,
+    "ConceptoId": 616,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 611,
+    "ConceptoId": 617,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 612,
+    "ConceptoId": 618,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 613,
+    "ConceptoId": 619,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 614,
+    "ConceptoId": 620,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 615,
+    "ConceptoId": 621,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 862.88
+  },
+  {
+    "Id": 616,
+    "ConceptoId": 622,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 617,
+    "ConceptoId": 623,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 618,
+    "ConceptoId": 624,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 619,
+    "ConceptoId": 625,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 620,
+    "ConceptoId": 626,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 115.86
+  },
+  {
+    "Id": 621,
+    "ConceptoId": 627,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 55.17
+  },
+  {
+    "Id": 622,
+    "ConceptoId": 628,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 960
+  },
+  {
+    "Id": 623,
+    "ConceptoId": 629,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 624,
+    "ConceptoId": 630,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 441.38
+  },
+  {
+    "Id": 625,
+    "ConceptoId": 631,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 106.21
+  },
+  {
+    "Id": 626,
+    "ConceptoId": 632,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 627,
+    "ConceptoId": 633,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 628,
+    "ConceptoId": 634,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 629,
+    "ConceptoId": 635,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 630,
+    "ConceptoId": 636,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 267.59
+  },
+  {
+    "Id": 631,
+    "ConceptoId": 637,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 184.83
+  },
+  {
+    "Id": 632,
+    "ConceptoId": 638,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 551.72
+  },
+  {
+    "Id": 633,
+    "ConceptoId": 639,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 321.38
+  },
+  {
+    "Id": 634,
+    "ConceptoId": 640,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 333.79
+  },
+  {
+    "Id": 635,
+    "ConceptoId": 641,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 147.59
+  },
+  {
+    "Id": 636,
+    "ConceptoId": 642,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 637,
+    "ConceptoId": 643,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 147.59
+  },
+  {
+    "Id": 638,
+    "ConceptoId": 644,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 62.07
+  },
+  {
+    "Id": 639,
+    "ConceptoId": 645,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2758.62
+  },
+  {
+    "Id": 640,
+    "ConceptoId": 646,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 896.55
+  },
+  {
+    "Id": 641,
+    "ConceptoId": 647,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 642,
+    "ConceptoId": 648,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 482.76
+  },
+  {
+    "Id": 643,
+    "ConceptoId": 649,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 92.41
+  },
+  {
+    "Id": 644,
+    "ConceptoId": 650,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 482.76
+  },
+  {
+    "Id": 645,
+    "ConceptoId": 651,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 646,
+    "ConceptoId": 652,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 551.72
+  },
+  {
+    "Id": 647,
+    "ConceptoId": 653,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 648,
+    "ConceptoId": 654,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1141.11
+  },
+  {
+    "Id": 649,
+    "ConceptoId": 655,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 142.76
+  },
+  {
+    "Id": 650,
+    "ConceptoId": 656,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 142.76
+  },
+  {
+    "Id": 651,
+    "ConceptoId": 657,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 53.79
+  },
+  {
+    "Id": 652,
+    "ConceptoId": 658,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 653,
+    "ConceptoId": 659,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 89.38
+  },
+  {
+    "Id": 654,
+    "ConceptoId": 660,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 249.93
+  },
+  {
+    "Id": 655,
+    "ConceptoId": 661,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 656,
+    "ConceptoId": 662,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 657,
+    "ConceptoId": 663,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 92.41
+  },
+  {
+    "Id": 658,
+    "ConceptoId": 664,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 659,
+    "ConceptoId": 665,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 660,
+    "ConceptoId": 666,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 661,
+    "ConceptoId": 667,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 662,
+    "ConceptoId": 668,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 249.93
+  },
+  {
+    "Id": 663,
+    "ConceptoId": 669,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 159.31
+  },
+  {
+    "Id": 664,
+    "ConceptoId": 670,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 665,
+    "ConceptoId": 671,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 666,
+    "ConceptoId": 672,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 667,
+    "ConceptoId": 673,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 668,
+    "ConceptoId": 674,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 620.69
+  },
+  {
+    "Id": 669,
+    "ConceptoId": 675,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 240
+  },
+  {
+    "Id": 670,
+    "ConceptoId": 676,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 267.86
+  },
+  {
+    "Id": 671,
+    "ConceptoId": 677,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 672,
+    "ConceptoId": 678,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1668.97
+  },
+  {
+    "Id": 673,
+    "ConceptoId": 679,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 441.38
+  },
+  {
+    "Id": 674,
+    "ConceptoId": 680,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 675,
+    "ConceptoId": 681,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 676,
+    "ConceptoId": 682,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 677,
+    "ConceptoId": 683,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 678,
+    "ConceptoId": 684,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 71.45
+  },
+  {
+    "Id": 679,
+    "ConceptoId": 685,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 680,
+    "ConceptoId": 686,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 192
+  },
+  {
+    "Id": 681,
+    "ConceptoId": 687,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 461.52
+  },
+  {
+    "Id": 682,
+    "ConceptoId": 688,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 683,
+    "ConceptoId": 689,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1397.47
+  },
+  {
+    "Id": 684,
+    "ConceptoId": 690,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1931.03
+  },
+  {
+    "Id": 685,
+    "ConceptoId": 691,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 896.55
+  },
+  {
+    "Id": 686,
+    "ConceptoId": 693,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 687,
+    "ConceptoId": 694,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 688,
+    "ConceptoId": 695,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 689,
+    "ConceptoId": 696,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 690,
+    "ConceptoId": 697,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 179.31
+  },
+  {
+    "Id": 691,
+    "ConceptoId": 698,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1172.41
+  },
+  {
+    "Id": 692,
+    "ConceptoId": 699,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 693,
+    "ConceptoId": 700,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 694,
+    "ConceptoId": 701,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 695,
+    "ConceptoId": 702,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 568.97
+  },
+  {
+    "Id": 696,
+    "ConceptoId": 703,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 697,
+    "ConceptoId": 704,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 834.48
+  },
+  {
+    "Id": 698,
+    "ConceptoId": 705,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 53.79
+  },
+  {
+    "Id": 699,
+    "ConceptoId": 706,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2172.69
+  },
+  {
+    "Id": 700,
+    "ConceptoId": 707,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2620.69
+  },
+  {
+    "Id": 701,
+    "ConceptoId": 708,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1724.14
+  },
+  {
+    "Id": 702,
+    "ConceptoId": 709,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1120
+  },
+  {
+    "Id": 703,
+    "ConceptoId": 710,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 704,
+    "ConceptoId": 711,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 705,
+    "ConceptoId": 712,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 504.48
+  },
+  {
+    "Id": 706,
+    "ConceptoId": 713,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 50.83
+  },
+  {
+    "Id": 707,
+    "ConceptoId": 714,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 379.31
+  },
+  {
+    "Id": 708,
+    "ConceptoId": 715,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 709,
+    "ConceptoId": 716,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 91.03
+  },
+  {
+    "Id": 710,
+    "ConceptoId": 717,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1232
+  },
+  {
+    "Id": 711,
+    "ConceptoId": 718,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1232
+  },
+  {
+    "Id": 712,
+    "ConceptoId": 719,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 713,
+    "ConceptoId": 720,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 409.66
+  },
+  {
+    "Id": 714,
+    "ConceptoId": 721,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 682.76
+  },
+  {
+    "Id": 715,
+    "ConceptoId": 722,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 264
+  },
+  {
+    "Id": 716,
+    "ConceptoId": 723,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 834.48
+  },
+  {
+    "Id": 717,
+    "ConceptoId": 724,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 718,
+    "ConceptoId": 725,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1115.93
+  },
+  {
+    "Id": 719,
+    "ConceptoId": 726,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 75.86
+  },
+  {
+    "Id": 720,
+    "ConceptoId": 727,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1365.52
+  },
+  {
+    "Id": 721,
+    "ConceptoId": 728,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 386.21
+  },
+  {
+    "Id": 722,
+    "ConceptoId": 729,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 44.83
+  },
+  {
+    "Id": 723,
+    "ConceptoId": 730,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 91.03
+  },
+  {
+    "Id": 724,
+    "ConceptoId": 731,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 294.34
+  },
+  {
+    "Id": 725,
+    "ConceptoId": 732,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 182.07
+  },
+  {
+    "Id": 726,
+    "ConceptoId": 733,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 53.79
+  },
+  {
+    "Id": 727,
+    "ConceptoId": 734,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 151.72
+  },
+  {
+    "Id": 728,
+    "ConceptoId": 735,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 227.59
+  },
+  {
+    "Id": 729,
+    "ConceptoId": 736,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2389.96
+  },
+  {
+    "Id": 730,
+    "ConceptoId": 737,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1600
+  },
+  {
+    "Id": 731,
+    "ConceptoId": 738,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 732,
+    "ConceptoId": 739,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 273.1
+  },
+  {
+    "Id": 733,
+    "ConceptoId": 740,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 121.38
+  },
+  {
+    "Id": 734,
+    "ConceptoId": 741,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1103.45
+  },
+  {
+    "Id": 735,
+    "ConceptoId": 742,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 179.31
+  },
+  {
+    "Id": 736,
+    "ConceptoId": 743,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 227.59
+  },
+  {
+    "Id": 737,
+    "ConceptoId": 745,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 182.07
+  },
+  {
+    "Id": 738,
+    "ConceptoId": 746,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 739,
+    "ConceptoId": 747,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 193.1
+  },
+  {
+    "Id": 740,
+    "ConceptoId": 748,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 785.63
+  },
+  {
+    "Id": 741,
+    "ConceptoId": 749,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 136.55
+  },
+  {
+    "Id": 742,
+    "ConceptoId": 750,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 264
+  },
+  {
+    "Id": 743,
+    "ConceptoId": 751,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 744,
+    "ConceptoId": 752,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 745,
+    "ConceptoId": 753,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 746,
+    "ConceptoId": 754,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 747,
+    "ConceptoId": 755,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 949.03
+  },
+  {
+    "Id": 748,
+    "ConceptoId": 756,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 749,
+    "ConceptoId": 757,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 750,
+    "ConceptoId": 758,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 751,
+    "ConceptoId": 759,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 91.03
+  },
+  {
+    "Id": 752,
+    "ConceptoId": 760,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 753,
+    "ConceptoId": 761,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 127.45
+  },
+  {
+    "Id": 754,
+    "ConceptoId": 763,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1056
+  },
+  {
+    "Id": 755,
+    "ConceptoId": 764,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 333.79
+  },
+  {
+    "Id": 756,
+    "ConceptoId": 765,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 485.52
+  },
+  {
+    "Id": 757,
+    "ConceptoId": 766,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 106.21
+  },
+  {
+    "Id": 758,
+    "ConceptoId": 767,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 759,
+    "ConceptoId": 768,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 455.17
+  },
+  {
+    "Id": 760,
+    "ConceptoId": 769,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 761,
+    "ConceptoId": 770,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 294.65
+  },
+  {
+    "Id": 762,
+    "ConceptoId": 771,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 203.31
+  },
+  {
+    "Id": 763,
+    "ConceptoId": 772,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 606.9
+  },
+  {
+    "Id": 764,
+    "ConceptoId": 774,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 333.79
+  },
+  {
+    "Id": 765,
+    "ConceptoId": 775,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 162.34
+  },
+  {
+    "Id": 766,
+    "ConceptoId": 776,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.28
+  },
+  {
+    "Id": 767,
+    "ConceptoId": 777,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2758.62
+  },
+  {
+    "Id": 768,
+    "ConceptoId": 778,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 986.21
+  },
+  {
+    "Id": 769,
+    "ConceptoId": 779,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 770,
+    "ConceptoId": 780,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 531.03
+  },
+  {
+    "Id": 771,
+    "ConceptoId": 781,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 101.66
+  },
+  {
+    "Id": 772,
+    "ConceptoId": 782,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 773,
+    "ConceptoId": 783,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 531.03
+  },
+  {
+    "Id": 774,
+    "ConceptoId": 784,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1765.52
+  },
+  {
+    "Id": 775,
+    "ConceptoId": 785,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 208.55
+  },
+  {
+    "Id": 776,
+    "ConceptoId": 786,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 606.9
+  },
+  {
+    "Id": 777,
+    "ConceptoId": 787,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 778,
+    "ConceptoId": 788,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 779,
+    "ConceptoId": 789,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 157.03
+  },
+  {
+    "Id": 780,
+    "ConceptoId": 790,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 157.03
+  },
+  {
+    "Id": 781,
+    "ConceptoId": 791,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 59.17
+  },
+  {
+    "Id": 782,
+    "ConceptoId": 792,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 783,
+    "ConceptoId": 793,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 98.32
+  },
+  {
+    "Id": 784,
+    "ConceptoId": 794,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 274.92
+  },
+  {
+    "Id": 785,
+    "ConceptoId": 795,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 786,
+    "ConceptoId": 796,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 787,
+    "ConceptoId": 797,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 101.66
+  },
+  {
+    "Id": 788,
+    "ConceptoId": 798,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 91.03
+  },
+  {
+    "Id": 789,
+    "ConceptoId": 799,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 91.03
+  },
+  {
+    "Id": 790,
+    "ConceptoId": 800,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1047.05
+  },
+  {
+    "Id": 791,
+    "ConceptoId": 801,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2758.62
+  },
+  {
+    "Id": 792,
+    "ConceptoId": 802,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 305.52
+  },
+  {
+    "Id": 793,
+    "ConceptoId": 803,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 159.31
+  },
+  {
+    "Id": 794,
+    "ConceptoId": 804,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 795,
+    "ConceptoId": 805,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 455.17
+  },
+  {
+    "Id": 796,
+    "ConceptoId": 806,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 294.65
+  },
+  {
+    "Id": 797,
+    "ConceptoId": 807,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 798,
+    "ConceptoId": 808,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1724.14
+  },
+  {
+    "Id": 799,
+    "ConceptoId": 809,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 485.52
+  },
+  {
+    "Id": 800,
+    "ConceptoId": 810,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 182.07
+  },
+  {
+    "Id": 801,
+    "ConceptoId": 811,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 802,
+    "ConceptoId": 812,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 803,
+    "ConceptoId": 813,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 91.03
+  },
+  {
+    "Id": 804,
+    "ConceptoId": 814,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 78.59
+  },
+  {
+    "Id": 805,
+    "ConceptoId": 815,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 834.48
+  },
+  {
+    "Id": 806,
+    "ConceptoId": 816,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 211.2
+  },
+  {
+    "Id": 807,
+    "ConceptoId": 817,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 289.66
+  },
+  {
+    "Id": 808,
+    "ConceptoId": 818,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 379.31
+  },
+  {
+    "Id": 809,
+    "ConceptoId": 819,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 810,
+    "ConceptoId": 820,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2124.14
+  },
+  {
+    "Id": 811,
+    "ConceptoId": 821,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 986.21
+  },
+  {
+    "Id": 812,
+    "ConceptoId": 822,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 813,
+    "ConceptoId": 823,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 568.97
+  },
+  {
+    "Id": 814,
+    "ConceptoId": 824,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1103.45
+  },
+  {
+    "Id": 815,
+    "ConceptoId": 825,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 816,
+    "ConceptoId": 826,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 179.31
+  },
+  {
+    "Id": 817,
+    "ConceptoId": 827,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1289.66
+  },
+  {
+    "Id": 818,
+    "ConceptoId": 828,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 75.86
+  },
+  {
+    "Id": 819,
+    "ConceptoId": 829,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 75.86
+  },
+  {
+    "Id": 820,
+    "ConceptoId": 830,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 121.38
+  },
+  {
+    "Id": 821,
+    "ConceptoId": 831,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 455.17
+  },
+  {
+    "Id": 822,
+    "ConceptoId": 832,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 333.79
+  },
+  {
+    "Id": 823,
+    "ConceptoId": 833,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 824,
+    "ConceptoId": 834,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 379.31
+  },
+  {
+    "Id": 825,
+    "ConceptoId": 835,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 826,
+    "ConceptoId": 836,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 110.34
+  },
+  {
+    "Id": 827,
+    "ConceptoId": 837,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 75.86
+  },
+  {
+    "Id": 828,
+    "ConceptoId": 838,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 606.9
+  },
+  {
+    "Id": 829,
+    "ConceptoId": 839,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 151.72
+  },
+  {
+    "Id": 830,
+    "ConceptoId": 840,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1137.93
+  },
+  {
+    "Id": 831,
+    "ConceptoId": 841,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 455.17
+  },
+  {
+    "Id": 832,
+    "ConceptoId": 842,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 834.48
+  },
+  {
+    "Id": 833,
+    "ConceptoId": 843,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 455.17
+  },
+  {
+    "Id": 834,
+    "ConceptoId": 844,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 835,
+    "ConceptoId": 845,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 386.21
+  },
+  {
+    "Id": 836,
+    "ConceptoId": 846,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 59.17
+  },
+  {
+    "Id": 837,
+    "ConceptoId": 847,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 689.66
+  },
+  {
+    "Id": 838,
+    "ConceptoId": 848,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 379.31
+  },
+  {
+    "Id": 839,
+    "ConceptoId": 849,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 840,
+    "ConceptoId": 850,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 841,
+    "ConceptoId": 851,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 842,
+    "ConceptoId": 852,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 147.59
+  },
+  {
+    "Id": 843,
+    "ConceptoId": 853,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 844,
+    "ConceptoId": 854,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 379.31
+  },
+  {
+    "Id": 845,
+    "ConceptoId": 855,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 620.69
+  },
+  {
+    "Id": 846,
+    "ConceptoId": 856,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1724.14
+  },
+  {
+    "Id": 847,
+    "ConceptoId": 857,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1724.14
+  },
+  {
+    "Id": 848,
+    "ConceptoId": 858,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 264
+  },
+  {
+    "Id": 849,
+    "ConceptoId": 859,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 264
+  },
+  {
+    "Id": 850,
+    "ConceptoId": 860,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 689.66
+  },
+  {
+    "Id": 851,
+    "ConceptoId": 861,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 689.66
+  },
+  {
+    "Id": 852,
+    "ConceptoId": 862,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 59.17
+  },
+  {
+    "Id": 853,
+    "ConceptoId": 863,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 854,
+    "ConceptoId": 864,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 855,
+    "ConceptoId": 865,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 856,
+    "ConceptoId": 866,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 857,
+    "ConceptoId": 867,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 858,
+    "ConceptoId": 868,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 859,
+    "ConceptoId": 869,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 860,
+    "ConceptoId": 870,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 4827.59
+  },
+  {
+    "Id": 861,
+    "ConceptoId": 871,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1141.11
+  },
+  {
+    "Id": 862,
+    "ConceptoId": 872,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 3448.28
+  },
+  {
+    "Id": 863,
+    "ConceptoId": 873,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 965.52
+  },
+  {
+    "Id": 864,
+    "ConceptoId": 874,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 482.76
+  },
+  {
+    "Id": 865,
+    "ConceptoId": 875,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 866,
+    "ConceptoId": 876,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 75.86
+  },
+  {
+    "Id": 867,
+    "ConceptoId": 877,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 75.86
+  },
+  {
+    "Id": 868,
+    "ConceptoId": 878,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 121.38
+  },
+  {
+    "Id": 869,
+    "ConceptoId": 879,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 455.17
+  },
+  {
+    "Id": 870,
+    "ConceptoId": 880,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 333.79
+  },
+  {
+    "Id": 871,
+    "ConceptoId": 881,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 872,
+    "ConceptoId": 882,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 873,
+    "ConceptoId": 883,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 110.34
+  },
+  {
+    "Id": 874,
+    "ConceptoId": 884,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 75.86
+  },
+  {
+    "Id": 875,
+    "ConceptoId": 885,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 606.9
+  },
+  {
+    "Id": 876,
+    "ConceptoId": 886,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 151.72
+  },
+  {
+    "Id": 877,
+    "ConceptoId": 887,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1137.93
+  },
+  {
+    "Id": 878,
+    "ConceptoId": 888,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 455.17
+  },
+  {
+    "Id": 879,
+    "ConceptoId": 889,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 834.48
+  },
+  {
+    "Id": 880,
+    "ConceptoId": 890,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 455.17
+  },
+  {
+    "Id": 881,
+    "ConceptoId": 891,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 882,
+    "ConceptoId": 892,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 386.21
+  },
+  {
+    "Id": 883,
+    "ConceptoId": 893,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 884,
+    "ConceptoId": 894,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 504.48
+  },
+  {
+    "Id": 885,
+    "ConceptoId": 895,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 50.83
+  },
+  {
+    "Id": 886,
+    "ConceptoId": 896,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 379.31
+  },
+  {
+    "Id": 887,
+    "ConceptoId": 897,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 888,
+    "ConceptoId": 898,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 91.03
+  },
+  {
+    "Id": 889,
+    "ConceptoId": 899,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 689.66
+  },
+  {
+    "Id": 890,
+    "ConceptoId": 900,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 891,
+    "ConceptoId": 901,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 409.66
+  },
+  {
+    "Id": 892,
+    "ConceptoId": 902,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 682.76
+  },
+  {
+    "Id": 893,
+    "ConceptoId": 903,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 834.48
+  },
+  {
+    "Id": 894,
+    "ConceptoId": 904,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 82.76
+  },
+  {
+    "Id": 895,
+    "ConceptoId": 905,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1115.93
+  },
+  {
+    "Id": 896,
+    "ConceptoId": 906,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 75.86
+  },
+  {
+    "Id": 897,
+    "ConceptoId": 907,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1365.52
+  },
+  {
+    "Id": 898,
+    "ConceptoId": 908,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 386.21
+  },
+  {
+    "Id": 899,
+    "ConceptoId": 909,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 44.83
+  },
+  {
+    "Id": 900,
+    "ConceptoId": 910,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 91.03
+  },
+  {
+    "Id": 901,
+    "ConceptoId": 911,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 294.34
+  },
+  {
+    "Id": 902,
+    "ConceptoId": 912,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 182.07
+  },
+  {
+    "Id": 903,
+    "ConceptoId": 913,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 53.79
+  },
+  {
+    "Id": 904,
+    "ConceptoId": 914,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 151.72
+  },
+  {
+    "Id": 905,
+    "ConceptoId": 915,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 227.59
+  },
+  {
+    "Id": 906,
+    "ConceptoId": 916,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2389.96
+  },
+  {
+    "Id": 907,
+    "ConceptoId": 917,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 3448.28
+  },
+  {
+    "Id": 908,
+    "ConceptoId": 918,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 909,
+    "ConceptoId": 919,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 273.1
+  },
+  {
+    "Id": 910,
+    "ConceptoId": 920,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 121.38
+  },
+  {
+    "Id": 911,
+    "ConceptoId": 921,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1103.45
+  },
+  {
+    "Id": 912,
+    "ConceptoId": 922,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 179.31
+  },
+  {
+    "Id": 913,
+    "ConceptoId": 923,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 227.59
+  },
+  {
+    "Id": 914,
+    "ConceptoId": 924,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 915,
+    "ConceptoId": 925,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 182.07
+  },
+  {
+    "Id": 916,
+    "ConceptoId": 926,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 193.1
+  },
+  {
+    "Id": 917,
+    "ConceptoId": 927,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 918,
+    "ConceptoId": 928,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 785.63
+  },
+  {
+    "Id": 919,
+    "ConceptoId": 929,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 136.55
+  },
+  {
+    "Id": 920,
+    "ConceptoId": 930,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 921,
+    "ConceptoId": 931,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 922,
+    "ConceptoId": 932,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 923,
+    "ConceptoId": 933,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 924,
+    "ConceptoId": 934,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 925,
+    "ConceptoId": 935,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 949.03
+  },
+  {
+    "Id": 926,
+    "ConceptoId": 936,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 927,
+    "ConceptoId": 937,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 928,
+    "ConceptoId": 938,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 929,
+    "ConceptoId": 939,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 91.03
+  },
+  {
+    "Id": 930,
+    "ConceptoId": 940,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 931,
+    "ConceptoId": 941,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 127.45
+  },
+  {
+    "Id": 932,
+    "ConceptoId": 942,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 55.17
+  },
+  {
+    "Id": 933,
+    "ConceptoId": 943,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1056
+  },
+  {
+    "Id": 934,
+    "ConceptoId": 944,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 333.79
+  },
+  {
+    "Id": 935,
+    "ConceptoId": 945,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 485.52
+  },
+  {
+    "Id": 936,
+    "ConceptoId": 946,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 106.21
+  },
+  {
+    "Id": 937,
+    "ConceptoId": 947,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 938,
+    "ConceptoId": 948,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 455.17
+  },
+  {
+    "Id": 939,
+    "ConceptoId": 949,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 206.9
+  },
+  {
+    "Id": 940,
+    "ConceptoId": 951,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 294.65
+  },
+  {
+    "Id": 941,
+    "ConceptoId": 952,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 203.31
+  },
+  {
+    "Id": 942,
+    "ConceptoId": 953,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 606.9
+  },
+  {
+    "Id": 943,
+    "ConceptoId": 954,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 333.79
+  },
+  {
+    "Id": 944,
+    "ConceptoId": 955,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 162.34
+  },
+  {
+    "Id": 945,
+    "ConceptoId": 956,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 946,
+    "ConceptoId": 957,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.28
+  },
+  {
+    "Id": 947,
+    "ConceptoId": 958,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2758.62
+  },
+  {
+    "Id": 948,
+    "ConceptoId": 959,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 949,
+    "ConceptoId": 960,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 165.52
+  },
+  {
+    "Id": 950,
+    "ConceptoId": 961,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 531.03
+  },
+  {
+    "Id": 951,
+    "ConceptoId": 962,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 101.66
+  },
+  {
+    "Id": 952,
+    "ConceptoId": 963,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 531.03
+  },
+  {
+    "Id": 953,
+    "ConceptoId": 964,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1765.52
+  },
+  {
+    "Id": 954,
+    "ConceptoId": 965,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 606.9
+  },
+  {
+    "Id": 955,
+    "ConceptoId": 967,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 956,
+    "ConceptoId": 968,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 157.03
+  },
+  {
+    "Id": 957,
+    "ConceptoId": 969,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 157.03
+  },
+  {
+    "Id": 958,
+    "ConceptoId": 970,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 59.17
+  },
+  {
+    "Id": 959,
+    "ConceptoId": 971,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 960,
+    "ConceptoId": 972,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 98.32
+  },
+  {
+    "Id": 961,
+    "ConceptoId": 973,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 274.92
+  },
+  {
+    "Id": 962,
+    "ConceptoId": 974,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 963,
+    "ConceptoId": 975,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 41.38
+  },
+  {
+    "Id": 964,
+    "ConceptoId": 976,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 101.66
+  },
+  {
+    "Id": 965,
+    "ConceptoId": 977,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 91.03
+  },
+  {
+    "Id": 966,
+    "ConceptoId": 978,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 965.52
+  },
+  {
+    "Id": 967,
+    "ConceptoId": 979,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2758.62
+  },
+  {
+    "Id": 968,
+    "ConceptoId": 980,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 305.6
+  },
+  {
+    "Id": 969,
+    "ConceptoId": 981,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 689.66
+  },
+  {
+    "Id": 970,
+    "ConceptoId": 982,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 159.31
+  },
+  {
+    "Id": 971,
+    "ConceptoId": 983,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 75.86
+  },
+  {
+    "Id": 972,
+    "ConceptoId": 984,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 973,
+    "ConceptoId": 985,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 455.17
+  },
+  {
+    "Id": 974,
+    "ConceptoId": 986,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 264
+  },
+  {
+    "Id": 975,
+    "ConceptoId": 987,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 976,
+    "ConceptoId": 988,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 455.17
+  },
+  {
+    "Id": 977,
+    "ConceptoId": 989,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 264
+  },
+  {
+    "Id": 978,
+    "ConceptoId": 990,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 294.65
+  },
+  {
+    "Id": 979,
+    "ConceptoId": 991,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 980,
+    "ConceptoId": 992,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1724.14
+  },
+  {
+    "Id": 981,
+    "ConceptoId": 994,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 182.07
+  },
+  {
+    "Id": 982,
+    "ConceptoId": 995,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 983,
+    "ConceptoId": 996,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 984,
+    "ConceptoId": 997,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 91.03
+  },
+  {
+    "Id": 985,
+    "ConceptoId": 999,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1724.14
+  },
+  {
+    "Id": 986,
+    "ConceptoId": 1000,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 834.48
+  },
+  {
+    "Id": 987,
+    "ConceptoId": 1001,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 211.2
+  },
+  {
+    "Id": 988,
+    "ConceptoId": 1002,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 289.66
+  },
+  {
+    "Id": 989,
+    "ConceptoId": 1003,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 379.31
+  },
+  {
+    "Id": 990,
+    "ConceptoId": 1004,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1655.17
+  },
+  {
+    "Id": 991,
+    "ConceptoId": 1005,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 2124.14
+  },
+  {
+    "Id": 992,
+    "ConceptoId": 1006,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 986.21
+  },
+  {
+    "Id": 993,
+    "ConceptoId": 1007,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1379.31
+  },
+  {
+    "Id": 994,
+    "ConceptoId": 1008,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 827.59
+  },
+  {
+    "Id": 995,
+    "ConceptoId": 1009,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1103.45
+  },
+  {
+    "Id": 996,
+    "ConceptoId": 1010,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 45.52
+  },
+  {
+    "Id": 997,
+    "ConceptoId": 1011,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 179.31
+  },
+  {
+    "Id": 998,
+    "ConceptoId": 1012,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 1289.66
+  },
+  {
+    "Id": 999,
+    "ConceptoId": 1013,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 379.31
+  },
+  {
+    "Id": 1000,
+    "ConceptoId": 1014,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 227.59
+  },
+  {
+    "Id": 1001,
+    "ConceptoId": 1015,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 344.83
+  },
+  {
+    "Id": 1002,
+    "ConceptoId": 1016,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 682.76
+  },
+  {
+    "Id": 1003,
+    "ConceptoId": 1017,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 379.31
+  },
+  {
+    "Id": 1004,
+    "ConceptoId": 1019,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 3034.48
+  },
+  {
+    "Id": 1005,
+    "ConceptoId": 1020,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1006,
+    "ConceptoId": 1021,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1007,
+    "ConceptoId": 1022,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1008,
+    "ConceptoId": 1023,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1009,
+    "ConceptoId": 1024,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1010,
+    "ConceptoId": 1025,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1011,
+    "ConceptoId": 1026,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1012,
+    "ConceptoId": 1027,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1013,
+    "ConceptoId": 1028,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1014,
+    "ConceptoId": 1029,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1015,
+    "ConceptoId": 1030,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1016,
+    "ConceptoId": 1031,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1017,
+    "ConceptoId": 1032,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1018,
+    "ConceptoId": 1033,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1019,
+    "ConceptoId": 1034,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1020,
+    "ConceptoId": 1035,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1021,
+    "ConceptoId": 1036,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1022,
+    "ConceptoId": 1037,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1024,
+    "ConceptoId": 1039,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1025,
+    "ConceptoId": 1040,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1026,
+    "ConceptoId": 1041,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1027,
+    "ConceptoId": 1042,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1028,
+    "ConceptoId": 1043,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1029,
+    "ConceptoId": 1044,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 110.34
+  },
+  {
+    "Id": 1030,
+    "ConceptoId": 1045,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 110.34
+  },
+  {
+    "Id": 1031,
+    "ConceptoId": 1046,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1032,
+    "ConceptoId": 1047,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1033,
+    "ConceptoId": 1048,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1034,
+    "ConceptoId": 1049,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1035,
+    "ConceptoId": 1050,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1036,
+    "ConceptoId": 1051,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1037,
+    "ConceptoId": 1052,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 200
+  },
+  {
+    "Id": 1038,
+    "ConceptoId": 1053,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.59
+  },
+  {
+    "Id": 1039,
+    "ConceptoId": 1054,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1040,
+    "ConceptoId": 1055,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1041,
+    "ConceptoId": 1056,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1042,
+    "ConceptoId": 1059,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 264
+  },
+  {
+    "Id": 1043,
+    "ConceptoId": 1060,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1044,
+    "ConceptoId": 1061,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1045,
+    "ConceptoId": 1062,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1048,
+    "ConceptoId": 1065,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1049,
+    "ConceptoId": 1066,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1050,
+    "ConceptoId": 1067,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 184.83
+  },
+  {
+    "Id": 1051,
+    "ConceptoId": 1068,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 1052,
+    "ConceptoId": 1069,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 110.34
+  },
+  {
+    "Id": 1053,
+    "ConceptoId": 1070,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 303.45
+  },
+  {
+    "Id": 1054,
+    "ConceptoId": 1071,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 1055,
+    "ConceptoId": 1072,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 1056,
+    "ConceptoId": 1073,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 1057,
+    "ConceptoId": 1074,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 55.17
+  },
+  {
+    "Id": 1058,
+    "ConceptoId": 1075,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 137.93
+  },
+  {
+    "Id": 1059,
+    "ConceptoId": 1076,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 551.72
+  },
+  {
+    "Id": 1060,
+    "ConceptoId": 1077,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 1061,
+    "ConceptoId": 1078,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 758.62
+  },
+  {
+    "Id": 1062,
+    "ConceptoId": 1079,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 413.79
+  },
+  {
+    "Id": 1063,
+    "ConceptoId": 1080,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 275.86
+  },
+  {
+    "Id": 1064,
+    "ConceptoId": 1081,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 68.97
+  },
+  {
+    "Id": 1065,
+    "ConceptoId": 1082,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 55.17
+  },
+  {
+    "Id": 1066,
+    "ConceptoId": 1083,
+    "Tipo": "IVA 16%",
+    "Tasa": 0.16,
+    "Monto": 689.66
+  },
+  {
+    "Id": 1067,
+    "ConceptoId": 1084,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1068,
+    "ConceptoId": 1085,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1069,
+    "ConceptoId": 1086,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1070,
+    "ConceptoId": 1087,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  },
+  {
+    "Id": 1071,
+    "ConceptoId": 1088,
+    "Tipo": "IVA 8%",
+    "Tasa": 0.08,
+    "Monto": 74.07
+  }
+]

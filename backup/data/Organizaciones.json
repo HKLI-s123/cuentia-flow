@@ -1,0 +1,74 @@
+[
+  {
+    "Id": 3,
+    "RFC": "ABC123456789",
+    "RazonSocial": "Mi Empresa de Cobranza S.A. de C.V.",
+    "CreatedAt": "2025-09-16T16:39:57.640Z",
+    "UpdatedAt": "2025-09-16T16:39:57.640Z",
+    "CorreoElectronico": "admin@miempresa.com",
+    "Nombre": "Mi Empresa Cobranza",
+    "IdFacturaAPI": null,
+    "ApiKeyFacturaAPI": null,
+    "FechaActualizacionApiKey": null
+  },
+  {
+    "Id": 5,
+    "RFC": "DMM180222I17",
+    "RazonSocial": "DESARROLLO M MENDOZA",
+    "CreatedAt": "2025-09-16T16:39:57.640Z",
+    "UpdatedAt": "2025-10-14T16:26:47.290Z",
+    "CorreoElectronico": "ashley.gamboa@mmendoza.com.mx",
+    "Nombre": "DESARROLLO M MENDOZA",
+    "IdFacturaAPI": null,
+    "ApiKeyFacturaAPI": null,
+    "FechaActualizacionApiKey": null
+  },
+  {
+    "Id": 6,
+    "RFC": "MERM880329JF7",
+    "RazonSocial": "MAURICIO GUILLERMO MENDOZA RUIZ",
+    "CreatedAt": "2025-10-11T17:28:10.650Z",
+    "UpdatedAt": "2025-10-11T17:41:06.120Z",
+    "CorreoElectronico": "mauricio.mendoza@mmendoza.com.mx",
+    "Nombre": "MAURICIO GUILLERO MENDOZA RUIZ",
+    "IdFacturaAPI": null,
+    "ApiKeyFacturaAPI": null,
+    "FechaActualizacionApiKey": null
+  },
+  {
+    "Id": 45,
+    "RFC": "LIF170822MZ3",
+    "RazonSocial": "LIFSA",
+    "CreatedAt": "2026-03-18T18:36:49.353Z",
+    "UpdatedAt": "2026-03-18T18:36:49.353Z",
+    "CorreoElectronico": "lifsa@gmail.com",
+    "Nombre": "LIFSA",
+    "IdFacturaAPI": null,
+    "ApiKeyFacturaAPI": "REDACTED",
+    "FechaActualizacionApiKey": "2026-03-19T22:48:07.827Z"
+  },
+  {
+    "Id": 46,
+    "RFC": "CAM170515GT5",
+    "RazonSocial": "CONSULTORES Y ASESORES M MENDOZA",
+    "CreatedAt": "2026-03-31T22:31:03.513Z",
+    "UpdatedAt": "2026-03-31T22:31:03.513Z",
+    "CorreoElectronico": "srgiorosales123@gmail.com",
+    "Nombre": "CONSULTORES Y ASESORES M MENDOZA",
+    "IdFacturaAPI": null,
+    "ApiKeyFacturaAPI": null,
+    "FechaActualizacionApiKey": null
+  },
+  {
+    "Id": 47,
+    "RFC": "PPU200206KTA",
+    "RazonSocial": "PUNTO PURIFICADOR",
+    "CreatedAt": "2026-03-31T23:23:05.450Z",
+    "UpdatedAt": "2026-03-31T23:23:05.450Z",
+    "CorreoElectronico": "srgiorosales123@gmail.com",
+    "Nombre": "PUNTO PURIFICADOR",
+    "IdFacturaAPI": null,
+    "ApiKeyFacturaAPI": null,
+    "FechaActualizacionApiKey": null
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "id": 8,
+    "usuario_id": 51,
+    "organizacion_id": 45,
+    "action": "UPLOAD_CERTIFICATE",
+    "details": "Certificados CSD subidos exitosamente. CER: 00001000000723149731.cer, KEY: csd_lifsa_lif170822mz3_20260310_135743.key",
+    "ip_address": "::1",
+    "timestamp": "2026-03-18T18:36:50.195Z"
+  },
+  {
+    "id": 9,
+    "usuario_id": 58,
+    "organizacion_id": 46,
+    "action": "UPLOAD_CERTIFICATE",
+    "details": "Certificados CSD subidos exitosamente. CER: 00001000000722029609.cer, KEY: csd_consultores_y_asesores_mendoza_cam170515gt5_20260129_152521.key",
+    "ip_address": "::1",
+    "timestamp": "2026-03-31T22:31:04.553Z"
+  },
+  {
+    "id": 10,
+    "usuario_id": 59,
+    "organizacion_id": 47,
+    "action": "UPLOAD_CERTIFICATE",
+    "details": "Certificados CSD subidos exitosamente. CER: 00001000000720094488.cer, KEY: csd_punto_purificador_ppu200206kta_20251107_095859.key",
+    "ip_address": "::1",
+    "timestamp": "2026-03-31T23:23:07.227Z"
+  }
+]

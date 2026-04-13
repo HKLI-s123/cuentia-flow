@@ -1,0 +1,1954 @@
+[
+  {
+    "Id": 21,
+    "ClienteId": 229,
+    "UsuarioId": 9,
+    "RolAgente": "Principal",
+    "CreatedAt": "2025-10-02T21:07:39.380Z",
+    "UpdatedAt": "2025-10-02T21:07:39.380Z"
+  },
+  {
+    "Id": 22,
+    "ClienteId": 249,
+    "UsuarioId": 10,
+    "RolAgente": "Principal",
+    "CreatedAt": "2025-10-02T21:08:41.460Z",
+    "UpdatedAt": "2025-10-02T21:08:41.460Z"
+  },
+  {
+    "Id": 23,
+    "ClienteId": 446,
+    "UsuarioId": 9,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-05T01:18:46.540Z",
+    "UpdatedAt": "2025-10-05T01:18:46.540Z"
+  },
+  {
+    "Id": 24,
+    "ClienteId": 447,
+    "UsuarioId": 9,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-06T17:15:03.830Z",
+    "UpdatedAt": "2025-10-06T17:15:03.830Z"
+  },
+  {
+    "Id": 25,
+    "ClienteId": 448,
+    "UsuarioId": 9,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-06T23:08:41.127Z",
+    "UpdatedAt": "2025-10-06T23:08:41.127Z"
+  },
+  {
+    "Id": 26,
+    "ClienteId": 449,
+    "UsuarioId": 9,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-06T23:46:00.887Z",
+    "UpdatedAt": "2025-10-06T23:46:00.887Z"
+  },
+  {
+    "Id": 27,
+    "ClienteId": 249,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T16:17:48.380Z",
+    "UpdatedAt": "2025-10-08T16:17:48.380Z"
+  },
+  {
+    "Id": 29,
+    "ClienteId": 251,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.397Z",
+    "UpdatedAt": "2025-10-08T18:30:17.397Z"
+  },
+  {
+    "Id": 30,
+    "ClienteId": 252,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.400Z",
+    "UpdatedAt": "2025-10-08T18:30:17.400Z"
+  },
+  {
+    "Id": 31,
+    "ClienteId": 253,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.403Z",
+    "UpdatedAt": "2025-10-08T18:30:17.403Z"
+  },
+  {
+    "Id": 32,
+    "ClienteId": 254,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.410Z",
+    "UpdatedAt": "2025-10-08T18:30:17.410Z"
+  },
+  {
+    "Id": 33,
+    "ClienteId": 255,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.410Z",
+    "UpdatedAt": "2025-10-08T18:30:17.410Z"
+  },
+  {
+    "Id": 34,
+    "ClienteId": 256,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.417Z",
+    "UpdatedAt": "2025-10-08T18:30:17.417Z"
+  },
+  {
+    "Id": 35,
+    "ClienteId": 257,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.420Z",
+    "UpdatedAt": "2025-10-08T18:30:17.420Z"
+  },
+  {
+    "Id": 36,
+    "ClienteId": 258,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.423Z",
+    "UpdatedAt": "2025-10-08T18:30:17.423Z"
+  },
+  {
+    "Id": 37,
+    "ClienteId": 259,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.427Z",
+    "UpdatedAt": "2025-10-08T18:30:17.427Z"
+  },
+  {
+    "Id": 38,
+    "ClienteId": 260,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.430Z",
+    "UpdatedAt": "2025-10-08T18:30:17.430Z"
+  },
+  {
+    "Id": 39,
+    "ClienteId": 261,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.437Z",
+    "UpdatedAt": "2025-10-08T18:30:17.437Z"
+  },
+  {
+    "Id": 40,
+    "ClienteId": 262,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.440Z",
+    "UpdatedAt": "2025-10-08T18:30:17.440Z"
+  },
+  {
+    "Id": 41,
+    "ClienteId": 263,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.447Z",
+    "UpdatedAt": "2025-10-08T18:30:17.447Z"
+  },
+  {
+    "Id": 42,
+    "ClienteId": 264,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.450Z",
+    "UpdatedAt": "2025-10-08T18:30:17.450Z"
+  },
+  {
+    "Id": 43,
+    "ClienteId": 265,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.453Z",
+    "UpdatedAt": "2025-10-08T18:30:17.453Z"
+  },
+  {
+    "Id": 44,
+    "ClienteId": 266,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.460Z",
+    "UpdatedAt": "2025-10-08T18:30:17.460Z"
+  },
+  {
+    "Id": 45,
+    "ClienteId": 267,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.463Z",
+    "UpdatedAt": "2025-10-08T18:30:17.463Z"
+  },
+  {
+    "Id": 46,
+    "ClienteId": 268,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.467Z",
+    "UpdatedAt": "2025-10-08T18:30:17.467Z"
+  },
+  {
+    "Id": 47,
+    "ClienteId": 269,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.470Z",
+    "UpdatedAt": "2025-10-08T18:30:17.470Z"
+  },
+  {
+    "Id": 48,
+    "ClienteId": 270,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.473Z",
+    "UpdatedAt": "2025-10-08T18:30:17.473Z"
+  },
+  {
+    "Id": 49,
+    "ClienteId": 271,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.480Z",
+    "UpdatedAt": "2025-10-08T18:30:17.480Z"
+  },
+  {
+    "Id": 50,
+    "ClienteId": 272,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.483Z",
+    "UpdatedAt": "2025-10-08T18:30:17.483Z"
+  },
+  {
+    "Id": 51,
+    "ClienteId": 273,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.490Z",
+    "UpdatedAt": "2025-10-08T18:30:17.490Z"
+  },
+  {
+    "Id": 52,
+    "ClienteId": 274,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.493Z",
+    "UpdatedAt": "2025-10-08T18:30:17.493Z"
+  },
+  {
+    "Id": 53,
+    "ClienteId": 275,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.497Z",
+    "UpdatedAt": "2025-10-08T18:30:17.497Z"
+  },
+  {
+    "Id": 54,
+    "ClienteId": 276,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.503Z",
+    "UpdatedAt": "2025-10-08T18:30:17.503Z"
+  },
+  {
+    "Id": 55,
+    "ClienteId": 277,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.507Z",
+    "UpdatedAt": "2025-10-08T18:30:17.507Z"
+  },
+  {
+    "Id": 56,
+    "ClienteId": 278,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.510Z",
+    "UpdatedAt": "2025-10-08T18:30:17.510Z"
+  },
+  {
+    "Id": 57,
+    "ClienteId": 279,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.513Z",
+    "UpdatedAt": "2025-10-08T18:30:17.513Z"
+  },
+  {
+    "Id": 58,
+    "ClienteId": 280,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.520Z",
+    "UpdatedAt": "2025-10-08T18:30:17.520Z"
+  },
+  {
+    "Id": 59,
+    "ClienteId": 281,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.537Z",
+    "UpdatedAt": "2025-10-08T18:30:17.537Z"
+  },
+  {
+    "Id": 60,
+    "ClienteId": 282,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.540Z",
+    "UpdatedAt": "2025-10-08T18:30:17.540Z"
+  },
+  {
+    "Id": 61,
+    "ClienteId": 283,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.547Z",
+    "UpdatedAt": "2025-10-08T18:30:17.547Z"
+  },
+  {
+    "Id": 62,
+    "ClienteId": 284,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.550Z",
+    "UpdatedAt": "2025-10-08T18:30:17.550Z"
+  },
+  {
+    "Id": 63,
+    "ClienteId": 285,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.553Z",
+    "UpdatedAt": "2025-10-08T18:30:17.553Z"
+  },
+  {
+    "Id": 64,
+    "ClienteId": 286,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.557Z",
+    "UpdatedAt": "2025-10-08T18:30:17.557Z"
+  },
+  {
+    "Id": 65,
+    "ClienteId": 287,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.560Z",
+    "UpdatedAt": "2025-10-08T18:30:17.560Z"
+  },
+  {
+    "Id": 66,
+    "ClienteId": 288,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.567Z",
+    "UpdatedAt": "2025-10-08T18:30:17.567Z"
+  },
+  {
+    "Id": 67,
+    "ClienteId": 289,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.570Z",
+    "UpdatedAt": "2025-10-08T18:30:17.570Z"
+  },
+  {
+    "Id": 68,
+    "ClienteId": 290,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.573Z",
+    "UpdatedAt": "2025-10-08T18:30:17.573Z"
+  },
+  {
+    "Id": 69,
+    "ClienteId": 291,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.580Z",
+    "UpdatedAt": "2025-10-08T18:30:17.580Z"
+  },
+  {
+    "Id": 70,
+    "ClienteId": 292,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.583Z",
+    "UpdatedAt": "2025-10-08T18:30:17.583Z"
+  },
+  {
+    "Id": 71,
+    "ClienteId": 293,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.587Z",
+    "UpdatedAt": "2025-10-08T18:30:17.587Z"
+  },
+  {
+    "Id": 72,
+    "ClienteId": 294,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.590Z",
+    "UpdatedAt": "2025-10-08T18:30:17.590Z"
+  },
+  {
+    "Id": 73,
+    "ClienteId": 295,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.597Z",
+    "UpdatedAt": "2025-10-08T18:30:17.597Z"
+  },
+  {
+    "Id": 74,
+    "ClienteId": 296,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.600Z",
+    "UpdatedAt": "2025-10-08T18:30:17.600Z"
+  },
+  {
+    "Id": 75,
+    "ClienteId": 297,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.607Z",
+    "UpdatedAt": "2025-10-08T18:30:17.607Z"
+  },
+  {
+    "Id": 76,
+    "ClienteId": 298,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.617Z",
+    "UpdatedAt": "2025-10-08T18:30:17.617Z"
+  },
+  {
+    "Id": 77,
+    "ClienteId": 299,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.623Z",
+    "UpdatedAt": "2025-10-08T18:30:17.623Z"
+  },
+  {
+    "Id": 78,
+    "ClienteId": 300,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:30:17.627Z",
+    "UpdatedAt": "2025-10-08T18:30:17.627Z"
+  },
+  {
+    "Id": 79,
+    "ClienteId": 301,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.263Z",
+    "UpdatedAt": "2025-10-08T18:32:00.263Z"
+  },
+  {
+    "Id": 80,
+    "ClienteId": 302,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.270Z",
+    "UpdatedAt": "2025-10-08T18:32:00.270Z"
+  },
+  {
+    "Id": 81,
+    "ClienteId": 303,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.273Z",
+    "UpdatedAt": "2025-10-08T18:32:00.273Z"
+  },
+  {
+    "Id": 82,
+    "ClienteId": 304,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.287Z",
+    "UpdatedAt": "2025-10-08T18:32:00.287Z"
+  },
+  {
+    "Id": 83,
+    "ClienteId": 305,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.290Z",
+    "UpdatedAt": "2025-10-08T18:32:00.290Z"
+  },
+  {
+    "Id": 84,
+    "ClienteId": 306,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.297Z",
+    "UpdatedAt": "2025-10-08T18:32:00.297Z"
+  },
+  {
+    "Id": 85,
+    "ClienteId": 307,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.300Z",
+    "UpdatedAt": "2025-10-08T18:32:00.300Z"
+  },
+  {
+    "Id": 86,
+    "ClienteId": 308,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.303Z",
+    "UpdatedAt": "2025-10-08T18:32:00.303Z"
+  },
+  {
+    "Id": 87,
+    "ClienteId": 309,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.310Z",
+    "UpdatedAt": "2025-10-08T18:32:00.310Z"
+  },
+  {
+    "Id": 88,
+    "ClienteId": 310,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.317Z",
+    "UpdatedAt": "2025-10-08T18:32:00.317Z"
+  },
+  {
+    "Id": 89,
+    "ClienteId": 311,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.320Z",
+    "UpdatedAt": "2025-10-08T18:32:00.320Z"
+  },
+  {
+    "Id": 90,
+    "ClienteId": 312,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.323Z",
+    "UpdatedAt": "2025-10-08T18:32:00.323Z"
+  },
+  {
+    "Id": 91,
+    "ClienteId": 313,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.330Z",
+    "UpdatedAt": "2025-10-08T18:32:00.330Z"
+  },
+  {
+    "Id": 92,
+    "ClienteId": 314,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.333Z",
+    "UpdatedAt": "2025-10-08T18:32:00.333Z"
+  },
+  {
+    "Id": 93,
+    "ClienteId": 315,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.337Z",
+    "UpdatedAt": "2025-10-08T18:32:00.337Z"
+  },
+  {
+    "Id": 94,
+    "ClienteId": 316,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.343Z",
+    "UpdatedAt": "2025-10-08T18:32:00.343Z"
+  },
+  {
+    "Id": 95,
+    "ClienteId": 317,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.347Z",
+    "UpdatedAt": "2025-10-08T18:32:00.347Z"
+  },
+  {
+    "Id": 96,
+    "ClienteId": 318,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.350Z",
+    "UpdatedAt": "2025-10-08T18:32:00.350Z"
+  },
+  {
+    "Id": 97,
+    "ClienteId": 319,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.353Z",
+    "UpdatedAt": "2025-10-08T18:32:00.353Z"
+  },
+  {
+    "Id": 98,
+    "ClienteId": 320,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.360Z",
+    "UpdatedAt": "2025-10-08T18:32:00.360Z"
+  },
+  {
+    "Id": 99,
+    "ClienteId": 321,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.363Z",
+    "UpdatedAt": "2025-10-08T18:32:00.363Z"
+  },
+  {
+    "Id": 100,
+    "ClienteId": 322,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.367Z",
+    "UpdatedAt": "2025-10-08T18:32:00.367Z"
+  },
+  {
+    "Id": 101,
+    "ClienteId": 323,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.373Z",
+    "UpdatedAt": "2025-10-08T18:32:00.373Z"
+  },
+  {
+    "Id": 102,
+    "ClienteId": 324,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.380Z",
+    "UpdatedAt": "2025-10-08T18:32:00.380Z"
+  },
+  {
+    "Id": 103,
+    "ClienteId": 325,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.383Z",
+    "UpdatedAt": "2025-10-08T18:32:00.383Z"
+  },
+  {
+    "Id": 104,
+    "ClienteId": 326,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.387Z",
+    "UpdatedAt": "2025-10-08T18:32:00.387Z"
+  },
+  {
+    "Id": 105,
+    "ClienteId": 327,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.390Z",
+    "UpdatedAt": "2025-10-08T18:32:00.390Z"
+  },
+  {
+    "Id": 106,
+    "ClienteId": 328,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.397Z",
+    "UpdatedAt": "2025-10-08T18:32:00.397Z"
+  },
+  {
+    "Id": 107,
+    "ClienteId": 329,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.400Z",
+    "UpdatedAt": "2025-10-08T18:32:00.400Z"
+  },
+  {
+    "Id": 108,
+    "ClienteId": 330,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.403Z",
+    "UpdatedAt": "2025-10-08T18:32:00.403Z"
+  },
+  {
+    "Id": 109,
+    "ClienteId": 331,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.410Z",
+    "UpdatedAt": "2025-10-08T18:32:00.410Z"
+  },
+  {
+    "Id": 110,
+    "ClienteId": 332,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.413Z",
+    "UpdatedAt": "2025-10-08T18:32:00.413Z"
+  },
+  {
+    "Id": 111,
+    "ClienteId": 333,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.417Z",
+    "UpdatedAt": "2025-10-08T18:32:00.417Z"
+  },
+  {
+    "Id": 112,
+    "ClienteId": 334,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.423Z",
+    "UpdatedAt": "2025-10-08T18:32:00.423Z"
+  },
+  {
+    "Id": 113,
+    "ClienteId": 335,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.427Z",
+    "UpdatedAt": "2025-10-08T18:32:00.427Z"
+  },
+  {
+    "Id": 114,
+    "ClienteId": 336,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.430Z",
+    "UpdatedAt": "2025-10-08T18:32:00.430Z"
+  },
+  {
+    "Id": 115,
+    "ClienteId": 337,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.433Z",
+    "UpdatedAt": "2025-10-08T18:32:00.433Z"
+  },
+  {
+    "Id": 116,
+    "ClienteId": 338,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.440Z",
+    "UpdatedAt": "2025-10-08T18:32:00.440Z"
+  },
+  {
+    "Id": 117,
+    "ClienteId": 339,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.443Z",
+    "UpdatedAt": "2025-10-08T18:32:00.443Z"
+  },
+  {
+    "Id": 118,
+    "ClienteId": 340,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.447Z",
+    "UpdatedAt": "2025-10-08T18:32:00.447Z"
+  },
+  {
+    "Id": 119,
+    "ClienteId": 341,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.453Z",
+    "UpdatedAt": "2025-10-08T18:32:00.453Z"
+  },
+  {
+    "Id": 120,
+    "ClienteId": 342,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.457Z",
+    "UpdatedAt": "2025-10-08T18:32:00.457Z"
+  },
+  {
+    "Id": 121,
+    "ClienteId": 343,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.463Z",
+    "UpdatedAt": "2025-10-08T18:32:00.463Z"
+  },
+  {
+    "Id": 122,
+    "ClienteId": 344,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.467Z",
+    "UpdatedAt": "2025-10-08T18:32:00.467Z"
+  },
+  {
+    "Id": 123,
+    "ClienteId": 345,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.470Z",
+    "UpdatedAt": "2025-10-08T18:32:00.470Z"
+  },
+  {
+    "Id": 124,
+    "ClienteId": 346,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.477Z",
+    "UpdatedAt": "2025-10-08T18:32:00.477Z"
+  },
+  {
+    "Id": 125,
+    "ClienteId": 347,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.480Z",
+    "UpdatedAt": "2025-10-08T18:32:00.480Z"
+  },
+  {
+    "Id": 126,
+    "ClienteId": 348,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.487Z",
+    "UpdatedAt": "2025-10-08T18:32:00.487Z"
+  },
+  {
+    "Id": 127,
+    "ClienteId": 349,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.490Z",
+    "UpdatedAt": "2025-10-08T18:32:00.490Z"
+  },
+  {
+    "Id": 128,
+    "ClienteId": 350,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:00.493Z",
+    "UpdatedAt": "2025-10-08T18:32:00.493Z"
+  },
+  {
+    "Id": 129,
+    "ClienteId": 351,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.547Z",
+    "UpdatedAt": "2025-10-08T18:32:19.547Z"
+  },
+  {
+    "Id": 130,
+    "ClienteId": 352,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.553Z",
+    "UpdatedAt": "2025-10-08T18:32:19.553Z"
+  },
+  {
+    "Id": 131,
+    "ClienteId": 353,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.560Z",
+    "UpdatedAt": "2025-10-08T18:32:19.560Z"
+  },
+  {
+    "Id": 132,
+    "ClienteId": 354,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.567Z",
+    "UpdatedAt": "2025-10-08T18:32:19.567Z"
+  },
+  {
+    "Id": 133,
+    "ClienteId": 355,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.570Z",
+    "UpdatedAt": "2025-10-08T18:32:19.570Z"
+  },
+  {
+    "Id": 134,
+    "ClienteId": 356,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.573Z",
+    "UpdatedAt": "2025-10-08T18:32:19.573Z"
+  },
+  {
+    "Id": 135,
+    "ClienteId": 357,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.580Z",
+    "UpdatedAt": "2025-10-08T18:32:19.580Z"
+  },
+  {
+    "Id": 136,
+    "ClienteId": 358,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.583Z",
+    "UpdatedAt": "2025-10-08T18:32:19.583Z"
+  },
+  {
+    "Id": 137,
+    "ClienteId": 359,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.587Z",
+    "UpdatedAt": "2025-10-08T18:32:19.587Z"
+  },
+  {
+    "Id": 138,
+    "ClienteId": 360,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.590Z",
+    "UpdatedAt": "2025-10-08T18:32:19.590Z"
+  },
+  {
+    "Id": 139,
+    "ClienteId": 361,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.597Z",
+    "UpdatedAt": "2025-10-08T18:32:19.597Z"
+  },
+  {
+    "Id": 140,
+    "ClienteId": 362,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.603Z",
+    "UpdatedAt": "2025-10-08T18:32:19.603Z"
+  },
+  {
+    "Id": 141,
+    "ClienteId": 363,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.607Z",
+    "UpdatedAt": "2025-10-08T18:32:19.607Z"
+  },
+  {
+    "Id": 142,
+    "ClienteId": 364,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.610Z",
+    "UpdatedAt": "2025-10-08T18:32:19.610Z"
+  },
+  {
+    "Id": 143,
+    "ClienteId": 365,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.617Z",
+    "UpdatedAt": "2025-10-08T18:32:19.617Z"
+  },
+  {
+    "Id": 144,
+    "ClienteId": 366,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.620Z",
+    "UpdatedAt": "2025-10-08T18:32:19.620Z"
+  },
+  {
+    "Id": 145,
+    "ClienteId": 367,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.627Z",
+    "UpdatedAt": "2025-10-08T18:32:19.627Z"
+  },
+  {
+    "Id": 146,
+    "ClienteId": 368,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.630Z",
+    "UpdatedAt": "2025-10-08T18:32:19.630Z"
+  },
+  {
+    "Id": 147,
+    "ClienteId": 369,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.633Z",
+    "UpdatedAt": "2025-10-08T18:32:19.633Z"
+  },
+  {
+    "Id": 148,
+    "ClienteId": 370,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.637Z",
+    "UpdatedAt": "2025-10-08T18:32:19.637Z"
+  },
+  {
+    "Id": 149,
+    "ClienteId": 371,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.640Z",
+    "UpdatedAt": "2025-10-08T18:32:19.640Z"
+  },
+  {
+    "Id": 150,
+    "ClienteId": 372,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.647Z",
+    "UpdatedAt": "2025-10-08T18:32:19.647Z"
+  },
+  {
+    "Id": 151,
+    "ClienteId": 373,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.650Z",
+    "UpdatedAt": "2025-10-08T18:32:19.650Z"
+  },
+  {
+    "Id": 152,
+    "ClienteId": 374,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.653Z",
+    "UpdatedAt": "2025-10-08T18:32:19.653Z"
+  },
+  {
+    "Id": 153,
+    "ClienteId": 375,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.660Z",
+    "UpdatedAt": "2025-10-08T18:32:19.660Z"
+  },
+  {
+    "Id": 154,
+    "ClienteId": 376,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.663Z",
+    "UpdatedAt": "2025-10-08T18:32:19.663Z"
+  },
+  {
+    "Id": 155,
+    "ClienteId": 377,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.670Z",
+    "UpdatedAt": "2025-10-08T18:32:19.670Z"
+  },
+  {
+    "Id": 156,
+    "ClienteId": 378,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.673Z",
+    "UpdatedAt": "2025-10-08T18:32:19.673Z"
+  },
+  {
+    "Id": 157,
+    "ClienteId": 379,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.677Z",
+    "UpdatedAt": "2025-10-08T18:32:19.677Z"
+  },
+  {
+    "Id": 158,
+    "ClienteId": 380,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.680Z",
+    "UpdatedAt": "2025-10-08T18:32:19.680Z"
+  },
+  {
+    "Id": 159,
+    "ClienteId": 381,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.687Z",
+    "UpdatedAt": "2025-10-08T18:32:19.687Z"
+  },
+  {
+    "Id": 160,
+    "ClienteId": 382,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.690Z",
+    "UpdatedAt": "2025-10-08T18:32:19.690Z"
+  },
+  {
+    "Id": 161,
+    "ClienteId": 383,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.693Z",
+    "UpdatedAt": "2025-10-08T18:32:19.693Z"
+  },
+  {
+    "Id": 162,
+    "ClienteId": 384,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.700Z",
+    "UpdatedAt": "2025-10-08T18:32:19.700Z"
+  },
+  {
+    "Id": 163,
+    "ClienteId": 385,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.703Z",
+    "UpdatedAt": "2025-10-08T18:32:19.703Z"
+  },
+  {
+    "Id": 164,
+    "ClienteId": 386,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.710Z",
+    "UpdatedAt": "2025-10-08T18:32:19.710Z"
+  },
+  {
+    "Id": 166,
+    "ClienteId": 388,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.720Z",
+    "UpdatedAt": "2025-10-08T18:32:19.720Z"
+  },
+  {
+    "Id": 167,
+    "ClienteId": 389,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.723Z",
+    "UpdatedAt": "2025-10-08T18:32:19.723Z"
+  },
+  {
+    "Id": 168,
+    "ClienteId": 390,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.727Z",
+    "UpdatedAt": "2025-10-08T18:32:19.727Z"
+  },
+  {
+    "Id": 169,
+    "ClienteId": 391,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.733Z",
+    "UpdatedAt": "2025-10-08T18:32:19.733Z"
+  },
+  {
+    "Id": 170,
+    "ClienteId": 392,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.737Z",
+    "UpdatedAt": "2025-10-08T18:32:19.737Z"
+  },
+  {
+    "Id": 171,
+    "ClienteId": 393,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.750Z",
+    "UpdatedAt": "2025-10-08T18:32:19.750Z"
+  },
+  {
+    "Id": 172,
+    "ClienteId": 394,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.753Z",
+    "UpdatedAt": "2025-10-08T18:32:19.753Z"
+  },
+  {
+    "Id": 173,
+    "ClienteId": 395,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.757Z",
+    "UpdatedAt": "2025-10-08T18:32:19.757Z"
+  },
+  {
+    "Id": 174,
+    "ClienteId": 396,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.760Z",
+    "UpdatedAt": "2025-10-08T18:32:19.760Z"
+  },
+  {
+    "Id": 175,
+    "ClienteId": 397,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.767Z",
+    "UpdatedAt": "2025-10-08T18:32:19.767Z"
+  },
+  {
+    "Id": 176,
+    "ClienteId": 398,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.770Z",
+    "UpdatedAt": "2025-10-08T18:32:19.770Z"
+  },
+  {
+    "Id": 177,
+    "ClienteId": 399,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.773Z",
+    "UpdatedAt": "2025-10-08T18:32:19.773Z"
+  },
+  {
+    "Id": 178,
+    "ClienteId": 400,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:19.780Z",
+    "UpdatedAt": "2025-10-08T18:32:19.780Z"
+  },
+  {
+    "Id": 179,
+    "ClienteId": 401,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.020Z",
+    "UpdatedAt": "2025-10-08T18:32:39.020Z"
+  },
+  {
+    "Id": 180,
+    "ClienteId": 402,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.027Z",
+    "UpdatedAt": "2025-10-08T18:32:39.027Z"
+  },
+  {
+    "Id": 181,
+    "ClienteId": 403,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.030Z",
+    "UpdatedAt": "2025-10-08T18:32:39.030Z"
+  },
+  {
+    "Id": 182,
+    "ClienteId": 404,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.037Z",
+    "UpdatedAt": "2025-10-08T18:32:39.037Z"
+  },
+  {
+    "Id": 183,
+    "ClienteId": 405,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.040Z",
+    "UpdatedAt": "2025-10-08T18:32:39.040Z"
+  },
+  {
+    "Id": 184,
+    "ClienteId": 406,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.043Z",
+    "UpdatedAt": "2025-10-08T18:32:39.043Z"
+  },
+  {
+    "Id": 185,
+    "ClienteId": 407,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.050Z",
+    "UpdatedAt": "2025-10-08T18:32:39.050Z"
+  },
+  {
+    "Id": 186,
+    "ClienteId": 408,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.053Z",
+    "UpdatedAt": "2025-10-08T18:32:39.053Z"
+  },
+  {
+    "Id": 187,
+    "ClienteId": 409,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.060Z",
+    "UpdatedAt": "2025-10-08T18:32:39.060Z"
+  },
+  {
+    "Id": 188,
+    "ClienteId": 410,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.063Z",
+    "UpdatedAt": "2025-10-08T18:32:39.063Z"
+  },
+  {
+    "Id": 189,
+    "ClienteId": 411,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.070Z",
+    "UpdatedAt": "2025-10-08T18:32:39.070Z"
+  },
+  {
+    "Id": 190,
+    "ClienteId": 412,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.073Z",
+    "UpdatedAt": "2025-10-08T18:32:39.073Z"
+  },
+  {
+    "Id": 191,
+    "ClienteId": 413,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.077Z",
+    "UpdatedAt": "2025-10-08T18:32:39.077Z"
+  },
+  {
+    "Id": 192,
+    "ClienteId": 414,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.083Z",
+    "UpdatedAt": "2025-10-08T18:32:39.083Z"
+  },
+  {
+    "Id": 193,
+    "ClienteId": 415,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.087Z",
+    "UpdatedAt": "2025-10-08T18:32:39.087Z"
+  },
+  {
+    "Id": 194,
+    "ClienteId": 416,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.093Z",
+    "UpdatedAt": "2025-10-08T18:32:39.093Z"
+  },
+  {
+    "Id": 195,
+    "ClienteId": 417,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.097Z",
+    "UpdatedAt": "2025-10-08T18:32:39.097Z"
+  },
+  {
+    "Id": 196,
+    "ClienteId": 418,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.100Z",
+    "UpdatedAt": "2025-10-08T18:32:39.100Z"
+  },
+  {
+    "Id": 197,
+    "ClienteId": 419,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.113Z",
+    "UpdatedAt": "2025-10-08T18:32:39.113Z"
+  },
+  {
+    "Id": 198,
+    "ClienteId": 420,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.117Z",
+    "UpdatedAt": "2025-10-08T18:32:39.117Z"
+  },
+  {
+    "Id": 199,
+    "ClienteId": 421,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.120Z",
+    "UpdatedAt": "2025-10-08T18:32:39.120Z"
+  },
+  {
+    "Id": 200,
+    "ClienteId": 422,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.137Z",
+    "UpdatedAt": "2025-10-08T18:32:39.137Z"
+  },
+  {
+    "Id": 201,
+    "ClienteId": 423,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.140Z",
+    "UpdatedAt": "2025-10-08T18:32:39.140Z"
+  },
+  {
+    "Id": 202,
+    "ClienteId": 424,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.143Z",
+    "UpdatedAt": "2025-10-08T18:32:39.143Z"
+  },
+  {
+    "Id": 203,
+    "ClienteId": 425,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.150Z",
+    "UpdatedAt": "2025-10-08T18:32:39.150Z"
+  },
+  {
+    "Id": 204,
+    "ClienteId": 426,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.153Z",
+    "UpdatedAt": "2025-10-08T18:32:39.153Z"
+  },
+  {
+    "Id": 205,
+    "ClienteId": 427,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.160Z",
+    "UpdatedAt": "2025-10-08T18:32:39.160Z"
+  },
+  {
+    "Id": 206,
+    "ClienteId": 428,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.163Z",
+    "UpdatedAt": "2025-10-08T18:32:39.163Z"
+  },
+  {
+    "Id": 207,
+    "ClienteId": 429,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.170Z",
+    "UpdatedAt": "2025-10-08T18:32:39.170Z"
+  },
+  {
+    "Id": 208,
+    "ClienteId": 430,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.173Z",
+    "UpdatedAt": "2025-10-08T18:32:39.173Z"
+  },
+  {
+    "Id": 209,
+    "ClienteId": 431,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.180Z",
+    "UpdatedAt": "2025-10-08T18:32:39.180Z"
+  },
+  {
+    "Id": 210,
+    "ClienteId": 432,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.183Z",
+    "UpdatedAt": "2025-10-08T18:32:39.183Z"
+  },
+  {
+    "Id": 211,
+    "ClienteId": 433,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.190Z",
+    "UpdatedAt": "2025-10-08T18:32:39.190Z"
+  },
+  {
+    "Id": 212,
+    "ClienteId": 434,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.193Z",
+    "UpdatedAt": "2025-10-08T18:32:39.193Z"
+  },
+  {
+    "Id": 213,
+    "ClienteId": 435,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.197Z",
+    "UpdatedAt": "2025-10-08T18:32:39.197Z"
+  },
+  {
+    "Id": 214,
+    "ClienteId": 436,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.200Z",
+    "UpdatedAt": "2025-10-08T18:32:39.200Z"
+  },
+  {
+    "Id": 215,
+    "ClienteId": 437,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.210Z",
+    "UpdatedAt": "2025-10-08T18:32:39.210Z"
+  },
+  {
+    "Id": 216,
+    "ClienteId": 438,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.213Z",
+    "UpdatedAt": "2025-10-08T18:32:39.213Z"
+  },
+  {
+    "Id": 217,
+    "ClienteId": 439,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.217Z",
+    "UpdatedAt": "2025-10-08T18:32:39.217Z"
+  },
+  {
+    "Id": 218,
+    "ClienteId": 440,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.220Z",
+    "UpdatedAt": "2025-10-08T18:32:39.220Z"
+  },
+  {
+    "Id": 219,
+    "ClienteId": 441,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.227Z",
+    "UpdatedAt": "2025-10-08T18:32:39.227Z"
+  },
+  {
+    "Id": 220,
+    "ClienteId": 442,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.230Z",
+    "UpdatedAt": "2025-10-08T18:32:39.230Z"
+  },
+  {
+    "Id": 221,
+    "ClienteId": 443,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.240Z",
+    "UpdatedAt": "2025-10-08T18:32:39.240Z"
+  },
+  {
+    "Id": 222,
+    "ClienteId": 444,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.243Z",
+    "UpdatedAt": "2025-10-08T18:32:39.243Z"
+  },
+  {
+    "Id": 223,
+    "ClienteId": 445,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-08T18:32:39.250Z",
+    "UpdatedAt": "2025-10-08T18:32:39.250Z"
+  },
+  {
+    "Id": 224,
+    "ClienteId": 450,
+    "UsuarioId": 17,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-11T17:50:22.877Z",
+    "UpdatedAt": "2025-10-11T17:50:22.877Z"
+  },
+  {
+    "Id": 225,
+    "ClienteId": 451,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-15T19:05:43.163Z",
+    "UpdatedAt": "2025-10-15T19:05:43.163Z"
+  },
+  {
+    "Id": 226,
+    "ClienteId": 452,
+    "UsuarioId": 17,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-15T19:31:23.040Z",
+    "UpdatedAt": "2025-10-15T19:31:23.040Z"
+  },
+  {
+    "Id": 227,
+    "ClienteId": 456,
+    "UsuarioId": 17,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-15T21:54:09.117Z",
+    "UpdatedAt": "2025-10-15T21:54:09.117Z"
+  },
+  {
+    "Id": 228,
+    "ClienteId": 457,
+    "UsuarioId": 17,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-15T22:23:03.483Z",
+    "UpdatedAt": "2025-10-15T22:23:03.483Z"
+  },
+  {
+    "Id": 229,
+    "ClienteId": 459,
+    "UsuarioId": 20,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-16T15:41:01.600Z",
+    "UpdatedAt": "2025-10-16T15:41:01.600Z"
+  },
+  {
+    "Id": 230,
+    "ClienteId": 459,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-16T15:42:06.913Z",
+    "UpdatedAt": "2025-10-16T15:42:06.913Z"
+  },
+  {
+    "Id": 231,
+    "ClienteId": 458,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-16T15:43:17.903Z",
+    "UpdatedAt": "2025-10-16T15:43:17.903Z"
+  },
+  {
+    "Id": 232,
+    "ClienteId": 460,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-16T16:10:44.280Z",
+    "UpdatedAt": "2025-10-16T16:10:44.280Z"
+  },
+  {
+    "Id": 233,
+    "ClienteId": 461,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-16T16:15:50.127Z",
+    "UpdatedAt": "2025-10-16T16:15:50.127Z"
+  },
+  {
+    "Id": 234,
+    "ClienteId": 462,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-16T16:47:32.740Z",
+    "UpdatedAt": "2025-10-16T16:47:32.740Z"
+  },
+  {
+    "Id": 235,
+    "ClienteId": 463,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-16T16:48:12.907Z",
+    "UpdatedAt": "2025-10-16T16:48:12.907Z"
+  },
+  {
+    "Id": 236,
+    "ClienteId": 464,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-16T16:58:23.000Z",
+    "UpdatedAt": "2025-10-16T16:58:23.000Z"
+  },
+  {
+    "Id": 241,
+    "ClienteId": 465,
+    "UsuarioId": 17,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-10-28T23:43:22.670Z",
+    "UpdatedAt": "2025-10-28T23:43:22.670Z"
+  },
+  {
+    "Id": 242,
+    "ClienteId": 387,
+    "UsuarioId": 16,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-12-03T18:36:38.583Z",
+    "UpdatedAt": "2025-12-03T18:36:38.583Z"
+  },
+  {
+    "Id": 243,
+    "ClienteId": 468,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-12-04T00:33:17.080Z",
+    "UpdatedAt": "2025-12-04T00:33:17.080Z"
+  },
+  {
+    "Id": 244,
+    "ClienteId": 469,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-12-04T00:40:41.303Z",
+    "UpdatedAt": "2025-12-04T00:40:41.303Z"
+  },
+  {
+    "Id": 245,
+    "ClienteId": 470,
+    "UsuarioId": 23,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-12-04T00:45:00.687Z",
+    "UpdatedAt": "2025-12-04T00:45:00.687Z"
+  },
+  {
+    "Id": 246,
+    "ClienteId": 471,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-12-04T00:59:33.597Z",
+    "UpdatedAt": "2025-12-04T00:59:33.597Z"
+  },
+  {
+    "Id": 247,
+    "ClienteId": 472,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-12-04T18:58:25.853Z",
+    "UpdatedAt": "2025-12-04T18:58:25.853Z"
+  },
+  {
+    "Id": 248,
+    "ClienteId": 473,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-12-04T19:58:15.783Z",
+    "UpdatedAt": "2025-12-04T19:58:15.783Z"
+  },
+  {
+    "Id": 249,
+    "ClienteId": 474,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2025-12-08T19:24:33.723Z",
+    "UpdatedAt": "2025-12-08T19:24:33.723Z"
+  },
+  {
+    "Id": 250,
+    "ClienteId": 475,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-01-22T18:29:16.520Z",
+    "UpdatedAt": "2026-01-22T18:29:16.520Z"
+  },
+  {
+    "Id": 251,
+    "ClienteId": 476,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-01-22T18:31:52.683Z",
+    "UpdatedAt": "2026-01-22T18:31:52.683Z"
+  },
+  {
+    "Id": 252,
+    "ClienteId": 477,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-01-22T18:34:48.203Z",
+    "UpdatedAt": "2026-01-22T18:34:48.203Z"
+  },
+  {
+    "Id": 253,
+    "ClienteId": 478,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-01-22T18:37:29.253Z",
+    "UpdatedAt": "2026-01-22T18:37:29.253Z"
+  },
+  {
+    "Id": 254,
+    "ClienteId": 479,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-01-22T18:38:49.917Z",
+    "UpdatedAt": "2026-01-22T18:38:49.917Z"
+  },
+  {
+    "Id": 255,
+    "ClienteId": 480,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-01-27T23:56:21.270Z",
+    "UpdatedAt": "2026-01-27T23:56:21.270Z"
+  },
+  {
+    "Id": 256,
+    "ClienteId": 481,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-02-04T23:44:17.883Z",
+    "UpdatedAt": "2026-02-04T23:44:17.883Z"
+  },
+  {
+    "Id": 257,
+    "ClienteId": 482,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-02-04T23:49:09.997Z",
+    "UpdatedAt": "2026-02-04T23:49:09.997Z"
+  },
+  {
+    "Id": 258,
+    "ClienteId": 483,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-02-04T23:53:12.270Z",
+    "UpdatedAt": "2026-02-04T23:53:12.270Z"
+  },
+  {
+    "Id": 259,
+    "ClienteId": 484,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-02-05T00:10:16.010Z",
+    "UpdatedAt": "2026-02-05T00:10:16.010Z"
+  },
+  {
+    "Id": 260,
+    "ClienteId": 485,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-02-06T17:23:41.210Z",
+    "UpdatedAt": "2026-02-06T17:23:41.210Z"
+  },
+  {
+    "Id": 261,
+    "ClienteId": 486,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-02-06T23:09:37.197Z",
+    "UpdatedAt": "2026-02-06T23:09:37.197Z"
+  },
+  {
+    "Id": 262,
+    "ClienteId": 487,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-02-09T17:49:57.197Z",
+    "UpdatedAt": "2026-02-09T17:49:57.197Z"
+  },
+  {
+    "Id": 263,
+    "ClienteId": 488,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-02-20T00:42:00.070Z",
+    "UpdatedAt": "2026-02-20T00:42:00.070Z"
+  },
+  {
+    "Id": 264,
+    "ClienteId": 489,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-03-02T19:58:52.440Z",
+    "UpdatedAt": "2026-03-02T19:58:52.440Z"
+  },
+  {
+    "Id": 265,
+    "ClienteId": 490,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-03-18T21:46:14.160Z",
+    "UpdatedAt": "2026-03-18T21:46:14.160Z"
+  },
+  {
+    "Id": 285,
+    "ClienteId": 504,
+    "UsuarioId": 55,
+    "RolAgente": null,
+    "CreatedAt": "2026-03-23T21:50:14.253Z",
+    "UpdatedAt": "2026-03-23T21:50:14.253Z"
+  },
+  {
+    "Id": 288,
+    "ClienteId": 506,
+    "UsuarioId": 55,
+    "RolAgente": null,
+    "CreatedAt": "2026-03-24T23:28:20.593Z",
+    "UpdatedAt": "2026-03-24T23:28:20.593Z"
+  },
+  {
+    "Id": 289,
+    "ClienteId": 249,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-03-31T22:28:37.040Z",
+    "UpdatedAt": "2026-03-31T22:28:37.040Z"
+  },
+  {
+    "Id": 290,
+    "ClienteId": 507,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-03-31T22:52:55.377Z",
+    "UpdatedAt": "2026-03-31T22:52:55.377Z"
+  },
+  {
+    "Id": 291,
+    "ClienteId": 508,
+    "UsuarioId": 18,
+    "RolAgente": "Agente Principal",
+    "CreatedAt": "2026-03-31T23:04:37.690Z",
+    "UpdatedAt": "2026-03-31T23:04:37.690Z"
+  }
+]

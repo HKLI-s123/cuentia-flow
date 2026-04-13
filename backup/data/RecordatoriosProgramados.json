@@ -1,0 +1,11 @@
+[
+  {
+    "Id": 1,
+    "ClienteId": 229,
+    "FacturaId": 4,
+    "TipoRecordatorio": "email",
+    "FechaEnvio": "2024-02-28T00:00:00.000Z",
+    "Mensaje": "Su factura F-000004 vence en 3 días. Monto: $75,000. Por favor proceda con el pago.",
+    "Estado": "enviado"
+  }
+]

@@ -465,6 +465,21 @@ CREATE TABLE "Suscripciones" (
 );
 
 -- ----------------------------------------
+-- Table: tickets_soporte
+-- ----------------------------------------
+CREATE TABLE "tickets_soporte" (
+  "id" INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
+  "usuarioid" INTEGER NOT NULL,
+  "organizacionid" INTEGER,
+  "asunto" VARCHAR(200) NOT NULL,
+  "categoria" VARCHAR(50) NOT NULL DEFAULT 'general',
+  "descripcion" TEXT NOT NULL,
+  "estado" VARCHAR(30) NOT NULL DEFAULT 'abierto',
+  "createdat" TIMESTAMP NOT NULL DEFAULT NOW(),
+  "updatedat" TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+-- ----------------------------------------
 -- Table: Usuario_Organizacion
 -- ----------------------------------------
 CREATE TABLE "Usuario_Organizacion" (
@@ -525,6 +540,7 @@ ALTER TABLE "RecordatoriosProgramados" ADD CONSTRAINT "PK__Recordat__3214EC07CE1
 ALTER TABLE "Regimen" ADD CONSTRAINT "PK_Regimen" PRIMARY KEY ("ID_Regimen");
 ALTER TABLE "Roles" ADD CONSTRAINT "PK__Roles__3214EC07BBD5A877" PRIMARY KEY ("Id");
 ALTER TABLE "Suscripciones" ADD CONSTRAINT "PK__Suscripc__3214EC076C6E7FBC" PRIMARY KEY ("Id");
+ALTER TABLE "tickets_soporte" ADD CONSTRAINT "PK_tickets_soporte" PRIMARY KEY ("id");
 ALTER TABLE "Usuario_Organizacion" ADD CONSTRAINT "PK__Usuario___3214EC07D75CF6A9" PRIMARY KEY ("Id");
 ALTER TABLE "Usuarios" ADD CONSTRAINT "PK__Usuarios__3214EC07E1F76580" PRIMARY KEY ("Id");
 ALTER TABLE "DatosFacturacionSuscripcion" ADD CONSTRAINT "UQ_DatosFacturacion_Org" UNIQUE ("OrganizacionId");
@@ -567,6 +583,8 @@ ALTER TABLE "Recordatorios" ADD CONSTRAINT "FK_Recordatorios_Usuario" FOREIGN KE
 ALTER TABLE "RecordatoriosProgramados" ADD CONSTRAINT "FK_RecordatoriosProgramados_Cliente" FOREIGN KEY ("ClienteId") REFERENCES "Clientes"("Id");
 ALTER TABLE "RecordatoriosProgramados" ADD CONSTRAINT "FK_RecordatoriosProgramados_Factura" FOREIGN KEY ("FacturaId") REFERENCES "Facturas"("Id");
 ALTER TABLE "Suscripciones" ADD CONSTRAINT "FK_Suscripciones_Organizacion" FOREIGN KEY ("OrganizacionId") REFERENCES "Organizaciones"("Id");
+ALTER TABLE "tickets_soporte" ADD CONSTRAINT "FK_tickets_soporte_usuario" FOREIGN KEY ("usuarioid") REFERENCES "Usuarios"("Id");
+ALTER TABLE "tickets_soporte" ADD CONSTRAINT "FK_tickets_soporte_organizacion" FOREIGN KEY ("organizacionid") REFERENCES "Organizaciones"("Id");
 ALTER TABLE "Usuario_Organizacion" ADD CONSTRAINT "FK_UsuarioOrganizacion_Organizacion" FOREIGN KEY ("OrganizacionId") REFERENCES "Organizaciones"("Id");
 ALTER TABLE "Usuario_Organizacion" ADD CONSTRAINT "FK_UsuarioOrganizacion_Rol" FOREIGN KEY ("RolId") REFERENCES "Roles"("Id");
 ALTER TABLE "Usuario_Organizacion" ADD CONSTRAINT "FK_UsuarioOrganizacion_Usuario" FOREIGN KEY ("UsuarioId") REFERENCES "Usuarios"("Id");
@@ -585,3 +603,5 @@ CREATE UNIQUE INDEX "idx_suscripciones_10" ON "Suscripciones" ("OrganizacionId")
 CREATE INDEX "idx_suscripciones_11" ON "Suscripciones" ("StripeCustomerId");
 CREATE INDEX "idx_suscripciones_12" ON "Suscripciones" ("StripeSubscriptionId");
 CREATE UNIQUE INDEX "idx_usuarios_13" ON "Usuarios" ("google_id") WHERE ("google_id" IS NOT NULL);
+CREATE INDEX "idx_tickets_soporte_usuario" ON "tickets_soporte" ("usuarioid");
+CREATE INDEX "idx_tickets_soporte_org" ON "tickets_soporte" ("organizacionid");

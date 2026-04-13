@@ -1,0 +1,50 @@
+[
+  {
+    "Id": 1,
+    "OrganizacionId": 45,
+    "StripeCustomerId": "cus_UFd7PDsdWjB3LG",
+    "StripeSubscriptionId": "sub_1TH7rDKWIz2QT93cyegIxYHm",
+    "StripePriceId": "price_1TH6zrKWIz2QT93cJyHq62r1",
+    "PlanSeleccionado": "pro",
+    "Estado": "active",
+    "FechaInicio": "2026-03-31T19:25:23.393Z",
+    "FechaFinPeriodo": "2026-04-30T19:21:45.000Z",
+    "FechaCancelacion": null,
+    "TrialEnd": null,
+    "CreatedAt": "2026-03-31T19:25:23.393Z",
+    "UpdatedAt": "2026-03-31T23:05:17.860Z",
+    "MotivoCancelacion": null
+  },
+  {
+    "Id": 2,
+    "OrganizacionId": 46,
+    "StripeCustomerId": "cus_UFgS5Y9TfjVvg3",
+    "StripeSubscriptionId": "sub_1THB6UKWIz2QT93cVivYozra",
+    "StripePriceId": "price_1TH6z2KWIz2QT93cyOgOVils",
+    "PlanSeleccionado": "basico",
+    "Estado": "trialing",
+    "FechaInicio": "2026-03-31T22:49:48.030Z",
+    "FechaFinPeriodo": "2026-04-30T22:49:44.000Z",
+    "FechaCancelacion": null,
+    "TrialEnd": null,
+    "CreatedAt": "2026-03-31T22:49:17.970Z",
+    "UpdatedAt": "2026-03-31T23:06:41.727Z",
+    "MotivoCancelacion": null
+  },
+  {
+    "Id": 3,
+    "OrganizacionId": 47,
+    "StripeCustomerId": "cus_UFh4xYtSJut7RT",
+    "StripeSubscriptionId": "sub_1THBmPKWIz2QT93cYBLEVY9m",
+    "StripePriceId": "price_1THAI5KWIz2QT93cD8h5tL9a",
+    "PlanSeleccionado": "basico",
+    "Estado": "active",
+    "FechaInicio": "2026-03-31T23:33:08.650Z",
+    "FechaFinPeriodo": "2026-04-02T23:33:02.000Z",
+    "FechaCancelacion": null,
+    "TrialEnd": null,
+    "CreatedAt": "2026-03-31T23:26:15.750Z",
+    "UpdatedAt": "2026-04-02T15:36:21.083Z",
+    "MotivoCancelacion": null
+  }
+]

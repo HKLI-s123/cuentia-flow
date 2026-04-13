@@ -1,0 +1,97 @@
+[
+  {
+    "ID_Regimen": 1,
+    "Codigo": 601,
+    "Descripcion": "General de Ley Personas Morales"
+  },
+  {
+    "ID_Regimen": 2,
+    "Codigo": 603,
+    "Descripcion": "Personas Morales con Fines no Lucrativos"
+  },
+  {
+    "ID_Regimen": 3,
+    "Codigo": 605,
+    "Descripcion": "Sueldos y Salarios e Ingresos Asimilados a Salarios"
+  },
+  {
+    "ID_Regimen": 4,
+    "Codigo": 606,
+    "Descripcion": "Arrendamiento"
+  },
+  {
+    "ID_Regimen": 5,
+    "Codigo": 607,
+    "Descripcion": "Régimen de Enajenación o Adquisición de Bienes"
+  },
+  {
+    "ID_Regimen": 6,
+    "Codigo": 608,
+    "Descripcion": "Demás ingresos"
+  },
+  {
+    "ID_Regimen": 7,
+    "Codigo": 610,
+    "Descripcion": "Residentes en el Extranjero sin Establecimiento Permanente en México"
+  },
+  {
+    "ID_Regimen": 8,
+    "Codigo": 611,
+    "Descripcion": "Ingresos por Dividendos (socios y accionistas)"
+  },
+  {
+    "ID_Regimen": 9,
+    "Codigo": 612,
+    "Descripcion": "Personas Físicas con Actividades Empresariales y Profesionales"
+  },
+  {
+    "ID_Regimen": 10,
+    "Codigo": 614,
+    "Descripcion": "Ingresos por intereses"
+  },
+  {
+    "ID_Regimen": 11,
+    "Codigo": 615,
+    "Descripcion": "Régimen de los ingresos por obtención de premios"
+  },
+  {
+    "ID_Regimen": 12,
+    "Codigo": 616,
+    "Descripcion": "Sin obligaciones fiscales"
+  },
+  {
+    "ID_Regimen": 13,
+    "Codigo": 620,
+    "Descripcion": "Sociedades Cooperativas de Producción que optan por diferir sus ingresos"
+  },
+  {
+    "ID_Regimen": 14,
+    "Codigo": 621,
+    "Descripcion": "Incorporación Fiscal"
+  },
+  {
+    "ID_Regimen": 15,
+    "Codigo": 622,
+    "Descripcion": "Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras"
+  },
+  {
+    "ID_Regimen": 16,
+    "Codigo": 623,
+    "Descripcion": "Opcional para Grupos de Sociedades"
+  },
+  {
+    "ID_Regimen": 17,
+    "Codigo": 624,
+    "Descripcion": "Coordinados"
+  },
+  {
+    "ID_Regimen": 18,
+    "Codigo": 625,
+    "Descripcion": "Régimen de las Actividades Empresariales con ingresos a través de Plataformas Tecnológicas"
+  },
+  {
+    "ID_Regimen": 19,
+    "Codigo": 626,
+    "Descripcion": "Régimen Simplificado de Confianza"
+  }
+]

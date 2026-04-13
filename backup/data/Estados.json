@@ -1,0 +1,494 @@
+[
+  {
+    "ID": 1,
+    "ClaveEstado": "AGS",
+    "NombreEstado": "Aguascalientes",
+    "PaisID": 1
+  },
+  {
+    "ID": 2,
+    "ClaveEstado": "BC",
+    "NombreEstado": "Baja California",
+    "PaisID": 1
+  },
+  {
+    "ID": 3,
+    "ClaveEstado": "BCS",
+    "NombreEstado": "Baja California Sur",
+    "PaisID": 1
+  },
+  {
+    "ID": 4,
+    "ClaveEstado": "CAM",
+    "NombreEstado": "Campeche",
+    "PaisID": 1
+  },
+  {
+    "ID": 5,
+    "ClaveEstado": "CHIS",
+    "NombreEstado": "Chiapas",
+    "PaisID": 1
+  },
+  {
+    "ID": 6,
+    "ClaveEstado": "CHIH",
+    "NombreEstado": "Chihuahua",
+    "PaisID": 1
+  },
+  {
+    "ID": 7,
+    "ClaveEstado": "CDMX",
+    "NombreEstado": "Ciudad de México",
+    "PaisID": 1
+  },
+  {
+    "ID": 8,
+    "ClaveEstado": "COAH",
+    "NombreEstado": "Coahuila",
+    "PaisID": 1
+  },
+  {
+    "ID": 9,
+    "ClaveEstado": "COL",
+    "NombreEstado": "Colima",
+    "PaisID": 1
+  },
+  {
+    "ID": 10,
+    "ClaveEstado": "DGO",
+    "NombreEstado": "Durango",
+    "PaisID": 1
+  },
+  {
+    "ID": 11,
+    "ClaveEstado": "GTO",
+    "NombreEstado": "Guanajuato",
+    "PaisID": 1
+  },
+  {
+    "ID": 12,
+    "ClaveEstado": "GRO",
+    "NombreEstado": "Guerrero",
+    "PaisID": 1
+  },
+  {
+    "ID": 13,
+    "ClaveEstado": "HGO",
+    "NombreEstado": "Hidalgo",
+    "PaisID": 1
+  },
+  {
+    "ID": 14,
+    "ClaveEstado": "JAL",
+    "NombreEstado": "Jalisco",
+    "PaisID": 1
+  },
+  {
+    "ID": 15,
+    "ClaveEstado": "MEX",
+    "NombreEstado": "Estado de México",
+    "PaisID": 1
+  },
+  {
+    "ID": 16,
+    "ClaveEstado": "MICH",
+    "NombreEstado": "Michoacán",
+    "PaisID": 1
+  },
+  {
+    "ID": 17,
+    "ClaveEstado": "MOR",
+    "NombreEstado": "Morelos",
+    "PaisID": 1
+  },
+  {
+    "ID": 18,
+    "ClaveEstado": "NAY",
+    "NombreEstado": "Nayarit",
+    "PaisID": 1
+  },
+  {
+    "ID": 19,
+    "ClaveEstado": "NL",
+    "NombreEstado": "Nuevo León",
+    "PaisID": 1
+  },
+  {
+    "ID": 20,
+    "ClaveEstado": "OAX",
+    "NombreEstado": "Oaxaca",
+    "PaisID": 1
+  },
+  {
+    "ID": 21,
+    "ClaveEstado": "PUE",
+    "NombreEstado": "Puebla",
+    "PaisID": 1
+  },
+  {
+    "ID": 22,
+    "ClaveEstado": "QRO",
+    "NombreEstado": "Querétaro",
+    "PaisID": 1
+  },
+  {
+    "ID": 23,
+    "ClaveEstado": "QROO",
+    "NombreEstado": "Quintana Roo",
+    "PaisID": 1
+  },
+  {
+    "ID": 24,
+    "ClaveEstado": "SLP",
+    "NombreEstado": "San Luis Potosí",
+    "PaisID": 1
+  },
+  {
+    "ID": 25,
+    "ClaveEstado": "SIN",
+    "NombreEstado": "Sinaloa",
+    "PaisID": 1
+  },
+  {
+    "ID": 26,
+    "ClaveEstado": "SON",
+    "NombreEstado": "Sonora",
+    "PaisID": 1
+  },
+  {
+    "ID": 27,
+    "ClaveEstado": "TAB",
+    "NombreEstado": "Tabasco",
+    "PaisID": 1
+  },
+  {
+    "ID": 28,
+    "ClaveEstado": "TAMPS",
+    "NombreEstado": "Tamaulipas",
+    "PaisID": 1
+  },
+  {
+    "ID": 29,
+    "ClaveEstado": "TLAX",
+    "NombreEstado": "Tlaxcala",
+    "PaisID": 1
+  },
+  {
+    "ID": 30,
+    "ClaveEstado": "VER",
+    "NombreEstado": "Veracruz",
+    "PaisID": 1
+  },
+  {
+    "ID": 31,
+    "ClaveEstado": "YUC",
+    "NombreEstado": "Yucatán",
+    "PaisID": 1
+  },
+  {
+    "ID": 32,
+    "ClaveEstado": "ZAC",
+    "NombreEstado": "Zacatecas",
+    "PaisID": 1
+  },
+  {
+    "ID": 33,
+    "ClaveEstado": "AL",
+    "NombreEstado": "Alabama",
+    "PaisID": 2
+  },
+  {
+    "ID": 34,
+    "ClaveEstado": "AK",
+    "NombreEstado": "Alaska",
+    "PaisID": 2
+  },
+  {
+    "ID": 35,
+    "ClaveEstado": "AZ",
+    "NombreEstado": "Arizona",
+    "PaisID": 2
+  },
+  {
+    "ID": 36,
+    "ClaveEstado": "AR",
+    "NombreEstado": "Arkansas",
+    "PaisID": 2
+  },
+  {
+    "ID": 37,
+    "ClaveEstado": "CA",
+    "NombreEstado": "California",
+    "PaisID": 2
+  },
+  {
+    "ID": 38,
+    "ClaveEstado": "CO",
+    "NombreEstado": "Colorado",
+    "PaisID": 2
+  },
+  {
+    "ID": 39,
+    "ClaveEstado": "CT",
+    "NombreEstado": "Connecticut",
+    "PaisID": 2
+  },
+  {
+    "ID": 40,
+    "ClaveEstado": "DE",
+    "NombreEstado": "Delaware",
+    "PaisID": 2
+  },
+  {
+    "ID": 41,
+    "ClaveEstado": "FL",
+    "NombreEstado": "Florida",
+    "PaisID": 2
+  },
+  {
+    "ID": 42,
+    "ClaveEstado": "GA",
+    "NombreEstado": "Georgia",
+    "PaisID": 2
+  },
+  {
+    "ID": 43,
+    "ClaveEstado": "HI",
+    "NombreEstado": "Hawái",
+    "PaisID": 2
+  },
+  {
+    "ID": 44,
+    "ClaveEstado": "ID",
+    "NombreEstado": "Idaho",
+    "PaisID": 2
+  },
+  {
+    "ID": 45,
+    "ClaveEstado": "IL",
+    "NombreEstado": "Illinois",
+    "PaisID": 2
+  },
+  {
+    "ID": 46,
+    "ClaveEstado": "IN",
+    "NombreEstado": "Indiana",
+    "PaisID": 2
+  },
+  {
+    "ID": 47,
+    "ClaveEstado": "IA",
+    "NombreEstado": "Iowa",
+    "PaisID": 2
+  },
+  {
+    "ID": 48,
+    "ClaveEstado": "KS",
+    "NombreEstado": "Kansas",
+    "PaisID": 2
+  },
+  {
+    "ID": 49,
+    "ClaveEstado": "KY",
+    "NombreEstado": "Kentucky",
+    "PaisID": 2
+  },
+  {
+    "ID": 50,
+    "ClaveEstado": "LA",
+    "NombreEstado": "Louisiana",
+    "PaisID": 2
+  },
+  {
+    "ID": 51,
+    "ClaveEstado": "ME",
+    "NombreEstado": "Maine",
+    "PaisID": 2
+  },
+  {
+    "ID": 52,
+    "ClaveEstado": "MD",
+    "NombreEstado": "Maryland",
+    "PaisID": 2
+  },
+  {
+    "ID": 53,
+    "ClaveEstado": "MA",
+    "NombreEstado": "Massachusetts",
+    "PaisID": 2
+  },
+  {
+    "ID": 54,
+    "ClaveEstado": "MI",
+    "NombreEstado": "Michigan",
+    "PaisID": 2
+  },
+  {
+    "ID": 55,
+    "ClaveEstado": "MN",
+    "NombreEstado": "Minnesota",
+    "PaisID": 2
+  },
+  {
+    "ID": 56,
+    "ClaveEstado": "MS",
+    "NombreEstado": "Mississippi",
+    "PaisID": 2
+  },
+  {
+    "ID": 57,
+    "ClaveEstado": "MO",
+    "NombreEstado": "Missouri",
+    "PaisID": 2
+  },
+  {
+    "ID": 58,
+    "ClaveEstado": "MT",
+    "NombreEstado": "Montana",
+    "PaisID": 2
+  },
+  {
+    "ID": 59,
+    "ClaveEstado": "NE",
+    "NombreEstado": "Nebraska",
+    "PaisID": 2
+  },
+  {
+    "ID": 60,
+    "ClaveEstado": "NV",
+    "NombreEstado": "Nevada",
+    "PaisID": 2
+  },
+  {
+    "ID": 61,
+    "ClaveEstado": "NH",
+    "NombreEstado": "New Hampshire",
+    "PaisID": 2
+  },
+  {
+    "ID": 62,
+    "ClaveEstado": "NJ",
+    "NombreEstado": "New Jersey",
+    "PaisID": 2
+  },
+  {
+    "ID": 63,
+    "ClaveEstado": "NM",
+    "NombreEstado": "New Mexico",
+    "PaisID": 2
+  },
+  {
+    "ID": 64,
+    "ClaveEstado": "NY",
+    "NombreEstado": "New York",
+    "PaisID": 2
+  },
+  {
+    "ID": 65,
+    "ClaveEstado": "NC",
+    "NombreEstado": "North Carolina",
+    "PaisID": 2
+  },
+  {
+    "ID": 66,
+    "ClaveEstado": "ND",
+    "NombreEstado": "North Dakota",
+    "PaisID": 2
+  },
+  {
+    "ID": 67,
+    "ClaveEstado": "OH",
+    "NombreEstado": "Ohio",
+    "PaisID": 2
+  },
+  {
+    "ID": 68,
+    "ClaveEstado": "OK",
+    "NombreEstado": "Oklahoma",
+    "PaisID": 2
+  },
+  {
+    "ID": 69,
+    "ClaveEstado": "OR",
+    "NombreEstado": "Oregon",
+    "PaisID": 2
+  },
+  {
+    "ID": 70,
+    "ClaveEstado": "PA",
+    "NombreEstado": "Pennsylvania",
+    "PaisID": 2
+  },
+  {
+    "ID": 71,
+    "ClaveEstado": "RI",
+    "NombreEstado": "Rhode Island",
+    "PaisID": 2
+  },
+  {
+    "ID": 72,
+    "ClaveEstado": "SC",
+    "NombreEstado": "South Carolina",
+    "PaisID": 2
+  },
+  {
+    "ID": 73,
+    "ClaveEstado": "SD",
+    "NombreEstado": "South Dakota",
+    "PaisID": 2
+  },
+  {
+    "ID": 74,
+    "ClaveEstado": "TN",
+    "NombreEstado": "Tennessee",
+    "PaisID": 2
+  },
+  {
+    "ID": 75,
+    "ClaveEstado": "TX",
+    "NombreEstado": "Texas",
+    "PaisID": 2
+  },
+  {
+    "ID": 76,
+    "ClaveEstado": "UT",
+    "NombreEstado": "Utah",
+    "PaisID": 2
+  },
+  {
+    "ID": 77,
+    "ClaveEstado": "VT",
+    "NombreEstado": "Vermont",
+    "PaisID": 2
+  },
+  {
+    "ID": 78,
+    "ClaveEstado": "VA",
+    "NombreEstado": "Virginia",
+    "PaisID": 2
+  },
+  {
+    "ID": 79,
+    "ClaveEstado": "WA",
+    "NombreEstado": "Washington",
+    "PaisID": 2
+  },
+  {
+    "ID": 80,
+    "ClaveEstado": "WV",
+    "NombreEstado": "West Virginia",
+    "PaisID": 2
+  },
+  {
+    "ID": 81,
+    "ClaveEstado": "WI",
+    "NombreEstado": "Wisconsin",
+    "PaisID": 2
+  },
+  {
+    "ID": 82,
+    "ClaveEstado": "WY",
+    "NombreEstado": "Wyoming",
+    "PaisID": 2
+  }
+]

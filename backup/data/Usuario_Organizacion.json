@@ -1,0 +1,128 @@
+[
+  {
+    "Id": 6,
+    "UsuarioId": 9,
+    "OrganizacionId": 3,
+    "RolId": 3,
+    "CreatedAt": "2025-09-16T17:08:01.223Z",
+    "UpdatedAt": "2025-09-16T17:08:01.223Z",
+    "FechaAsignacion": null
+  },
+  {
+    "Id": 8,
+    "UsuarioId": 10,
+    "OrganizacionId": 5,
+    "RolId": 3,
+    "CreatedAt": "2025-09-16T17:08:01.223Z",
+    "UpdatedAt": "2025-09-16T17:08:01.223Z",
+    "FechaAsignacion": null
+  },
+  {
+    "Id": 11,
+    "UsuarioId": 16,
+    "OrganizacionId": 5,
+    "RolId": 3,
+    "CreatedAt": "2025-10-08T16:15:13.823Z",
+    "UpdatedAt": "2025-10-08T16:15:13.823Z",
+    "FechaAsignacion": null
+  },
+  {
+    "Id": 13,
+    "UsuarioId": 18,
+    "OrganizacionId": 5,
+    "RolId": 3,
+    "CreatedAt": "2025-10-11T17:05:43.637Z",
+    "UpdatedAt": "2025-10-11T17:06:45.563Z",
+    "FechaAsignacion": null
+  },
+  {
+    "Id": 15,
+    "UsuarioId": 17,
+    "OrganizacionId": 5,
+    "RolId": 3,
+    "CreatedAt": "2025-10-13T15:27:06.143Z",
+    "UpdatedAt": "2025-10-13T15:27:06.143Z",
+    "FechaAsignacion": null
+  },
+  {
+    "Id": 16,
+    "UsuarioId": 19,
+    "OrganizacionId": 6,
+    "RolId": 4,
+    "CreatedAt": "2025-10-15T15:28:26.660Z",
+    "UpdatedAt": "2025-10-15T15:28:26.660Z",
+    "FechaAsignacion": null
+  },
+  {
+    "Id": 17,
+    "UsuarioId": 20,
+    "OrganizacionId": 5,
+    "RolId": 3,
+    "CreatedAt": "2025-10-16T00:00:04.617Z",
+    "UpdatedAt": "2025-10-16T00:00:04.617Z",
+    "FechaAsignacion": null
+  },
+  {
+    "Id": 19,
+    "UsuarioId": 22,
+    "OrganizacionId": 5,
+    "RolId": 3,
+    "CreatedAt": "2025-12-02T19:17:01.927Z",
+    "UpdatedAt": "2025-12-02T19:17:01.927Z",
+    "FechaAsignacion": null
+  },
+  {
+    "Id": 20,
+    "UsuarioId": 23,
+    "OrganizacionId": 5,
+    "RolId": 4,
+    "CreatedAt": "2025-12-03T17:05:20.760Z",
+    "UpdatedAt": "2025-12-03T17:05:20.760Z",
+    "FechaAsignacion": null
+  },
+  {
+    "Id": 21,
+    "UsuarioId": 24,
+    "OrganizacionId": 5,
+    "RolId": 4,
+    "CreatedAt": "2025-12-03T17:07:53.900Z",
+    "UpdatedAt": "2025-12-03T17:07:53.900Z",
+    "FechaAsignacion": null
+  },
+  {
+    "Id": 57,
+    "UsuarioId": 51,
+    "OrganizacionId": 45,
+    "RolId": 3,
+    "CreatedAt": "2026-03-18T18:36:49.970Z",
+    "UpdatedAt": "2026-03-18T18:36:49.970Z",
+    "FechaAsignacion": "2026-03-18T18:36:49.970Z"
+  },
+  {
+    "Id": 60,
+    "UsuarioId": 55,
+    "OrganizacionId": 45,
+    "RolId": 4,
+    "CreatedAt": "2026-03-18T19:47:15.607Z",
+    "UpdatedAt": "2026-03-18T19:47:15.607Z",
+    "FechaAsignacion": "2026-03-18T19:47:16.943Z"
+  },
+  {
+    "Id": 61,
+    "UsuarioId": 58,
+    "OrganizacionId": 46,
+    "RolId": 3,
+    "CreatedAt": "2026-03-31T22:31:03.920Z",
+    "UpdatedAt": "2026-03-31T22:31:03.920Z",
+    "FechaAsignacion": "2026-03-31T22:31:03.920Z"
+  },
+  {
+    "Id": 62,
+    "UsuarioId": 59,
+    "OrganizacionId": 47,
+    "RolId": 3,
+    "CreatedAt": "2026-03-31T23:23:05.773Z",
+    "UpdatedAt": "2026-03-31T23:23:05.773Z",
+    "FechaAsignacion": "2026-03-31T23:23:05.773Z"
+  }
+]

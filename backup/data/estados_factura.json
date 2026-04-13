@@ -1,0 +1,26 @@
+[
+  {
+    "id": 6,
+    "codigo": "cancelada"
+  },
+  {
+    "id": 5,
+    "codigo": "incobrable"
+  },
+  {
+    "id": 3,
+    "codigo": "pagada"
+  },
+  {
+    "id": 2,
+    "codigo": "parcial"
+  },
+  {
+    "id": 4,
+    "codigo": "vencida"
+  },
+  {
+    "id": 1,
+    "codigo": "vigente"
+  }
+]

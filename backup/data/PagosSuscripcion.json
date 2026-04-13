@@ -1,0 +1,123 @@
+[
+  {
+    "Id": 1,
+    "SuscripcionId": 1,
+    "StripeInvoiceId": "in_test_fake_1",
+    "StripePaymentIntentId": null,
+    "Monto": 499,
+    "Moneda": "mxn",
+    "Estado": "paid",
+    "FechaPago": "2026-03-03T21:10:39.327Z",
+    "UrlRecibo": null
+  },
+  {
+    "Id": 2,
+    "SuscripcionId": 1,
+    "StripeInvoiceId": "in_test_fake_2",
+    "StripePaymentIntentId": null,
+    "Monto": 499,
+    "Moneda": "mxn",
+    "Estado": "paid",
+    "FechaPago": "2026-01-31T21:10:39.530Z",
+    "UrlRecibo": null
+  },
+  {
+    "Id": 3,
+    "SuscripcionId": 1,
+    "StripeInvoiceId": "in_test_fake_3",
+    "StripePaymentIntentId": null,
+    "Monto": 499,
+    "Moneda": "mxn",
+    "Estado": "paid",
+    "FechaPago": "2025-12-31T21:10:39.737Z",
+    "UrlRecibo": null
+  },
+  {
+    "Id": 4,
+    "SuscripcionId": 2,
+    "StripeInvoiceId": "in_1THB6TKWIz2QT93cqjeupb0c",
+    "StripePaymentIntentId": null,
+    "Monto": 0,
+    "Moneda": "mxn",
+    "Estado": "paid",
+    "FechaPago": "2026-03-31T22:49:48.320Z",
+    "UrlRecibo": "https://invoice.stripe.com/i/acct_1ScwRJKWIz2QT93c/test_YWNjdF8xU2N3UkpLV0l6MlFUOTNjLF9VRmdUVGI3eEdXYjhoQ1dHY3B1UVdyeGRJUnEzSWxBLDE2NTUzODE4Nw0200WFmb1iC0?s=ap"
+  },
+  {
+    "Id": 5,
+    "SuscripcionId": 2,
+    "StripeInvoiceId": "in_1THBLcKWIz2QT93cp3jboW8f",
+    "StripePaymentIntentId": null,
+    "Monto": 0,
+    "Moneda": "mxn",
+    "Estado": "paid",
+    "FechaPago": "2026-03-31T23:05:26.773Z",
+    "UrlRecibo": "https://invoice.stripe.com/i/acct_1ScwRJKWIz2QT93c/test_YWNjdF8xU2N3UkpLV0l6MlFUOTNjLF9VRmdqdjVERnBmS25ObWpnSzAxQ0pTZlNWbjhTNWFVLDE2NTUzOTEyNg0200MWIgXEnd?s=ap"
+  },
+  {
+    "Id": 6,
+    "SuscripcionId": 2,
+    "StripeInvoiceId": "in_1THBMqKWIz2QT93cFGMheQoN",
+    "StripePaymentIntentId": null,
+    "Monto": 0,
+    "Moneda": "mxn",
+    "Estado": "paid",
+    "FechaPago": "2026-03-31T23:06:42.107Z",
+    "UrlRecibo": "https://invoice.stripe.com/i/acct_1ScwRJKWIz2QT93c/test_YWNjdF8xU2N3UkpLV0l6MlFUOTNjLF9VRmdrdWE1d1RKaTFybDRnSWVOVkNFbTR2THk0ZTFxLDE2NTUzOTIwMQ02004nfCPdga?s=ap"
+  },
+  {
+    "Id": 7,
+    "SuscripcionId": 3,
+    "StripeInvoiceId": "sim_invoice_test_001",
+    "StripePaymentIntentId": null,
+    "Monto": 499,
+    "Moneda": "mxn",
+    "Estado": "paid",
+    "FechaPago": "2026-03-31T23:26:16.057Z",
+    "UrlRecibo": null
+  },
+  {
+    "Id": 8,
+    "SuscripcionId": 3,
+    "StripeInvoiceId": "in_1THBh7KWIz2QT93c6LpfHaGT",
+    "StripePaymentIntentId": null,
+    "Monto": 1299,
+    "Moneda": "mxn",
+    "Estado": "paid",
+    "FechaPago": "2026-03-31T23:27:44.730Z",
+    "UrlRecibo": "https://invoice.stripe.com/i/acct_1ScwRJKWIz2QT93c/test_YWNjdF8xU2N3UkpLV0l6MlFUOTNjLF9VRmg1dks1N3pYd0FWV3hBdE5VVUdJVzV3SFZPNGttLDE2NTU0MDQ2Mw0200m9g1yU7q?s=ap"
+  },
+  {
+    "Id": 9,
+    "SuscripcionId": 3,
+    "StripeInvoiceId": "in_1THBmMKWIz2QT93c9YFK5oWo",
+    "StripePaymentIntentId": null,
+    "Monto": 499,
+    "Moneda": "mxn",
+    "Estado": "paid",
+    "FechaPago": "2026-03-31T23:33:08.283Z",
+    "UrlRecibo": "https://invoice.stripe.com/i/acct_1ScwRJKWIz2QT93c/test_YWNjdF8xU2N3UkpLV0l6MlFUOTNjLF9VRmhBcFd3RmdVOVdadGhaTzYyNEdQRHNscEJvb09KLDE2NTU0MDc4Nw0200rvbRSQO8?s=ap"
+  },
+  {
+    "Id": 10,
+    "SuscripcionId": 3,
+    "StripeInvoiceId": "in_1THBjDKWIz2QT93cn4wjAxXb",
+    "StripePaymentIntentId": null,
+    "Monto": 0,
+    "Moneda": "mxn",
+    "Estado": "paid",
+    "FechaPago": "2026-04-01T00:30:34.120Z",
+    "UrlRecibo": "https://invoice.stripe.com/i/acct_1ScwRJKWIz2QT93c/test_YWNjdF8xU2N3UkpLV0l6MlFUOTNjLF9VRmg3bzhOQ1NmR0dLWUdyMk1CaG5lWlZLR3ZsbHpnLDE2NTU0NDIzMg0200AqXVyViF?s=ap"
+  },
+  {
+    "Id": 11,
+    "SuscripcionId": 3,
+    "StripeInvoiceId": "in_1THYGaKWIz2QT93czXkzxYq0",
+    "StripePaymentIntentId": null,
+    "Monto": 0,
+    "Moneda": "mxn",
+    "Estado": "paid",
+    "FechaPago": "2026-04-02T00:34:17.933Z",
+    "UrlRecibo": "https://invoice.stripe.com/i/acct_1ScwRJKWIz2QT93c/test_YWNjdF8xU2N3UkpLV0l6MlFUOTNjLF9VRzRQT1VYVzRqU2lGMjZiRDZaQ3VHNTRLRDhhS2ZTLDE2NTYzMDg1Ng02003H7qfX9g?s=ap"
+  }
+]

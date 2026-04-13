@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "codigo": "alta"
+  },
+  {
+    "id": 3,
+    "codigo": "baja"
+  },
+  {
+    "id": 2,
+    "codigo": "media"
+  }
+]

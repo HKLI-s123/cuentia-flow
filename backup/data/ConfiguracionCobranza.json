@@ -1,0 +1,26 @@
+[
+  {
+    "Id": 1,
+    "OrganizacionId": 3,
+    "DiasGracia": 3,
+    "EscalamientoDias": "{\"nivel1\":7,\"nivel2\":15,\"nivel3\":30,\"nivel4\":60,\"primer_recordatorio\":7,\"segundo_recordatorio\":15,\"gestion_telefonica\":30,\"proceso_legal\":90}",
+    "EnvioAutomaticoRecordatorios": true,
+    "DiasRecordatorioPrevio": 3
+  },
+  {
+    "Id": 2,
+    "OrganizacionId": 5,
+    "DiasGracia": 3,
+    "EscalamientoDias": "{\"primer_recordatorio\":7,\"segundo_recordatorio\":15,\"gestion_telefonica\":30,\"proceso_legal\":90}",
+    "EnvioAutomaticoRecordatorios": true,
+    "DiasRecordatorioPrevio": 3
+  },
+  {
+    "Id": 3,
+    "OrganizacionId": 6,
+    "DiasGracia": 3,
+    "EscalamientoDias": "{\"primer_recordatorio\":7,\"segundo_recordatorio\":15,\"gestion_telefonica\":30,\"proceso_legal\":90}",
+    "EnvioAutomaticoRecordatorios": true,
+    "DiasRecordatorioPrevio": 3
+  }
+]

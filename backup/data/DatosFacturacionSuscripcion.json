@@ -1,0 +1,15 @@
+[
+  {
+    "Id": 1,
+    "OrganizacionId": 45,
+    "RequiereFactura": true,
+    "RFC": "ROMS020305F70",
+    "RazonSocial": "SERGIO IVANOVICH ROSALES MARQUEZ",
+    "RegimenFiscalId": 19,
+    "UsoCFDI": "G03",
+    "Correo": "srgiorosales123@gmail.com",
+    "CodigoPostal": "32575",
+    "CreatedAt": "2026-03-31T23:46:44.970Z",
+    "UpdatedAt": "2026-03-31T23:46:44.970Z"
+  }
+]
