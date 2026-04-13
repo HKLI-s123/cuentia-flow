@@ -10,7 +10,7 @@
 
 set -euo pipefail
 
-APP_DIR="/home/cuentia/cuentia-flow"
+APP_DIR="/home/cuentia/apps/cuentia-flow"
 LOG_DIR="/home/cuentia/logs"
 DOMAIN="flow.cuentia.mx"
 NODE_VERSION="22"
