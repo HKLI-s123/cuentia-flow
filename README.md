@@ -1,33 +1,39 @@
-# sv
+# 🔐 Cobranza App - Sistema de Gestión de Cobranzas
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+[![Security](https://img.shields.io/badge/Security-Production%20Ready-green)](SEGURIDAD_AUTENTICACION.md)
+[![License](https://img.shields.io/badge/License-Proprietary-red)]()
 
-## Creating a project
+Sistema profesional de gestión de cobranzas con autenticación segura, multi-tenant y compatible con producción.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## 🚀 Inicio Rápido
 
-```sh
-# create a new project in the current directory
-npx sv create
+### Documentación de Seguridad ⭐ **IMPORTANTE**
 
-# create a new project in my-app
-npx sv create my-app
-```
+Si es tu primera vez o necesitas entender la seguridad:
 
-## Developing
+- **[RESUMEN_SEGURIDAD.md](RESUMEN_SEGURIDAD.md)** ← Empieza aquí (5 min)
+- **[DOCUMENTACION_INDICE.md](DOCUMENTACION_INDICE.md)** - Índice de todos los documentos
+- **[SEGURIDAD_AUTENTICACION.md](SEGURIDAD_AUTENTICACION.md)** - Guía completa (60+ min)
+- **[GUIA_RAPIDA_AUTH.md](GUIA_RAPIDA_AUTH.md)** - Para implementar
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Lo Esencial
 
-```sh
+```bash
+# 1. Instalar dependencias
+npm install
+
+# 2. Configurar variables de entorno
+cp .env.example .env
+# Editar .env con secretos (generar con: openssl rand -base64 32)
+
+# 3. Desarrollo
 npm run dev
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# 4. Validar seguridad
+node scripts/security-checklist.js
 ```
 
-## Building
-
-To create a production version of your app:
+## ✨ Características
 
 ```sh
 npm run build
@@ -36,3 +42,4 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+"# cuentia-flow" 
