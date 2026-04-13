@@ -1,0 +1,35 @@
+-- ============================================
+-- PostgreSQL Data Import Script
+-- Importa los datos JSON exportados de MSSQL
+-- ============================================
+
+-- NOTA: Este script es informativo.
+-- Usa el script import-to-postgres.ts para importar datos.
+
+-- Agentes_Clientes: 244 filas
+-- audit_log: 3 filas
+-- Clientes: 245 filas
+-- ComprobantesRecibidos: 2 filas
+-- ConceptosFactura: 1029 filas
+-- ConfiguracionCobranza: 3 filas
+-- configuracion_organizacion: 6 filas
+-- DatosFacturacionSuscripcion: 1 filas
+-- Estados: 82 filas
+-- estados_factura: 6 filas
+-- FacturaEnvios: 7 filas
+-- Facturas: 3588 filas
+-- GestionesCobranza: 34 filas
+-- ImpuestosConcepto: 1010 filas
+-- Organizaciones: 6 filas
+-- Organizaciones_BaileysSession: 1 filas
+-- Pagos: 276 filas
+-- PagosSuscripcion: 11 filas
+-- Paises: 2 filas
+-- prioridades_cobranza: 3 filas
+-- Recordatorios: 19 filas
+-- RecordatoriosProgramados: 1 filas
+-- Regimen: 19 filas
+-- Roles: 2 filas
+-- Suscripciones: 3 filas
+-- Usuarios: 28 filas
+-- Usuario_Organizacion: 14 filas
