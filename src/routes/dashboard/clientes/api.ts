@@ -5,10 +5,6 @@ import { authFetch } from '$lib/api';
 // FUNCIONES DE API
 // ========================================
 
-function obtenerToken(): string | null {
-	return sessionStorage.getItem('jwt');
-}
-
 export async function cargarConfiguracion(): Promise<string> {
 	try {
 		const response = await authFetch('/api/config');

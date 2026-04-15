@@ -1,39 +1,39 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { getConnection } from '$lib/server/db';
+import { validateOrganizationAccess } from '$lib/server/auth';
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async (event) => {
     try {
-        const organizacionId = url.searchParams.get('organizacionId') || '3';
+        const organizacionId = event.url.searchParams.get('organizacionId') || '3';
+
+        // Validar acceso a la organización
+        const auth = await validateOrganizationAccess(event, organizacionId);
+        if (!auth.valid) return auth.error!;
+
         const pool = await getConnection();
 
         // 1. Clientes por Agente
-        const clientesPorAgente = await pool.request()
-            .input('organizacionId', organizacionId)
-            .query(`
+        const clientesPorAgente = await pool.query(`
                 SELECT
                     CONCAT(u.Nombre, ' ', u.Apellido) as agente,
                     COUNT(ac.ClienteId) as total_clientes
                 FROM Agentes_Clientes ac
                 INNER JOIN Usuarios u ON ac.UsuarioId = u.Id
                 INNER JOIN Usuario_Organizacion uo ON u.Id = uo.UsuarioId
-                WHERE uo.OrganizacionId = @organizacionId
+                WHERE uo.OrganizacionId = $1
                 GROUP BY u.Id, u.Nombre, u.Apellido
                 ORDER BY total_clientes DESC
-            `);
+            `, [organizacionId]);
 
         // 2. Total de clientes por organización
-        const totalClientes = await pool.request()
-            .input('organizacionId', organizacionId)
-            .query(`
+        const totalClientes = await pool.query(`
                 SELECT COUNT(*) as total
                 FROM Clientes c
-                WHERE c.OrganizacionId = @organizacionId
-            `);
+                WHERE c.OrganizacionId = $1
+            `, [organizacionId]);
 
         // 3. Clientes con y sin agente asignado
-        const clientesAsignacion = await pool.request()
-            .input('organizacionId', organizacionId)
-            .query(`
+        const clientesAsignacion = await pool.query(`
                 SELECT
                     CASE
                         WHEN ac.ClienteId IS NOT NULL THEN 'Con Agente'
@@ -42,67 +42,63 @@ export const GET: RequestHandler = async ({ url }) => {
                     COUNT(*) as total
                 FROM Clientes c
                 LEFT JOIN Agentes_Clientes ac ON c.Id = ac.ClienteId
-                WHERE c.OrganizacionId = @organizacionId
+                WHERE c.OrganizacionId = $1
                 GROUP BY CASE
                     WHEN ac.ClienteId IS NOT NULL THEN 'Con Agente'
                     ELSE 'Sin Agente'
                 END
-            `);
+            `, [organizacionId]);
 
         // 4. Verificar si existe tabla Facturas para estadísticas más avanzadas
-        const tablaFacturasExiste = await pool.request()
-            .query(`
+        const tablaFacturasExiste = await pool.query(`
                 SELECT COUNT(*) as existe
-                FROM INFORMATION_SCHEMA.TABLES
-                WHERE TABLE_NAME = 'Facturas'
+                FROM information_schema.tables
+                WHERE table_name = 'facturas'
             `);
 
         let facturasPorEstado: any[] = [];
         let montosFacturas: any[] = [];
 
-        if (tablaFacturasExiste.recordset[0].existe > 0) {
+        if (parseInt(tablaFacturasExiste.rows[0].existe) > 0) {
             // 5. Facturas por estado (si la tabla existe)
-            const facturasPorEstadoResult = await pool.request()
-                .input('organizacionId', organizacionId)
-                .query(`
+            const facturasPorEstadoResult = await pool.query(`
                     SELECT
-                        ISNULL(f.Estado, 'Pendiente') as estado,
+                        COALESCE(ef.codigo, 'pendiente') as estado,
                         COUNT(*) as total,
-                        ISNULL(SUM(f.Total), 0) as monto_total
+                        COALESCE(SUM(f.montototal), 0) as monto_total
                     FROM Facturas f
                     INNER JOIN Clientes c ON f.ClienteId = c.Id
-                    WHERE c.OrganizacionId = @organizacionId
-                    GROUP BY f.Estado
-                `);
-            facturasPorEstado = facturasPorEstadoResult.recordset;
+                    LEFT JOIN estados_factura ef ON f.estado_factura_id = ef.id
+                    WHERE c.OrganizacionId = $1
+                    GROUP BY ef.codigo
+                `, [organizacionId]);
+            facturasPorEstado = facturasPorEstadoResult.rows;
 
             // 6. Montos de facturas por mes (últimos 6 meses)
-            const montosFacturasResult = await pool.request()
-                .input('organizacionId', organizacionId)
-                .query(`
+            const montosFacturasResult = await pool.query(`
                     SELECT
-                        FORMAT(f.FechaEmision, 'MMM yyyy') as mes,
-                        MONTH(f.FechaEmision) as mes_num,
-                        YEAR(f.FechaEmision) as año,
-                        SUM(f.Total) as total_facturado
+                        TO_CHAR(f.FechaEmision, 'Mon YYYY') as mes,
+                        EXTRACT(MONTH FROM f.FechaEmision)::int as mes_num,
+                        EXTRACT(YEAR FROM f.FechaEmision)::int as año,
+                        SUM(f.montototal) as total_facturado
                     FROM Facturas f
                     INNER JOIN Clientes c ON f.ClienteId = c.Id
-                    WHERE c.OrganizacionId = @organizacionId
-                        AND f.FechaEmision >= DATEADD(month, -6, GETDATE())
-                    GROUP BY YEAR(f.FechaEmision), MONTH(f.FechaEmision), FORMAT(f.FechaEmision, 'MMM yyyy')
+                    WHERE c.OrganizacionId = $1
+                        AND f.FechaEmision >= NOW() - INTERVAL '6 months'
+                    GROUP BY EXTRACT(YEAR FROM f.FechaEmision), EXTRACT(MONTH FROM f.FechaEmision), TO_CHAR(f.FechaEmision, 'Mon YYYY')
                     ORDER BY año, mes_num
-                `);
-            montosFacturas = montosFacturasResult.recordset;
+                `, [organizacionId]);
+            montosFacturas = montosFacturasResult.rows;
         }
 
         return new Response(
             JSON.stringify({
-                clientes_por_agente: clientesPorAgente.recordset,
-                total_clientes: totalClientes.recordset[0].total,
-                clientes_asignacion: clientesAsignacion.recordset,
+                clientes_por_agente: clientesPorAgente.rows,
+                total_clientes: parseInt(totalClientes.rows[0].total, 10),
+                clientes_asignacion: clientesAsignacion.rows,
                 facturas_por_estado: facturasPorEstado,
                 montos_facturas: montosFacturas,
-                tiene_facturas: tablaFacturasExiste.recordset[0].existe > 0
+                tiene_facturas: parseInt(tablaFacturasExiste.rows[0].existe) > 0
             }),
             { status: 200 }
         );

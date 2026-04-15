@@ -2,7 +2,8 @@
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
-  import { Building2, Upload, X, Check, AlertCircle, ShieldAlert } from 'lucide-svelte';
+  import { page } from '$app/stores';
+  import { Building2, Upload, X, Check, AlertCircle, ShieldAlert, CreditCard } from 'lucide-svelte';
   import Input from '$lib/components/ui/Input.svelte';
   import Button from '$lib/components/ui/Button.svelte';
 
@@ -10,8 +11,11 @@
   let guardando = false;
   let error: string | null = null;
   let mensajeExito = false;
+  let advertenciaCertificados: string | null = null;
   let verificandoAcceso = true;
   let tieneAcceso = false;
+  let planUsuario: any = null;
+  let cargandoPlan = true;
 
   // Datos fiscales
   let legal_name = '';
@@ -113,14 +117,21 @@
       return;
     }
 
+    if (planUsuario && planUsuario.disponibles <= 0) {
+      error = `Has alcanzado el límite de organizaciones para tu plan ${planUsuario.nombre}. Máximo: ${planUsuario.limite}`;
+      return;
+    }
+
     guardando = true;
     error = null;
+    advertenciaCertificados = null;
 
     try {
       // 1. Crear la organización en Facturapi
       const { authFetch } = await import('$lib/api');
 
       const organizacionData = {
+        name: legal_name.trim(),
         legal_name: legal_name.trim(),
         tax_id: tax_id.toUpperCase().trim(),
         tax_system: tax_system,
@@ -160,18 +171,28 @@
         formData.append('organizacion_id', result.organizacionId);
 
         const uploadResponse = await authFetch('/api/organizaciones/subir-certificado', {
-          method: 'POST',
+          method: 'PUT',
           body: formData
         });
 
         if (!uploadResponse.ok) {
           const uploadError = await uploadResponse.json();
           console.warn('Advertencia: No se pudieron subir los certificados:', uploadError);
+
+          const mensajeBackend =
+            uploadError?.details?.message ||
+            uploadError?.message ||
+            uploadError?.error;
+
+          advertenciaCertificados = mensajeBackend
+            ? `La organización se creó, pero los certificados CSD no se pudieron subir: ${mensajeBackend}`
+            : 'La organización se creó, pero los certificados CSD no se pudieron subir. Puedes configurarlos después en configuración.';
         }
       }
 
       // 3. Mostrar mensaje de éxito
       mensajeExito = true;
+      guardando = false;
 
       // 4. Redirigir al dashboard después de 2 segundos
       setTimeout(() => {
@@ -190,36 +211,46 @@
     goto('/dashboard');
   }
 
+  async function cargarPlan() {
+    try {
+      const { authFetch } = await import('$lib/api');
+      const response = await authFetch('/api/usuario/plan');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          planUsuario = data.plan;
+        }
+      }
+    } catch (err) {
+      console.error('Error al cargar plan:', err);
+    } finally {
+      cargandoPlan = false;
+    }
+  }
+
   // Verificar acceso al montar el componente
   onMount(() => {
     if (!browser) return;
 
     // Verificar que el usuario esté autenticado y tenga rol de administrador
-    const userData = sessionStorage.getItem('userData');
+    const user = $page.data.user as any;
 
-    if (!userData) {
+    if (!user) {
       // No hay usuario, redirigir al login
       goto('/');
       return;
     }
 
-    try {
-      const user = JSON.parse(userData);
-
-      // Verificar que tenga rol de administrador (rolId 3)
-      // Solo los administradores pueden crear nuevas organizaciones
-      if (!user.rolId || user.rolId !== 3) {
-        tieneAcceso = false;
-        verificandoAcceso = false;
-        return;
-      }
-
-      tieneAcceso = true;
+    // Verificar permisos: permitir si no tiene org aún (primera org) o si es admin (rolId 3)
+    if (user.rolId && user.rolId !== 3) {
+      tieneAcceso = false;
       verificandoAcceso = false;
-    } catch (e) {
-      console.error('Error verificando acceso:', e);
-      goto('/');
+      return;
     }
+
+    tieneAcceso = true;
+    verificandoAcceso = false;
+    cargarPlan();
   });
 </script>
 
@@ -260,6 +291,22 @@
       <p class="text-slate-600">Registra una nueva organización con su información fiscal para emitir facturas</p>
     </div>
 
+  {#if !cargandoPlan && planUsuario}
+    <div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
+      <CreditCard class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+      <div class="flex-1">
+        <h3 class="font-semibold text-blue-900 mb-1">Tu plan: {planUsuario.nombre}</h3>
+        <p class="text-sm text-blue-700">
+          Organizaciones disponibles: <strong>{planUsuario.disponibles}</strong> de <strong>{planUsuario.limite}</strong>
+          ({planUsuario.creadas} creadas)
+        </p>
+        {#if planUsuario.disponibles === 0}
+          <p class="text-sm text-red-600 mt-2 font-semibold">Has alcanzado el límite de organizaciones para tu plan</p>
+        {/if}
+      </div>
+    </div>
+  {/if}
+
   <!-- Mensajes -->
   {#if error}
     <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
@@ -277,6 +324,16 @@
       <div>
         <h3 class="font-semibold text-green-900 mb-1">¡Organización creada!</h3>
         <p class="text-sm text-green-700">La organización se ha registrado correctamente. Redirigiendo al dashboard...</p>
+      </div>
+    </div>
+  {/if}
+
+  {#if advertenciaCertificados}
+    <div class="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
+      <ShieldAlert class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+      <div>
+        <h3 class="font-semibold text-amber-900 mb-1">Certificados CSD no configurados</h3>
+        <p class="text-sm text-amber-700">{advertenciaCertificados}</p>
       </div>
     </div>
   {/if}
@@ -490,6 +547,11 @@
         Certificados CSD (Opcional)
       </h2>
       <p class="text-sm text-slate-600 mb-4">Puedes agregar los certificados ahora o hacerlo más tarde desde la configuración</p>
+      <div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
+        <p class="text-sm text-amber-800">
+          Nota: Los sellos digitales (CSD) son diferentes a la FIEL. Los CSD se usan para facturar y se solicitan directamente ante el SAT.
+        </p>
+      </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Archivo .cer -->

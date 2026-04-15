@@ -1,9 +1,10 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { getConnection } from '$lib/server/db';
+import { validateOrganizationAccess } from '$lib/server/auth';
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async (event) => {
     try {
-        const organizacionId = url.searchParams.get('organizacionId');
+        const organizacionId = event.url.searchParams.get('organizacionId');
 
         if (!organizacionId) {
             return new Response(
@@ -12,13 +13,17 @@ export const GET: RequestHandler = async ({ url }) => {
             );
         }
 
+        // Validar acceso a la organización
+        const auth = await validateOrganizationAccess(event, organizacionId);
+        if (!auth.valid) return auth.error!;
+
         const pool = await getConnection();
 
         // Query para obtener todos los datos completos de los clientes
         const query = `
             SELECT
                 c.Id,
-                ISNULL(agentes.ListaAgentes, 'Sin asignar') as AgenteDeCobranza,
+                COALESCE(agentes.ListaAgentes, 'Sin asignar') as AgenteDeCobranza,
                 c.NombreComercial,
                 c.RazonSocial,
                 c.RFC,
@@ -52,16 +57,14 @@ export const GET: RequestHandler = async ({ url }) => {
             LEFT JOIN Regimen r ON c.RegimenFiscalId = r.ID_Regimen
             LEFT JOIN Paises p ON c.PaisId = p.ID
             LEFT JOIN Estados e ON c.EstadoId = e.ID
-            WHERE c.OrganizacionId = @organizacionId
+            WHERE c.OrganizacionId = $1
             ORDER BY c.RazonSocial ASC
         `;
 
-        const result = await pool.request()
-            .input('organizacionId', organizacionId)
-            .query(query);
+        const result = await pool.query(query, [organizacionId]);
 
         return new Response(
-            JSON.stringify(result.recordset),
+            JSON.stringify(result.rows),
             {
                 status: 200,
                 headers: {

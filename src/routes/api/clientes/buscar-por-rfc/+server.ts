@@ -1,10 +1,11 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { getConnection } from '$lib/server/db';
+import { validateOrganizationAccess } from '$lib/server/auth';
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async (event) => {
     try {
-        const rfc = url.searchParams.get('rfc');
-        const organizacionId = url.searchParams.get('organizacionId');
+        const rfc = event.url.searchParams.get('rfc');
+        const organizacionId = event.url.searchParams.get('organizacionId');
 
         if (!rfc || !organizacionId) {
             return new Response(
@@ -13,20 +14,22 @@ export const GET: RequestHandler = async ({ url }) => {
             );
         }
 
+        // Validar acceso a la organización
+        const auth = await validateOrganizationAccess(event, organizacionId);
+        if (!auth.valid) return auth.error!;
+
         const pool = await getConnection();
 
         // Buscar cliente por RFC en la organización específica
-        const result = await pool.request()
-            .input('rfc', rfc)
-            .input('organizacionId', parseInt(organizacionId))
-            .query(`
-                SELECT TOP 1 Id as id
+        const result = await pool.query(`
+                SELECT Id as id
                 FROM Clientes
-                WHERE RFC = @rfc AND OrganizacionId = @organizacionId
+                WHERE RFC = $1 AND OrganizacionId = $2
                 ORDER BY Id DESC
-            `);
+                LIMIT 1
+            `, [rfc, parseInt(organizacionId)]);
 
-        if (result.recordset.length === 0) {
+        if (result.rows.length === 0) {
             return new Response(
                 JSON.stringify({ error: 'Cliente no encontrado' }),
                 { status: 404 }
@@ -34,7 +37,7 @@ export const GET: RequestHandler = async ({ url }) => {
         }
 
         return new Response(
-            JSON.stringify(result.recordset[0]),
+            JSON.stringify(result.rows[0]),
             { status: 200 }
         );
 

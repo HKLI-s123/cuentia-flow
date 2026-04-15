@@ -30,6 +30,7 @@ export interface Pago {
   monto: number;
   fechaPago: string;
   metodo: string; // 'efectivo', 'transferencia', 'cheque', 'tarjeta', etc.
+  cancelado?: boolean;
   createdAt: string;
   updatedAt: string;
   // Campos relacionados (del JOIN con facturas y usuarios)

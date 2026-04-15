@@ -1,4 +1,6 @@
 ﻿<script lang="ts">
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import { createEventDispatcher } from 'svelte';
   import { X, Mail, RefreshCw, Plus, CheckCircle, AlertCircle, MessageCircle } from 'lucide-svelte';
   import type { Factura } from './types';
@@ -114,7 +116,7 @@
     cargandoRecordatorios = true;
 
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId) return;
 
       const response = await authFetch(`/api/facturas/${factura.id}/recordatorios?organizacionId=${organizacionId}`);
@@ -139,7 +141,7 @@
       const hoy = hoyLocal();
       // Verificar si ya hay un recordatorio exitoso hoy mirando los recordatorios cargados
       // Esto se validará también en el backend, aquí es solo UX
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId) return;
 
       const response = await authFetch(`/api/facturas/${factura.id}/recordatorios?organizacionId=${organizacionId}`);
@@ -264,7 +266,7 @@
     enviando = true;
 
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
 
       if (!organizacionId) {
         mensajeError = 'No se pudo obtener la informacion de la organizacion';

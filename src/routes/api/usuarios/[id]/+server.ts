@@ -1,7 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getConnection } from '$lib/server/db';
-import sql from 'mssql';
 import bcrypt from 'bcryptjs';
 
 export const PUT: RequestHandler = async ({ params, request }) => {
@@ -50,26 +49,22 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 
 		// Validar que el usuario editor sea administrador
 		const rolEditorQuery = `
-			SELECT r.Nombre
-			FROM Usuario_Organizacion uo
-			INNER JOIN Roles r ON uo.RolId = r.Id
-			WHERE uo.UsuarioId = @UsuarioEditorId AND uo.OrganizacionId = @OrganizacionId
+			SELECT r.nombre
+			FROM usuario_organizacion uo
+			INNER JOIN roles r ON uo.rolid = r.id
+			WHERE uo.usuarioid = $1 AND uo.organizacionid = $2
 		`;
 
-		const rolEditor = await pool
-			.request()
-			.input('UsuarioEditorId', sql.Int, usuarioEditorId)
-			.input('OrganizacionId', sql.Int, organizacionId)
-			.query(rolEditorQuery);
+		const rolEditor = await pool.query(rolEditorQuery, [usuarioEditorId, organizacionId]);
 
-		if (rolEditor.recordset.length === 0) {
+		if (rolEditor.rows.length === 0) {
 			return json({
 				success: false,
 				error: 'Usuario editor no encontrado en la organización'
 			}, { status: 403 });
 		}
 
-		const nombreRol = rolEditor.recordset[0].Nombre;
+		const nombreRol = rolEditor.rows[0].nombre;
 		if (nombreRol !== 'Administrador') {
 			return json({
 				success: false,
@@ -79,12 +74,12 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 		}
 
 		// Verificar si el usuario existe
-		const existeUsuario = await pool
-			.request()
-			.input('UsuarioId', sql.Int, usuarioId)
-			.query(`SELECT Id FROM Usuarios WHERE Id = @UsuarioId`);
+		const existeUsuario = await pool.query(
+			`SELECT id FROM usuarios WHERE id = $1`,
+			[usuarioId]
+		);
 
-		if (existeUsuario.recordset.length === 0) {
+		if (existeUsuario.rows.length === 0) {
 			return json({
 				success: false,
 				error: 'Usuario no encontrado'
@@ -92,13 +87,12 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 		}
 
 		// Verificar si el correo ya existe en otro usuario
-		const correoExiste = await pool
-			.request()
-			.input('Correo', sql.NVarChar(150), correo)
-			.input('UsuarioId', sql.Int, usuarioId)
-			.query(`SELECT Id FROM Usuarios WHERE Correo = @Correo AND Id != @UsuarioId`);
+		const correoExiste = await pool.query(
+			`SELECT id FROM usuarios WHERE correo = $1 AND id != $2`,
+			[correo, usuarioId]
+		);
 
-		if (correoExiste.recordset.length > 0) {
+		if (correoExiste.rows.length > 0) {
 			return json({
 				success: false,
 				error: 'El correo electrónico ya está registrado en otro usuario'
@@ -106,52 +100,43 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 		}
 
 		// Actualizar tabla Usuarios
-		let updateUsuarioQuery = `
-			UPDATE Usuarios SET
-				Correo = @Correo,
-				NumeroTel = @NumeroTel,
-				Activo = @Activo,
-				Nombre = @Nombre,
-				Apellido = @Apellido
-		`;
+		const updateParams: any[] = [correo, numero_tel || null, activo ? true : false, Nombre, Apellido];
+		let paramIndex = 6;
 
-		const sqlRequest = pool.request()
-			.input('Correo', sql.NVarChar(150), correo)
-			.input('NumeroTel', sql.NVarChar(20), numero_tel || null)
-			.input('Activo', sql.Bit, activo ? 1 : 0)
-			.input('Nombre', sql.NVarChar(100), Nombre)
-			.input('Apellido', sql.NVarChar(100), Apellido);
+		let updateUsuarioQuery = `
+			UPDATE usuarios SET
+				correo = $1,
+				numerotel = $2,
+				activo = $3,
+				nombre = $4,
+				apellido = $5
+		`;
 
 		// Si se proporciona una nueva contraseña, hashearla y actualizarla
 		if (contrasena && contrasena.trim() !== '') {
-			const salt = await bcrypt.genSalt(10);
+			const salt = await bcrypt.genSalt(12);
 			const hashedPassword = await bcrypt.hash(contrasena, salt);
 
-			updateUsuarioQuery += `, Contrasena = @Contrasena`;
-			sqlRequest.input('Contrasena', sql.NVarChar(255), hashedPassword);
+			updateUsuarioQuery += `, contrasena = $${paramIndex}`;
+			updateParams.push(hashedPassword);
+			paramIndex++;
 		}
 
-		updateUsuarioQuery += ` WHERE Id = @UsuarioId`;
-		sqlRequest.input('UsuarioId', sql.Int, usuarioId);
+		updateUsuarioQuery += ` WHERE id = $${paramIndex}`;
+		updateParams.push(usuarioId);
 
-		await sqlRequest.query(updateUsuarioQuery);
+		await pool.query(updateUsuarioQuery, updateParams);
 
 		// Actualizar Usuario_Organizacion
 		const ahora = new Date();
 		const updateUsuarioOrgQuery = `
-			UPDATE Usuario_Organizacion SET
-				RolId = @RolId,
-				UpdatedAt = @UpdatedAt
-			WHERE UsuarioId = @UsuarioId AND OrganizacionId = @OrganizacionId
+			UPDATE usuario_organizacion SET
+				rolid = $1,
+				updatedat = $2
+			WHERE usuarioid = $3 AND organizacionid = $4
 		`;
 
-		await pool
-			.request()
-			.input('RolId', sql.Int, rolId)
-			.input('UpdatedAt', sql.DateTime, ahora)
-			.input('UsuarioId', sql.Int, usuarioId)
-			.input('OrganizacionId', sql.Int, organizacionId)
-			.query(updateUsuarioOrgQuery);
+		await pool.query(updateUsuarioOrgQuery, [rolId, ahora, usuarioId, organizacionId]);
 
 		return json({
 			success: true,
@@ -183,12 +168,12 @@ export const DELETE: RequestHandler = async ({ params }) => {
 		const pool = await getConnection();
 
 		// Verificar si el usuario existe
-		const existeUsuario = await pool
-			.request()
-			.input('UsuarioId', sql.Int, usuarioId)
-			.query(`SELECT Id FROM Usuarios WHERE Id = @UsuarioId`);
+		const existeUsuario = await pool.query(
+			`SELECT id FROM usuarios WHERE id = $1`,
+			[usuarioId]
+		);
 
-		if (existeUsuario.recordset.length === 0) {
+		if (existeUsuario.rows.length === 0) {
 			return json({
 				success: false,
 				error: 'Usuario no encontrado'
@@ -196,34 +181,28 @@ export const DELETE: RequestHandler = async ({ params }) => {
 		}
 
 		// Verificar si el usuario está asignado a clientes en agentes_clientes
-		const asignacionesQuery = `
-			SELECT ac.ClienteId
-			FROM agentes_clientes ac
-			WHERE ac.UsuarioId = @UsuarioId
-		`;
+		const asignaciones = await pool.query(
+			`SELECT clienteid FROM agentes_clientes WHERE usuarioid = $1`,
+			[usuarioId]
+		);
 
-		const asignaciones = await pool
-			.request()
-			.input('UsuarioId', sql.Int, usuarioId)
-			.query(asignacionesQuery);
-
-		if (asignaciones.recordset.length > 0) {
+		if (asignaciones.rows.length > 0) {
 			// El usuario está asignado a clientes, verificar si tienen facturas vencidas
-			const clienteIds = asignaciones.recordset.map((r: any) => r.ClienteId);
+			const clienteIds = asignaciones.rows.map((r: any) => r.clienteid);
 
+			// Build parameterized placeholders for IN clause
+			const placeholders = clienteIds.map((_: any, i: number) => `$${i + 1}`).join(',');
 			const facturasVencidasQuery = `
-				SELECT COUNT(*) as TotalVencidas
-				FROM Facturas f
-				WHERE f.ClienteId IN (${clienteIds.join(',')})
+				SELECT COUNT(*) as totalvencidas
+				FROM facturas f
+				WHERE f.clienteid IN (${placeholders})
 				AND f.estado_factura_id = 4
-				AND f.SaldoPendiente > 0
+				AND f.saldopendiente > 0
 			`;
 
-			const facturasVencidas = await pool
-				.request()
-				.query(facturasVencidasQuery);
+			const facturasVencidas = await pool.query(facturasVencidasQuery, clienteIds);
 
-			const totalVencidas = facturasVencidas.recordset[0].TotalVencidas;
+			const totalVencidas = parseInt(facturasVencidas.rows[0].totalvencidas);
 
 			if (totalVencidas > 0) {
 				return json({
@@ -231,7 +210,7 @@ export const DELETE: RequestHandler = async ({ params }) => {
 					error: 'No se puede eliminar el usuario',
 					message: `Este usuario está asignado a clientes que tienen ${totalVencidas} factura(s) vencida(s). Debe resolver las facturas vencidas antes de eliminar el usuario.`,
 					detalles: {
-						clientesAsignados: asignaciones.recordset.length,
+						clientesAsignados: asignaciones.rows.length,
 						facturasVencidas: totalVencidas
 					}
 				}, { status: 400 });
@@ -241,25 +220,25 @@ export const DELETE: RequestHandler = async ({ params }) => {
 			return json({
 				success: false,
 				error: 'No se puede eliminar el usuario',
-				message: `Este usuario está asignado a ${asignaciones.recordset.length} cliente(s). Debe desasignar los clientes antes de eliminar el usuario.`,
+				message: `Este usuario está asignado a ${asignaciones.rows.length} cliente(s). Debe desasignar los clientes antes de eliminar el usuario.`,
 				detalles: {
-					clientesAsignados: asignaciones.recordset.length
+					clientesAsignados: asignaciones.rows.length
 				}
 			}, { status: 400 });
 		}
 
 		// No tiene clientes asignados, proceder a "eliminar"
 		// Eliminar de Usuario_Organizacion
-		await pool
-			.request()
-			.input('UsuarioId', sql.Int, usuarioId)
-			.query(`DELETE FROM Usuario_Organizacion WHERE UsuarioId = @UsuarioId`);
+		await pool.query(
+			`DELETE FROM usuario_organizacion WHERE usuarioid = $1`,
+			[usuarioId]
+		);
 
 		// Marcar como inactivo en Usuarios (soft delete)
-		await pool
-			.request()
-			.input('UsuarioId', sql.Int, usuarioId)
-			.query(`UPDATE Usuarios SET Activo = 0 WHERE Id = @UsuarioId`);
+		await pool.query(
+			`UPDATE usuarios SET activo = false WHERE id = $1`,
+			[usuarioId]
+		);
 
 		return json({
 			success: true,

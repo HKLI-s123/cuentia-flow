@@ -30,9 +30,10 @@ export const GET: RequestHandler = async (event) => {
 	try {
 		// Obtener la API key de la organización
 		const orgQuery = `
-			SELECT facturapi_key as FacturapiKey
-			FROM configuracion_organizacion
-			WHERE organizacion_id = ?
+			SELECT COALESCE(co.facturapi_key, o.apikeyfacturaapi) as FacturapiKey
+			FROM Organizaciones o
+			LEFT JOIN configuracion_organizacion co ON o.Id = co.organizacion_id
+			WHERE o.Id = ?
 		`;
 
 		const orgResult = await db.query(orgQuery, [organizacionId]);
@@ -80,8 +81,7 @@ export const GET: RequestHandler = async (event) => {
 		console.error('Error al obtener catálogo de productos SAT:', error);
 		return json({
 			success: false,
-			error: 'Error al obtener catálogo de productos SAT',
-			details: error instanceof Error ? error.message : 'Error desconocido'
+			error: 'Error al obtener catálogo de productos SAT'
 		}, { status: 500 });
 	}
 };

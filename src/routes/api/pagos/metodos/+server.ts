@@ -69,7 +69,7 @@ export const GET: RequestHandler = async ({ url }) => {
     return new Response(
       JSON.stringify({
         success: false,
-        message: error instanceof Error ? error.message : 'Error al obtener métodos de pago'
+        message: 'Error al obtener métodos de pago'
       }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );

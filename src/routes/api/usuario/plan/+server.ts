@@ -67,7 +67,7 @@ export const GET: RequestHandler = async (event) => {
 			[userId]
 		);
 
-		const organizacionesCreadas = orgCountResult.rows[0].total;
+		const organizacionesCreadas = parseInt(orgCountResult.rows[0].total, 10) || 0;
 		const organizacionesDisponibles = limites.maxOrganizaciones - organizacionesCreadas;
 
 		return json({
@@ -85,8 +85,7 @@ export const GET: RequestHandler = async (event) => {
 		console.error('[API] Error al obtener plan del usuario:', error);
 		return json(
 			{
-				error: 'Error al obtener información del plan',
-				details: error instanceof Error ? error.message : 'Error desconocido'
+				error: 'Error al obtener información del plan'
 			},
 			{ status: 500 }
 		);

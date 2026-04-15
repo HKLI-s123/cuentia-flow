@@ -1,5 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
   import { ChevronLeft, Download, Copy, RefreshCw, FileText } from 'lucide-svelte';
@@ -43,7 +45,7 @@
   // Cargar estadísticas de recordatorios
   async function cargarStatsRecordatorios() {
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId || !facturaId) return;
 
       const response = await authFetch(`/api/facturas/${facturaId}/recordatorios?organizacionId=${organizacionId}`);
@@ -64,7 +66,7 @@
   // Cargar configuración de cobranza (para Agente IA)
   async function cargarConfigCobranza() {
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId) return;
 
       // Si la factura ya tiene el campo, usarlo directamente
@@ -88,7 +90,7 @@
     const nuevoEstado = !agenteIAActivo;
 
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId) return;
 
       const response = await authFetch(`/api/facturas/${factura.id}`, {
@@ -138,7 +140,7 @@
 
     desactivandoRecurrencia = true;
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId) return;
 
       const response = await authFetch(`/api/facturas/${factura.id}`, {
@@ -175,7 +177,7 @@
     error = '';
 
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
 
       const response = await authFetch(`/api/facturas/${facturaId}?organizacionId=${organizacionId}`);
       const data = await response.json();
@@ -211,6 +213,15 @@
       });
       return;
     }
+    if (factura?.metodoPago === 'PUE' || factura?.estado_factura_id === 3 || (factura?.saldoPendiente || 0) <= 0) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Factura pagada',
+        text: 'No se pueden enviar recordatorios para una factura que ya está pagada.',
+        confirmButtonColor: '#3b82f6'
+      });
+      return;
+    }
     if (agenteIAActivo) {
       Swal.fire({
         icon: 'info',
@@ -234,7 +245,7 @@
   async function visualizarPDF() {
     if (!factura) return;
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
 
       if (!organizacionId) {
         Swal.fire({
@@ -278,7 +289,7 @@
   async function descargarXML() {
     if (!factura) return;
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
 
       if (!organizacionId) {
         Swal.fire({
@@ -469,7 +480,7 @@
                 <span class="hidden sm:inline">XML</span>
               </Button>
             {/if}
-            {#if !agenteIAActivo}
+            {#if !agenteIAActivo && factura.metodoPago !== 'PUE' && !facturaCancelada && factura.estado_factura_id !== 3 && (factura.saldoPendiente || 0) > 0}
             <Button variant="primary" size="md" on:click={() => abrirModalRecordatorios(false)}>
               <span class="hidden sm:inline">ENVIAR RECORDATORIO</span>
               <span class="sm:hidden">RECORDATORIO</span>
@@ -567,6 +578,23 @@
                     </div>
                     <p class="text-xs text-gray-400 mt-2">El agente IA no está disponible para facturas canceladas.</p>
                   </div>
+                {:else if factura.metodoPago === 'PUE'}
+                <!-- Factura PUE - Pagada -->
+                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <div class="flex items-center gap-2 mb-2">
+                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="text-sm font-semibold text-green-700 uppercase">Factura Pagada (PUE)</h3>
+                  </div>
+                  <p class="text-sm text-green-600">Esta factura fue pagada en una sola exhibición al momento de la facturación. No requiere cobranza ni complemento de pago.</p>
+                </div>
+
+                <!-- Fecha de emisión -->
+                <div class="mb-6">
+                  <h3 class="text-xs font-medium text-gray-500 uppercase mb-2">Fecha de emisión</h3>
+                  <p class="text-sm text-gray-600">{formatearFecha(factura.fechaEmision)}</p>
+                </div>
                 {:else}
                 <!-- Vencimiento de factura -->
                 <div class="mb-6">
@@ -729,7 +757,7 @@
                     </div>
                     <div>
                       <p class="text-xs text-gray-500 mb-1">Condiciones de pago</p>
-                      <p class="text-sm font-medium text-gray-900">7 días</p>
+                      <p class="text-sm font-medium text-gray-900">{factura.condicionesPago || 'N/A'}</p>
                     </div>
                     <div>
                       <p class="text-xs text-gray-500 mb-1">Régimen Fiscal</p>
@@ -795,6 +823,12 @@
                         {#if factura.recurrencia.ultimaFacturaGenerada}
                           <p>Última generada: <span class="font-medium">{formatearFecha(factura.recurrencia.ultimaFacturaGenerada)}</span></p>
                         {/if}
+                        {#if factura.recurrencia.orden}
+                          <p>Orden de compra: <span class="font-medium">{factura.recurrencia.orden}</span></p>
+                        {/if}
+                        {#if factura.recurrencia.identificador}
+                          <p>Identificador: <span class="font-medium">{factura.recurrencia.identificador}</span></p>
+                        {/if}
                       </div>
 
                       <!-- Lista de facturas hijas -->
@@ -844,8 +878,41 @@
                 <p class="text-sm text-gray-600 mb-1">Forma de pago</p>
                 <p class="text-sm text-gray-900">{formatearFormaPago(factura.formaPago || '')}</p>
               </div>
+              {#if factura.ordenCompra}
+                <div>
+                  <p class="text-sm text-gray-600 mb-1">Orden de compra</p>
+                  <p class="text-sm text-gray-900">{factura.ordenCompra}</p>
+                </div>
+              {/if}
+              {#if factura.identificador}
+                <div>
+                  <p class="text-sm text-gray-600 mb-1">Identificador</p>
+                  <p class="text-sm text-gray-900">{factura.identificador}</p>
+                </div>
+              {/if}
             </div>
           </div>
+
+          <!-- NOTAS -->
+          {#if factura.notasCliente || factura.notasInternas}
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 class="text-sm font-bold text-gray-700 uppercase mb-6">NOTAS</h3>
+              <div class="space-y-4">
+                {#if factura.notasCliente}
+                  <div>
+                    <p class="text-sm text-gray-600 mb-1">Notas para el cliente (PAC)</p>
+                    <p class="text-sm text-gray-900 whitespace-pre-line">{factura.notasCliente}</p>
+                  </div>
+                {/if}
+                {#if factura.notasInternas}
+                  <div>
+                    <p class="text-sm text-gray-600 mb-1">Notas internas</p>
+                    <p class="text-sm text-gray-900 whitespace-pre-line">{factura.notasInternas}</p>
+                  </div>
+                {/if}
+              </div>
+            </div>
+          {/if}
 
           <!-- DOCUMENTOS CON RELACIÓN -->
           <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -1026,11 +1093,12 @@
 {#if factura}
   <ModalPagos
     bind:open={modalPagosAbierto}
-    organizacionId={sessionStorage.getItem('organizacionActualId') || ''}
+    organizacionId={get(orgIdStore)?.toString() || ''}
     facturaInicial={factura}
     clienteInicial={factura.cliente}
     abrirConFactura={true}
     on:pagoGuardado={cargarFactura}
+    on:cerrar={() => { modalPagosAbierto = false; }}
   />
 {/if}
 

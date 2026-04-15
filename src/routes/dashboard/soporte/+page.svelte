@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import { authFetch } from '$lib/api';
   import { Button } from '$lib/components/ui';
   import { Send, Clock, CheckCircle, AlertCircle, ChevronDown, ChevronUp } from 'lucide-svelte';
@@ -59,7 +61,7 @@
 
     enviando = true;
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
 
       const response = await authFetch('/api/soporte', {
         method: 'POST',

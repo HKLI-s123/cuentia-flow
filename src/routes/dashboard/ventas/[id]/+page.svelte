@@ -1,10 +1,13 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
   import { ChevronLeft, Download, Copy, FileText, RefreshCw, AlertTriangle, Trash2, Send, Clock, Eye, X, CheckCircle, AlertCircle, Info } from 'lucide-svelte';
   import { authFetch } from '$lib/api';
   import { Button, Modal } from '$lib/components/ui';
+  import ModalAgregarPago from '../../pagos/ModalAgregarPago.svelte';
   import { formatearMoneda, formatearFecha } from '../utils';
 
   // Obtener ID de la factura desde la URL
@@ -20,6 +23,9 @@
   let modalCancelacionAbierto = false;
   let motivoSeleccionado = '01';
   let cancelando = false;
+
+  // Modal de pago
+  let modalPagoAbierto = false;
 
   // Notificaciones
   let notificacion: { tipo: 'exito' | 'error' | 'info' | 'advertencia', titulo: string, mensaje: string } | null = null;
@@ -75,7 +81,7 @@
     error = '';
 
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId) {
         error = 'No se pudo obtener la organización';
         cargando = false;
@@ -142,7 +148,7 @@
   }
 
   async function agregarPago() {
-    goto(`/dashboard/por-cobrar/${facturaId}`);
+    modalPagoAbierto = true;
   }
 
   function abrirModalCancelacion() {
@@ -168,7 +174,7 @@
   async function confirmarCancelacion() {
     cancelando = true;
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId) {
         mostrarNotif('error', 'Error', 'No se pudo obtener la información de la organización.');
         cancelando = false;
@@ -671,3 +677,29 @@
     </div>
   </svelte:fragment>
 </Modal>
+
+<!-- Modal Agregar Pago -->
+{#if factura}
+<ModalAgregarPago
+  bind:open={modalPagoAbierto}
+  organizacionId={get(orgIdStore)?.toString() || ''}
+  facturaInicial={{
+    id: factura.id,
+    numeroFactura: factura.numeroFactura,
+    montoTotal: factura.montoTotal,
+    saldoPendiente: factura.saldoPendiente || factura.montoTotal
+  }}
+  clienteInicial={{
+    id: factura.cliente?.id || factura.clienteId,
+    razonSocial: factura.cliente?.razonSocial || '',
+    rfc: factura.cliente?.rfc || ''
+  }}
+  abrirConFactura={true}
+  on:pagoGuardado={() => {
+    cargarFactura();
+  }}
+  on:cerrar={() => {
+    modalPagoAbierto = false;
+  }}
+/>
+{/if}

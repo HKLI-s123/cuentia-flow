@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getConnection } from '$lib/server/db';
-import jwt from 'jsonwebtoken';
+import { verifyAccessToken } from '$lib/server/tokens';
 
 export const GET: RequestHandler = async ({ request }) => {
     try {
@@ -13,65 +13,60 @@ export const GET: RequestHandler = async ({ request }) => {
 
         const token = authHeader.substring(7); // Remover 'Bearer '
         
-        // Decodificar el token (ajustar según tu implementación)
-        let decodedToken;
-        try {
-            // Si usas un secret para firmar el JWT, úsalo aquí
-            decodedToken = jwt.decode(token) as any;
-            if (!decodedToken || !decodedToken.email) {
-                return json({ error: 'Token inválido' }, { status: 401 });
-            }
-        } catch (error) {
+        // Verificar firma del token (no solo decodificar)
+        const decodedToken = verifyAccessToken(token);
+        if (!decodedToken || !decodedToken.correo) {
             return json({ error: 'Token inválido' }, { status: 401 });
         }
 
         const pool = await getConnection();
-        const result = await pool.request()
-            .input('email', decodedToken.email)
-            .query(`
+        const result = await pool.query(
+            `
                 SELECT
-                    u.Id,
-                    u.Nombre,
-                    u.Apellido,
-                    u.Correo,
-                    uo.OrganizacionId,
-                    o.RazonSocial as Organizacion,
-                    r.Nombre as Rol,
-                    uo.Id as UsuarioOrganizacionId
+                    u.id,
+                    u.nombre,
+                    u.apellido,
+                    u.correo,
+                    uo.organizacionid,
+                    o.razonsocial as organizacion,
+                    r.nombre as rol,
+                    uo.id as usuarioorganizacionid
                 FROM Usuarios u
-                LEFT JOIN Usuario_Organizacion uo ON u.Id = uo.UsuarioId
-                LEFT JOIN Organizaciones o ON uo.OrganizacionId = o.Id
-                LEFT JOIN Roles r ON uo.RolId = r.Id
-                WHERE u.Correo = @email
-                    AND u.Activo = 1
-                ORDER BY o.RazonSocial, r.Nombre
-            `);
+                LEFT JOIN Usuario_Organizacion uo ON u.id = uo.usuarioid
+                LEFT JOIN Organizaciones o ON uo.organizacionid = o.id
+                LEFT JOIN Roles r ON uo.rolid = r.id
+                WHERE u.correo = $1
+                    AND u.activo = true
+                ORDER BY o.razonsocial, r.nombre
+            `,
+            [decodedToken.correo]
+        );
 
-        if (result.recordset.length === 0) {
+        if (result.rows.length === 0) {
             return json({ error: 'Usuario no encontrado' }, { status: 404 });
         }
 
         // Agrupar los datos del usuario con sus organizaciones
-        const firstRecord = result.recordset[0];
-        const organizaciones = result.recordset
-            .filter(row => row.OrganizacionId) // Solo filas con organización
-            .map(row => ({
-                organizacionId: row.OrganizacionId,
-                organizacion: row.Organizacion,
-                rol: row.Rol,
-                usuarioOrganizacionId: row.UsuarioOrganizacionId
+        const firstRecord = result.rows[0];
+        const organizaciones = result.rows
+            .filter((row: any) => row.organizacionid) // Solo filas con organización
+            .map((row: any) => ({
+                organizacionId: row.organizacionid,
+                organizacion: row.organizacion,
+                rol: row.rol,
+                usuarioOrganizacionId: row.usuarioorganizacionid
             }));
 
         // Formatear la respuesta
         const userInfo = {
-            id: firstRecord.Id,
-            nombre: `${firstRecord.Nombre} ${firstRecord.Apellido}`.trim(),
-            email: firstRecord.Correo,
+            id: firstRecord.id,
+            nombre: `${firstRecord.nombre} ${firstRecord.apellido}`.trim(),
+            email: firstRecord.correo,
             // Usar la primera organización como principal (para compatibilidad)
             organizacion: organizaciones[0]?.organizacion || 'Sin Organización',
             organizacionId: organizaciones[0]?.organizacionId || null,
             rol: organizaciones[0]?.rol || 'Sin Rol',
-            iniciales: `${firstRecord.Nombre?.charAt(0) || ''}${firstRecord.Apellido?.charAt(0) || ''}`.toUpperCase(),
+            iniciales: `${firstRecord.nombre?.charAt(0) || ''}${firstRecord.apellido?.charAt(0) || ''}`.toUpperCase(),
             // Agregar todas las organizaciones para edición
             organizaciones: organizaciones
         };

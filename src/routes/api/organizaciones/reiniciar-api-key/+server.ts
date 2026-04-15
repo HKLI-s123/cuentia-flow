@@ -114,8 +114,7 @@ export const POST: RequestHandler = async ({ url, locals, request }) => {
 
 		return new Response(
 			JSON.stringify({
-				error: 'Error al reiniciar la API Key',
-				detalles: error instanceof Error ? error.message : String(error)
+				error: 'Error al reiniciar la API Key'
 			}),
 			{ status: 500 }
 		);

@@ -19,7 +19,18 @@ export function formatearMoneda(monto: number | undefined | null): string {
  */
 export function formatearFecha(fecha: string | Date | undefined | null): string {
   if (!fecha) return 'N/A';
-  const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
+  let date: Date;
+  if (typeof fecha === 'string') {
+    // Extraer YYYY-MM-DD y crear fecha local para evitar desfase de timezone
+    const match = fecha.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) {
+      date = new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
+    } else {
+      date = new Date(fecha);
+    }
+  } else {
+    date = fecha;
+  }
   return new Intl.DateTimeFormat('es-MX', {
     year: 'numeric',
     month: 'short',

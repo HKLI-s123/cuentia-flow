@@ -16,6 +16,7 @@ export interface Venta {
   createdAt: string;
   identificador?: string;
   Timbrado?: boolean;
+  metodoPago?: string | null;
   saldoPendiente?: number;
 }
 

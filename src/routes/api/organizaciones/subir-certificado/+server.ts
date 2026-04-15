@@ -26,25 +26,14 @@ import { logAuditEvent } from '$lib/server/auditLog';
 const FACTURAPI_USER_KEY = process.env.FACTURAPI_USER_KEY || '';
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB por archivo
 
-// Validar fortaleza de contraseña para certificados
+// Validar contraseña de certificado (sin reglas extra para no bloquear contraseñas válidas del SAT)
 function validateCertificatePassword(password: string): { valid: boolean; error?: string } {
 	if (!password || typeof password !== 'string') {
 		return { valid: false, error: 'La contraseña es requerida' };
 	}
 
-	if (password.length < 6) {
-		return { valid: false, error: 'La contraseña debe tener al menos 6 caracteres' };
-	}
-
-	// Verificar que contiene al menos un número
-	if (!/\d/.test(password)) {
-		return { valid: false, error: 'La contraseña debe contener al menos un número' };
-	}
-
-	// Advertencia: no pueden ser todas mayúsculas o minúsculas para seguridad extra
-	if (password === password.toUpperCase() || password === password.toLowerCase()) {
-		// Log pero no bloquear (algunas keys pueden ser así)
-		console.warn('[CERT] Advertencia: Contraseña sin variación de mayúsculas/minúsculas');
+	if (password.length > 255) {
+		return { valid: false, error: 'La contraseña es demasiado larga' };
 	}
 
 	return { valid: true };
@@ -55,6 +44,10 @@ export const PUT: RequestHandler = async (event) => {
 		// 1. Verificar autenticación
 		if (!event.locals.user) {
 			return json({ error: 'No autorizado' }, { status: 401 });
+		}
+
+		if (!FACTURAPI_USER_KEY) {
+			return json({ error: 'No se ha configurado FACTURAPI_USER_KEY en el servidor' }, { status: 500 });
 		}
 
 		// Aplicar rate limiting (máx 10 intentos por hora)
@@ -182,7 +175,7 @@ export const PUT: RequestHandler = async (event) => {
 			[cerHash, keyHash, organizacionId]
 		);
 
-			if (csdDuplicateCheck.rows[0].total > 0) {
+			if ((parseInt(csdDuplicateCheck.rows[0].total, 10) || 0) > 0) {
 				await logAuditEvent({
 					userId: event.locals.user.id,
 					organizacionId,
@@ -363,3 +356,6 @@ export const PUT: RequestHandler = async (event) => {
 		);
 	}
 };
+
+// Compatibilidad hacia atrás: algunos clientes antiguos usan POST
+export const POST: RequestHandler = PUT;

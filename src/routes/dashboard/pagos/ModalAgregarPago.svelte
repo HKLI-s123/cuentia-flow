@@ -1,11 +1,13 @@
 <script lang="ts">
   import { authFetch } from '$lib/api';
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
+  import { page } from '$app/stores';
   import { Button, Badge, Input, Modal } from '$lib/components/ui';
-  import axios from 'axios';
-  import { CreditCard, AlertCircle, Loader, Trash2, Plus } from 'lucide-svelte';
+  import { CreditCard, AlertCircle, Loader, Trash2, Plus, Upload, Link, CheckCircle, Copy, Image } from 'lucide-svelte';
   import { createEventDispatcher } from 'svelte';
   import { onMount } from 'svelte';
-  
+  import { hoyLocal } from '$lib/utils/date';
 
   const dispatch = createEventDispatcher();
 
@@ -48,7 +50,7 @@
   let metodosDisponibles: any[] = [];
   let cargandoMetodos = false;
 
-  let fechaPago = new Date().toISOString().split('T')[0];
+  let fechaPago = hoyLocal();
   let identificador = '';
 
   let facturasDisponibles: any[] = [];
@@ -60,6 +62,16 @@
 
   let guardando = false;
   let errorMensaje: string | null = null;
+
+  // Estado de comprobante por factura: 'ninguno' | 'subir' | 'link'
+  let modoComprobante: Record<number, string> = {};
+  let archivosComprobante: Record<number, { base64: string; mimetype: string; nombre: string } | null> = {};
+
+  // Estado post-guardado (éxito)
+  let mostrarExito = false;
+  let pagosGuardados: { pagoId: number; facturaId: number; monto: number }[] = [];
+  let linksGenerados: Record<number, string> = {};
+  let procesandoComprobantes = false;
 
   // Reactividad
   $: totalPendiente = facturasSeleccionadas.reduce(
@@ -217,7 +229,7 @@
 
   async function guardarPago() {
      try {
-       // 🔹 Validaciones básicas
+       // Validaciones básicas
        if (!clienteSeleccionado) {
          errorMensaje = 'Debes seleccionar un cliente.';
          return;
@@ -240,185 +252,143 @@
 
       if (facturasSeleccionadas.some(f => f.montoPago <= 0)) {
          errorMensaje = 'Todos los montos deben ser mayores a cero';
-         guardando = false;
          return;
       }
    
-       // 🔹 Validar montos de pago
        const facturasConMonto = facturasSeleccionadas.filter(f => f.montoPago && f.montoPago > 0);
        if (!facturasConMonto.length) {
          errorMensaje = 'Debes ingresar el monto a pagar de al menos una factura.';
          return;
        }
 
-       // 🔹 Consultar parcialidades desde la BD
-      const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-      const usuarioId = userData.id || '1';
-       const facturasConMontoYParcialidad = await Promise.all(
-         facturasConMonto.map(async (f) => {
-           try {
-             const resp = await authFetch(
-               `/api/pagos/contador?facturaId=${f.id}&usuarioId=${usuarioId}`
-             );
-             const data = await resp.json();
-             const parcialidad = (data.success ? data.totalPagos : 0) + 1;
-             return { ...f, parcialidad };
-           } catch (err) {
-             console.error('Error al consultar parcialidad de factura', f.id, err);
-             return { ...f, parcialidad: 1 };
-           }
-         })
-       );
-       
-       console.log(clienteSeleccionado.razonSocial);
-       console.log("Regimen fiscal del cliente",clienteSeleccionado.regimenFiscal);
-       console.log("longitud rfc", clienteSeleccionado.rfc.length);
-   
-       // 🔹 Construir payload de Facturapi
-       const facturapiPayload = {
-         type: 'P',
-         customer: {
-           legal_name: clienteSeleccionado.razonSocial.toUpperCase(),
-           email: clienteSeleccionado.email,
-           tax_id: clienteSeleccionado.rfc,
-           tax_system: `${clienteSeleccionado.regimenFiscal}`.trim(),
-           address: {
-             zip: clienteSeleccionado.codigoPostal || '00000'
-           }
-         },
-         complements: [
-           {
-             type: 'pago',
-             data: [
-               {
-                 payment_form: metodoPago, // Ejemplo: '03' transferencia
-                 date: new Date(fechaPago).toISOString(),
-                 related_documents: facturasConMontoYParcialidad.map(f => ({
-                   uuid: f.uuid, // UUID de la factura original
-                   amount: parseFloat(f.montoPago),
-                   installment: f.parcialidad || 1,
-                  ...(parseFloat(f.saldoPendiente) - parseFloat(f.montoPago) > 0
-                      ? { last_balance: parseFloat(f.saldoPendiente) - parseFloat(f.montoPago) }
-                      : {last_balance: parseFloat(f.saldoPendiente)}), // si es 0 o menor, no se envía
-                   taxes: [
-                     {
-                       base: parseFloat((f.montoPago / 1.16).toFixed(2)),
-                       type: 'IVA',
-                       rate: 0.16
-                     }
-                   ]
-                 })              
-                )
-               }
-             ]
-           }
-         ]
-       };
-   
-       console.log('📦 Payload a enviar a Facturapi:', facturapiPayload);
-
-       const payloadString = JSON.stringify(facturapiPayload);
-       console.log('📤 JSON ENVIADO A FACTURAPI:', payloadString);
-   
        guardando = true;
        errorMensaje = null;
-   
-       const apiKey = 'REDACTED_FACTURAPI_LIVE_KEY';
 
-       console.log(
-        'LEGAL_NAME:',
-        facturapiPayload.customer.legal_name,
-        [...facturapiPayload.customer.legal_name].map(
-          c => `${c}(${c.charCodeAt(0)})`
-        )
-      );
+       // Llamar al endpoint seguro del servidor para timbrar
+       const response = await authFetch(`/api/pagos/timbrar?organizacionId=${organizacionId}`, {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({
+           clienteId: clienteSeleccionado.id,
+           facturas: facturasConMonto.map(f => ({
+             facturaId: f.id,
+             montoPago: parseFloat(f.montoPago)
+           })),
+           fechaPago,
+           metodoPago
+         })
+       });
 
-       // 🔹 Llamada a Facturapi
-       const response = await axios.post(
-         'https://www.facturapi.io/v2/invoices',
-         facturapiPayload,
-         {
-           auth: {
-             username: apiKey, // Clave privada de la organización
-             password: ''
-           }
-         }
-       );
+       const data = await response.json();
 
-       console.log('🧾 RESPUESTA COMPLETA FACTURAPI:', response);
-
-       // 🔹 Actualizar saldo pendiente de cada factura
-       for (const f of facturasConMonto) {
-         const newSaldo = parseFloat(f.saldoPendiente) - parseFloat(f.montoPago);
-         await authFetch(`/api/facturas/${f.id}/actualizar-saldo`, {
-           method: 'PATCH',
-           headers: { 'Content-Type': 'application/json' },
-           body: JSON.stringify({ saldoPendiente: newSaldo})
-         });
-       
-         // opcional: actualizar el objeto local para reflejarlo inmediatamente en UI
-         f.saldoPendiente = newSaldo;
-       }
-          
-     
-       try {   
-         // Crear un pago por cada factura
-         for (const factura of facturasSeleccionadas) {
-
-           const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-           const usuarioId = userData.id || '1';
-           const response = await authFetch(`/api/pagos?organizacionId=${organizacionId}`, {
-             method: 'POST',
-             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify({
-               facturaId: factura.id,
-               usuarioId: parseInt(usuarioId),
-               monto: factura.montoPago,
-               fechaPago,
-               metodo: metodoPago
-             })
-           });
-   
-           const data = await response.json();
-           if (!data.success) {
-             errorMensaje = data.message || 'Error al guardar pago';
-             guardando = false;
-             return;
-           }
-         }
-
-   
-         // Si llegó aquí, todos los pagos se guardaron
-         dispatch('pagoGuardado');
-         cerrar();
-       } catch (err) {
-         errorMensaje = err instanceof Error ? err.message : 'Error al guardar pago';
-       } finally {
+       if (!data.success) {
+         errorMensaje = data.error || data.details || 'Error al timbrar el complemento de pago';
          guardando = false;
+         return;
        }
-   
-       // 🔹 Emitir evento y cerrar modal
+
+       // Timbrado exitoso - procesar comprobantes
+       pagosGuardados = data.pagos || [];
+       
+       await procesarComprobantes();
+
+       mostrarExito = true;
+       guardando = false;
        dispatch('pagoGuardado');
-       cerrar();
-   
-     } catch (error: any) {
-       console.error('❌ Error al timbrar con Facturapi:', error);
-       errorMensaje = error?.response?.data?.message || 'Error al crear el CFDI de pago en Facturapi.';
-     } finally {
+
+     } catch (err) {
+       errorMensaje = err instanceof Error ? err.message : 'Error al guardar pago';
        guardando = false;
      }
-   }
+  }
+
+  async function procesarComprobantes() {
+    procesandoComprobantes = true;
+    linksGenerados = {};
+
+    for (const pago of pagosGuardados) {
+      const modo = modoComprobante[pago.facturaId] || 'ninguno';
+
+      if (modo === 'subir') {
+        const archivo = archivosComprobante[pago.facturaId];
+        if (archivo) {
+          try {
+            await authFetch(`/api/pagos/${pago.pagoId}/comprobante?organizacionId=${organizacionId}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                imagenBase64: archivo.base64,
+                mimetype: archivo.mimetype
+              })
+            });
+          } catch (err) {
+            console.error(`Error subiendo comprobante para pago ${pago.pagoId}:`, err);
+          }
+        }
+      } else if (modo === 'link') {
+        try {
+          const resp = await authFetch(`/api/pagos/${pago.pagoId}/generar-link?organizacionId=${organizacionId}`, {
+            method: 'POST'
+          });
+          const linkData = await resp.json();
+          if (linkData.success && linkData.link) {
+            linksGenerados[pago.pagoId] = linkData.link;
+          }
+        } catch (err) {
+          console.error(`Error generando link para pago ${pago.pagoId}:`, err);
+        }
+      }
+    }
+
+    linksGenerados = { ...linksGenerados };
+    procesandoComprobantes = false;
+  }
+
+  function seleccionarArchivoComprobante(facturaId: number) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/jpeg,image/png,image/webp';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      if (file.size > 5 * 1024 * 1024) {
+        errorMensaje = 'La imagen no debe superar los 5 MB';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        archivosComprobante[facturaId] = {
+          base64: reader.result as string,
+          mimetype: file.type,
+          nombre: file.name
+        };
+        archivosComprobante = { ...archivosComprobante };
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  }
+
+  async function copiarLink(link: string) {
+    await navigator.clipboard.writeText(link);
+  }
    
   function cerrar() {
+    if (mostrarExito) {
+      mostrarExito = false;
+    }
     open = false;
     resetearFormulario();
+    dispatch('cerrar');
   }
 
   function resetearFormulario() {
     clienteSeleccionado = null;
     busquedaCliente = '';
     metodoPago = '';
-    fechaPago = new Date().toISOString().split('T')[0];
+    fechaPago = hoyLocal();
     identificador = '';
     facturasSeleccionadas = [];
     facturasDisponibles = [];
@@ -428,6 +398,13 @@
     facturaInicial = null;
     clienteInicial = null;
     abrirConFactura = false;
+
+    modoComprobante = {};
+    archivosComprobante = {};
+    mostrarExito = false;
+    pagosGuardados = [];
+    linksGenerados = {};
+    procesandoComprobantes = false;
   }
 
   function formatearMoneda(monto: number): string {
@@ -461,6 +438,7 @@
   </svelte:fragment>
 
   <!-- Contenido Principal -->
+  {#if !mostrarExito}
   <form on:submit|preventDefault={guardarPago} class="space-y-6">
     <!-- Mensaje de Error -->
     {#if errorMensaje}
@@ -560,6 +538,7 @@
               id="fecha-pago"
               type="date"
               bind:value={fechaPago}
+              max={new Date().toISOString().split('T')[0]}
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -656,37 +635,109 @@
         <div class="mt-4 space-y-2 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p class="text-sm font-medium text-gray-900 mb-3">Facturas seleccionadas ({facturasSeleccionadas.length})</p>
           {#each facturasSeleccionadas as factura}
-            <div class="flex items-center justify-between p-3 bg-white border border-blue-100 rounded-lg">
-              <div class="flex flex-col">
-                <p class="font-medium text-gray-900">#{factura.numeroFactura}</p>
-                <p class="text-xs text-gray-500">Saldo pendiente: {formatearMoneda(factura.saldoPendiente)}</p>
-                <div class="mt-2 flex items-center gap-2">
-                  <label for={"monto-" + factura.id} class="text-sm text-gray-700">Monto a pagar:</label>
-                  <input
-                    id={"monto-" + factura.id}
-                    type="number"
-                    min="0"
-                    max={factura.saldoPendiente}
-                    step="0.01"
-                    bind:value={factura.montoPago}
-                    on:input={() => {
-                      // Asegura que el monto no exceda el saldo
-                      if (factura.montoPago > factura.saldoPendiente) factura.montoPago = factura.saldoPendiente;
-                      facturasSeleccionadas = [...facturasSeleccionadas];
-                    }}
-                    class="w-32 px-2 py-1 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
+            <div class="p-3 bg-white border border-blue-100 rounded-lg">
+              <div class="flex items-center justify-between">
+                <div class="flex flex-col flex-1">
+                  <p class="font-medium text-gray-900">#{factura.numeroFactura}</p>
+                  <p class="text-xs text-gray-500">Saldo pendiente: {formatearMoneda(factura.saldoPendiente)}</p>
+                  <div class="mt-2 flex items-center gap-2">
+                    <label for={"monto-" + factura.id} class="text-sm text-gray-700">Monto a pagar:</label>
+                    <input
+                      id={"monto-" + factura.id}
+                      type="number"
+                      min="0"
+                      max={factura.saldoPendiente}
+                      step="0.01"
+                      bind:value={factura.montoPago}
+                      on:input={() => {
+                        if (factura.montoPago > factura.saldoPendiente) factura.montoPago = factura.saldoPendiente;
+                        facturasSeleccionadas = [...facturasSeleccionadas];
+                      }}
+                      class="w-32 px-2 py-1 border border-gray-300 rounded-lg text-right focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  on:click={() => removerFactura(factura.id)}
+                  class="text-red-600 hover:text-red-900 p-1 rounded"
+                  aria-label="Remover factura"
+                >
+                  <Trash2 class="w-4 h-4" />
+                </button>
               </div>
-          
-              <button
-                type="button"
-                on:click={() => removerFactura(factura.id)}
-                class="text-red-600 hover:text-red-900 p-1 rounded"
-                aria-label="Remover factura"
-              >
-                <Trash2 class="w-4 h-4" />
-              </button>
+
+              <!-- Comprobante de pago -->
+              <div class="mt-3 pt-3 border-t border-blue-100">
+                <p class="text-xs font-medium text-gray-600 mb-2">Comprobante de pago</p>
+                <div class="flex gap-2">
+                  <button
+                    type="button"
+                    on:click={() => { modoComprobante[factura.id] = 'ninguno'; modoComprobante = {...modoComprobante}; }}
+                    class="px-2 py-1 text-xs rounded-md border transition-colors {(!modoComprobante[factura.id] || modoComprobante[factura.id] === 'ninguno') ? 'bg-gray-200 border-gray-400 text-gray-800' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}"
+                  >
+                    Ninguno
+                  </button>
+                  <button
+                    type="button"
+                    on:click={() => { modoComprobante[factura.id] = 'subir'; modoComprobante = {...modoComprobante}; }}
+                    class="px-2 py-1 text-xs rounded-md border transition-colors flex items-center gap-1 {modoComprobante[factura.id] === 'subir' ? 'bg-blue-100 border-blue-400 text-blue-800' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}"
+                  >
+                    <Upload class="w-3 h-3" />
+                    Subir
+                  </button>
+                  <button
+                    type="button"
+                    on:click={() => { modoComprobante[factura.id] = 'link'; modoComprobante = {...modoComprobante}; }}
+                    class="px-2 py-1 text-xs rounded-md border transition-colors flex items-center gap-1 {modoComprobante[factura.id] === 'link' ? 'bg-purple-100 border-purple-400 text-purple-800' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}"
+                  >
+                    <Link class="w-3 h-3" />
+                    Enviar link
+                  </button>
+                </div>
+
+                {#if modoComprobante[factura.id] === 'subir'}
+                  <div class="mt-2">
+                    {#if archivosComprobante[factura.id]}
+                      <div class="bg-green-50 border border-green-200 rounded-lg p-2 space-y-2">
+                        <div class="flex items-center gap-2">
+                          <Image class="w-4 h-4 text-green-600" />
+                          <span class="text-xs text-green-700 flex-1 truncate">{archivosComprobante[factura.id]?.nombre}</span>
+                          <button
+                            type="button"
+                            on:click={() => { archivosComprobante[factura.id] = null; archivosComprobante = {...archivosComprobante}; }}
+                            class="text-red-500 hover:text-red-700 text-xs"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                        {#if archivosComprobante[factura.id]?.base64}
+                          <img
+                            src={archivosComprobante[factura.id]?.base64}
+                            alt="Vista previa del comprobante"
+                            class="max-h-32 mx-auto rounded object-contain"
+                          />
+                        {/if}
+                      </div>
+                    {:else}
+                      <button
+                        type="button"
+                        on:click={() => seleccionarArchivoComprobante(factura.id)}
+                        class="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-xs text-gray-500 hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center gap-1"
+                      >
+                        <Upload class="w-3 h-3" />
+                        Seleccionar imagen (JPEG, PNG, WebP — máx 5MB)
+                      </button>
+                    {/if}
+                  </div>
+                {/if}
+
+                {#if modoComprobante[factura.id] === 'link'}
+                  <div class="mt-2 bg-purple-50 border border-purple-200 rounded-lg p-2">
+                    <p class="text-xs text-purple-700">Se generará un link para que el cliente suba su comprobante después de guardar el pago.</p>
+                  </div>
+                {/if}
+              </div>
             </div>
           {/each}
         </div>
@@ -701,22 +752,78 @@
       </div>
     {/if}
   </form>
+  {/if}
+
+  <!-- Vista de éxito -->
+  {#if mostrarExito}
+    <div class="space-y-6">
+      <div class="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+        <CheckCircle class="w-12 h-12 text-green-600 mx-auto mb-3" />
+        <h3 class="text-lg font-semibold text-green-800">Pago registrado exitosamente</h3>
+        <p class="text-sm text-green-600 mt-1">
+          Se timbró el complemento de pago y se registraron {pagosGuardados.length} pago(s).
+        </p>
+      </div>
+
+      {#if procesandoComprobantes}
+        <div class="flex items-center justify-center gap-2 py-4">
+          <Loader class="w-5 h-5 animate-spin text-blue-600" />
+          <span class="text-sm text-gray-600">Procesando comprobantes...</span>
+        </div>
+      {/if}
+
+      {#if Object.keys(linksGenerados).length > 0}
+        <div>
+          <h4 class="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+            <Link class="w-4 h-4 text-purple-600" />
+            Links para comprobantes
+          </h4>
+          <div class="space-y-2">
+            {#each Object.entries(linksGenerados) as [pagoId, link]}
+              <div class="bg-purple-50 border border-purple-200 rounded-lg p-3 flex items-center gap-3">
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs text-purple-600 mb-1">Pago #{pagoId}</p>
+                  <p class="text-sm text-purple-800 font-mono truncate">{link}</p>
+                </div>
+                <button
+                  type="button"
+                  on:click={() => copiarLink(link)}
+                  class="flex-shrink-0 p-2 text-purple-600 hover:text-purple-800 hover:bg-purple-100 rounded-lg transition-colors"
+                  title="Copiar link"
+                >
+                  <Copy class="w-4 h-4" />
+                </button>
+              </div>
+            {/each}
+          </div>
+        </div>
+      {/if}
+    </div>
+  {/if}
 
   <!-- Footer con botones -->
   <svelte:fragment slot="footer">
-    <div class="flex justify-end gap-3">
-      <Button variant="secondary" on:click={handleCloseModal}>
-        Cancelar
-      </Button>
-      <Button
-        variant="primary"
-        on:click={guardarPago}
-        disabled={guardando || !clienteSeleccionado || !metodoPago || facturasSeleccionadas.length === 0}
-        loading={guardando}
-      >
-        <CreditCard class="w-4 h-4" />
-        Guardar Pago
-      </Button>
-    </div>
+    {#if mostrarExito}
+      <div class="flex justify-end">
+        <Button variant="primary" on:click={cerrar}>
+          Cerrar
+        </Button>
+      </div>
+    {:else}
+      <div class="flex justify-end gap-3">
+        <Button variant="secondary" on:click={handleCloseModal}>
+          Cancelar
+        </Button>
+        <Button
+          variant="primary"
+          on:click={guardarPago}
+          disabled={guardando || !clienteSeleccionado || !metodoPago || facturasSeleccionadas.length === 0}
+          loading={guardando}
+        >
+          <CreditCard class="w-4 h-4" />
+          Guardar Pago
+        </Button>
+      </div>
+    {/if}
   </svelte:fragment>
 </Modal>

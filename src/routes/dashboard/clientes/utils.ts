@@ -1,3 +1,5 @@
+import { get } from 'svelte/store';
+import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
 import type { ValidationErrors, Regimen, Pais, Estado, Agente } from './types.js';
 
 // ========================================
@@ -264,13 +266,14 @@ export function mapearClienteParaAPI(
 	paises: Pais[],
 	estados: Estado[],
 	regimenes: Regimen[],
-	agentes: Agente[]
+	agentes: Agente[],
+	telefonoWhatsApp: string = ''
 ) {
 	// Obtener organizacionId dinámicamente
 	let organizacionId = "3"; // Fallback
 	if (typeof window !== 'undefined') {
 		try {
-			const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+			const userData = { organizacionId: get(orgIdStore) };
 			organizacionId = userData.organizacionId?.toString() || "3";
 		} catch (error) {
 			console.warn('No se pudo obtener organizacionId, usando fallback');
@@ -287,6 +290,7 @@ export function mapearClienteParaAPI(
 		"PaisId": paisSeleccionado,
 		"CodigoPais": codigoPais ? codigoPais.replace('+', '') : "52",
 		"Telefono": telefono || "",
+		"TelefonoWhatsApp": telefonoWhatsApp || "",
 		"EstadoId": estadoSeleccionado,
 		"Calle": calle || "",
 		"NumeroExterior": numExterior || "",

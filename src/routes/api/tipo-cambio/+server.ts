@@ -49,7 +49,6 @@ export const GET: RequestHandler = async ({ url }) => {
 			{
 				success: false,
 				error: 'Error al obtener tipo de cambio',
-				details: error instanceof Error ? error.message : 'Error desconocido',
 				// Valores por defecto aproximados
 				tipoCambio: 1.0,
 				moneda: url.searchParams.get('moneda') || 'USD'

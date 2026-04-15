@@ -1,10 +1,24 @@
 <script lang="ts">
-  import { Home, DollarSign, BarChart3, CreditCard, Users, UserCog, FileText, PieChart, Settings, LogOut, Menu, X, Building2, ChevronDown } from "lucide-svelte";
+  import { Home, DollarSign, BarChart3, CreditCard, Users, UserCog, PieChart, Settings, LogOut, Menu, X, Building2, ChevronDown, Bot, HelpCircle } from "lucide-svelte";
+  import Footer from '$lib/components/Footer.svelte';
   import { goto, invalidateAll } from '$app/navigation';
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
   import { page } from '$app/stores';
   import { notificarCambioOrganizacion, organizacionStore } from '$lib/stores/organizacion';
+
+  // Datos del servidor (user viene de +layout.server.ts)
+  export let data: { user: any };
+
+  // Inicializar store inmediatamente con datos del servidor (antes de onMount)
+  // para que las páginas hijas tengan organizacionId disponible en su primer render.
+  // Si el usuario no tiene organización, forzar null para evitar estado stale entre sesiones.
+  $: if (data.user) {
+    organizacionStore.init({
+      organizacionId: data.user.organizacion || null,
+      rolId: data.user.rolId || null
+    });
+  }
 
   // Estado del sidebar móvil
   let sidebarOpen = false;
@@ -40,7 +54,7 @@
   };
 
   // Cargar lista de organizaciones del usuario
-  async function loadOrganizaciones(userId: number) {
+  async function loadOrganizaciones(userId: number, currentOrgId?: number) {
     if (!browser) return null;
 
     try {
@@ -51,10 +65,9 @@
         if (data.success && data.organizaciones) {
           organizaciones = data.organizaciones;
 
-          // Cargar organización seleccionada desde sessionStorage o usar la primera
-          const orgIdGuardado = sessionStorage.getItem('organizacionActualId');
-          if (orgIdGuardado) {
-            const orgSeleccionada = organizaciones.find(org => org.id === parseInt(orgIdGuardado));
+          // Usar la organización del servidor o la primera disponible
+          if (currentOrgId) {
+            const orgSeleccionada = organizaciones.find(org => org.id === currentOrgId);
             if (orgSeleccionada) {
               organizacionActual = {
                 id: orgSeleccionada.id,
@@ -64,13 +77,12 @@
             }
           }
 
-          // Si no hay organización guardada, usar la primera
+          // Si no hay organización específica, usar la primera
           if (organizaciones.length > 0) {
             organizacionActual = {
               id: organizaciones[0].id,
               razonSocial: organizaciones[0].razonSocial
             };
-            sessionStorage.setItem('organizacionActualId', organizaciones[0].id.toString());
             return organizaciones[0];
           }
         }
@@ -94,18 +106,6 @@
       };
       userInfo.organizacion = org.razonSocial;
       userInfo.rol = org.rolNombre;
-      sessionStorage.setItem('organizacionActualId', org.id.toString());
-
-      // Actualizar el userData en sessionStorage con la nueva organización
-      const userDataStr = sessionStorage.getItem('userData');
-      if (userDataStr) {
-        const userData = JSON.parse(userDataStr);
-        userData.organizacionId = org.id;
-        userData.organizacionNombre = org.razonSocial;
-        userData.rolId = org.rolId;
-        userData.rolNombre = org.rolNombre;
-        sessionStorage.setItem('userData', JSON.stringify(userData));
-      }
 
       // Actualizar el store reactivo con la nueva organización
       organizacionStore.actualizar({
@@ -118,72 +118,82 @@
       // Notificar a todos los componentes que la organización cambió
       notificarCambioOrganizacion();
 
-      // Invalidar todos los datos
+      // Validar acceso a la nueva organización con el backend
+      const { authFetch } = await import('$lib/api');
+      const validateResponse = await authFetch(`/api/usuario/validar-organizacion?organizacionId=${org.id}`);
+      
+      if (!validateResponse.ok) {
+        throw new Error('No tienes acceso a esta organización');
+      }
+
+      // Invalidar todos los datos para que se recarguen con la nueva org
       await invalidateAll();
 
-      // Redirigir al dashboard principal para que todo se recargue correctamente
-      await goto('/dashboard', { replaceState: true });
+      // Esperar a que invalidateAll complete (SvelteKit recarga datos)
+      await new Promise(resolve => setTimeout(resolve, 300));
 
-      // Esperar un poco más para asegurar que la navegación y recarga de datos se complete
-      await new Promise(resolve => setTimeout(resolve, 800));
-
-      // Ocultar indicador de carga
+      // Ocultar indicador de carga - los datos ya están en la transición
       cambiandoOrganizacion = false;
     } catch (error) {
       console.error('Error al cambiar de organización:', error);
-      // Mantener la animación visible un momento antes de ocultar en caso de error
-      await new Promise(resolve => setTimeout(resolve, 500));
       cambiandoOrganizacion = false;
+      // Revertir cambios en caso de error
+      await loadOrganizaciones(data.user?.id);
     }
   }
 
-  // Cargar información del usuario desde sessionStorage
+  // Cargar información del usuario desde datos del servidor
   async function loadUserInfo() {
-    if (!browser) return;
+    if (!browser || !data.user) return;
 
     try {
-      const userData = sessionStorage.getItem('userData');
-      if (userData) {
-        const user = JSON.parse(userData);
+      const user = data.user;
 
-        // Cargar organizaciones del usuario
-        const orgSeleccionada = await loadOrganizaciones(user.id);
-
-        userInfo = {
-          nombre: `${user.nombre} ${user.apellido}`,
-          email: user.correo,
-          organizacion: orgSeleccionada ? orgSeleccionada.razonSocial : 'Mi Empresa',
-          rol: orgSeleccionada ? orgSeleccionada.rolNombre : 'Usuario',
-          iniciales: `${user.nombre?.[0] || 'U'}${user.apellido?.[0] || ''}`
-        };
-
-        // Verificar consistencia entre organizacionId y organizacionActualId
-        const organizacionActualId = sessionStorage.getItem('organizacionActualId');
-        if (user.organizacionId && organizacionActualId &&
-            parseInt(organizacionActualId) !== user.organizacionId) {
-          console.warn(`⚠️ Inconsistencia detectada: organizacionId=${user.organizacionId}, organizacionActualId=${organizacionActualId}`);
-          // Corregir: usar organizacionId como la fuente de verdad
-          sessionStorage.setItem('organizacionActualId', user.organizacionId.toString());
-          organizacionActual.id = user.organizacionId;
-        }
+      // Inicializar el store inmediatamente con los datos del servidor
+      // para que las páginas hijas puedan cargar datos sin esperar
+      if (user.organizacion) {
+        organizacionStore.init({
+          organizacionId: user.organizacion,
+          rolId: user.rolId
+        });
       }
+
+      // Cargar organizaciones del usuario (async)
+      const orgSeleccionada = await loadOrganizaciones(user.id, user.organizacion);
+
+      userInfo = {
+        nombre: `${user.nombre || ''} ${user.apellido || ''}`.trim() || 'Usuario',
+        email: user.correo || '',
+        organizacion: orgSeleccionada ? orgSeleccionada.razonSocial : 'Mi Empresa',
+        rol: orgSeleccionada ? orgSeleccionada.rolNombre : 'Usuario',
+        iniciales: `${user.nombre?.[0] || 'U'}${user.apellido?.[0] || ''}`
+      };
+
+      // Actualizar el store con datos completos de la organización
+      organizacionStore.init({
+        organizacionId: orgSeleccionada?.id || user.organizacion,
+        organizacionNombre: orgSeleccionada?.razonSocial,
+        rolId: orgSeleccionada?.rolId,
+        rolNombre: orgSeleccionada?.rolNombre
+      });
     } catch (error) {
       // En caso de error, mantener valores por defecto
     }
   }
 
-  // Validar token al cargar el layout
-  onMount(() => {
-    const token = sessionStorage.getItem('jwt');
-    if (!token) {
-      goto('/');
-    } else {
-      // Inicializar el store de organización
-      organizacionStore.init();
-
-      // Cargar info del usuario sin bloquear
-      loadUserInfo();
+  // Mantener nombre en sync cuando $page.data.user cambia (e.g. después de editar perfil + invalidateAll)
+  $: if (browser && data.user) {
+    const _fullName = `${data.user.nombre || ''} ${data.user.apellido || ''}`.trim() || 'Usuario';
+    const _iniciales = `${data.user.nombre?.[0] || 'U'}${data.user.apellido?.[0] || ''}`;
+    if (userInfo.nombre !== _fullName || userInfo.iniciales !== _iniciales) {
+      userInfo = { ...userInfo, nombre: _fullName, iniciales: _iniciales, email: data.user.correo || userInfo.email };
     }
+  }
+
+  // Inicializar al cargar el layout
+  onMount(() => {
+    // Cargar info del usuario
+    loadUserInfo();
 
     // Agregar listener para cerrar dropdown
     document.addEventListener('click', handleClickOutside);
@@ -194,13 +204,12 @@
     };
   });
 
-  // Logout: eliminar token y datos de usuario de sessionStorage
-  const logout = () => {
-    sessionStorage.removeItem('jwt');
-    sessionStorage.removeItem('userData');
-    sessionStorage.removeItem('organizacionActualId');
+  // Logout: cerrar sesión en el servidor y limpiar datos locales
+  const handleLogout = async () => {
+    const { logout } = await import('$lib/auth');
+    await logout();
     organizacionStore.limpiar();
-    goto('/');
+    window.location.href = '/login';
   };
 
   // Toggle sidebar móvil
@@ -219,15 +228,26 @@
   // Configuración de navegación
   const navigation = [
     { name: 'Inicio', href: '/dashboard', icon: Home },
-    { name: 'Por Cobrar', href: '/dashboard/por-cobrar', icon: DollarSign },
+    { name: 'Facturación', href: '/dashboard/facturacion', icon: DollarSign },
     { name: 'Ventas', href: '/dashboard/ventas', icon: BarChart3 },
     { name: 'Pagos', href: '/dashboard/pagos', icon: CreditCard },
-    { name: 'Clientes', href: '/dashboard/clientes', icon: Users },
-    { name: 'Usuarios', href: '/dashboard/usuarios', icon: UserCog },
-    { name: 'Contratos', href: '/dashboard/contratos', icon: FileText },
+    { name: 'Clientes', href: '/dashboard/clientes', icon: Users, rolRequerido: 'Administrador' },
+    { name: 'Usuarios', href: '/dashboard/usuarios', icon: UserCog, rolRequerido: 'Administrador' },
+    { name: 'Cobrador IA', href: '/dashboard/cobrador-ia', icon: Bot, rolRequerido: 'Administrador' },
     { name: 'Reportes', href: '/dashboard/reportes', icon: PieChart },
-    { name: 'Configuración', href: '/dashboard/configuracion', icon: Settings }
+    { name: 'Soporte', href: '/dashboard/soporte', icon: HelpCircle },
+    { name: 'Configuración', href: '/dashboard/configuracion', icon: Settings, rolRequerido: 'Administrador' }
   ];
+
+  // Filtrar navegación según rol del usuario
+  $: sinOrganizaciones = organizaciones.length === 0;
+  $: rolActual = organizaciones.find(o => o.id === organizacionActual.id)?.rolNombre || '';
+  $: navigationFiltrada = sinOrganizaciones
+    ? navigation.filter(item => item.href === '/dashboard' || item.href === '/dashboard/configuracion' || item.href === '/dashboard/soporte')
+    : navigation.filter(item => {
+        if (!item.rolRequerido) return true;
+        return rolActual === item.rolRequerido;
+      });
 
   // Función para verificar si una ruta está activa
   $: isActive = (href: string) => {
@@ -275,7 +295,7 @@
               class="w-4 h-4 text-slate-400 transition-transform flex-shrink-0 {organizacionDropdownOpen ? 'rotate-180' : ''} {organizaciones.length <= 1 ? 'opacity-30' : 'opacity-100'}"
             />
           </div>
-          <p class="text-xs text-slate-400 pl-6">Sistema de Gestión</p>
+          <p class="text-xs text-slate-400 pl-6">{organizaciones.find(o => o.id === organizacionActual.id)?.rfc || 'Sin RFC'}</p>
         </button>
 
         <!-- Dropdown menu -->
@@ -324,7 +344,7 @@
     
     <!-- Navegación -->
     <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-      {#each navigation as item}
+      {#each navigationFiltrada as item}
         <a 
           href={item.href} 
           class="group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 
@@ -365,7 +385,7 @@
       <!-- Botón logout -->
       <button
         class="flex items-center gap-3 w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 hover:shadow-lg hover:shadow-red-500/25 group"
-        on:click={logout}
+        on:click={handleLogout}
       >
         <LogOut class="w-5 h-5 transition-transform duration-200 group-hover:scale-105" />
         <span>Cerrar Sesión</span>
@@ -413,6 +433,9 @@
         <slot />
       </div>
     </main>
+
+    <!-- Footer -->
+    <Footer />
   </div>
 </div>
 

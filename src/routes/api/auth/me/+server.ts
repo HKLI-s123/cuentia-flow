@@ -1,30 +1,36 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { getConnection } from '$lib/server/db';
-import sql from 'mssql';
-import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
+import { verifyAccessToken } from '$lib/server/tokens';
+import { getClientIP, secureLog, secureErrorResponse } from '$lib/server/security';
 
 export const GET: RequestHandler = async (event) => {
 	try {
-		// Verificar autenticación
-		const user = getUserFromRequest(event);
-		if (!user) {
-			return unauthorizedResponse('Token de autorización requerido');
+		const clientIP = getClientIP(event);
+		const accessToken = event.cookies.get('accessToken');
+		if (!accessToken) {
+			secureLog('warn', 'Me request without accessToken cookie', { ip: clientIP });
+			return secureErrorResponse(401, 'No autenticado');
 		}
 
-		const pool = await getConnection();
-
-		const result = await pool
-			.request()
-			.input('Id', sql.Int, user.id)
-			.query(`SELECT Id, Correo, Nombre, Apellido, OrganizacionId, Activo FROM Usuarios WHERE Id = @Id`);
-
-		if (result.recordset.length === 0) {
-			return json({ error: 'Usuario no encontrado' }, { status: 404 });
+		const payload = verifyAccessToken(accessToken);
+		if (!payload) {
+			secureLog('warn', 'Me request with invalid/expired token', { ip: clientIP });
+			return secureErrorResponse(401, 'Token inválido o expirado');
 		}
 
-		return json(result.recordset[0]);
+		return json(
+			{
+				id: payload.id,
+				correo: payload.correo,
+				organizacion: payload.organizacion,
+				rolId: payload.rolId
+			},
+			{ status: 200 }
+		);
 	} catch (err) {
-		return json({ error: 'Error en el servidor' }, { status: 500 });
+		secureLog('error', 'Me endpoint error', {
+			error: err instanceof Error ? err.message : 'Unknown error'
+		});
+		return secureErrorResponse(500, 'Error al obtener datos del usuario');
 	}
 };

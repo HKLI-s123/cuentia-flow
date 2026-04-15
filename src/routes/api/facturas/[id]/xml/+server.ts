@@ -22,10 +22,11 @@ export const GET: RequestHandler = async (event) => {
   try {
     // Obtener la URL del XML y la API key de la base de datos
     const query = `
-      SELECT f.XMLUrl, f.numero_factura, f.UUID, co.facturapi_key as FacturapiKey
+      SELECT f.XMLUrl, f.numero_factura, f.UUID, COALESCE(co.facturapi_key, o.apikeyfacturaapi) as FacturapiKey
       FROM Facturas f
       INNER JOIN Clientes c ON f.ClienteId = c.Id
-      INNER JOIN configuracion_organizacion co ON c.OrganizacionId = co.organizacion_id
+      INNER JOIN Organizaciones o ON c.OrganizacionId = o.Id
+      LEFT JOIN configuracion_organizacion co ON o.Id = co.organizacion_id
       WHERE f.Id = ? AND c.OrganizacionId = ?
     `;
 

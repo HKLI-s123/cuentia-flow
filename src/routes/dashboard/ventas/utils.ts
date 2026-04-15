@@ -8,12 +8,16 @@ export function formatearMoneda(monto: number): string {
 export function formatearFecha(fecha: string): string {
   if (!fecha) return 'N/A';
   try {
-    const date = new Date(fecha.split('T')[0]);
-    return date.toLocaleDateString('es-ES', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    });
+    const match = fecha.match(/(\d{4})-(\d{2})-(\d{2})/);
+    if (match) {
+      const date = new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
+      return date.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      });
+    }
+    return 'N/A';
   } catch {
     return 'N/A';
   }

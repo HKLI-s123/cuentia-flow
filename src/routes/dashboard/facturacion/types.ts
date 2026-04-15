@@ -1,5 +1,3 @@
-// Tipos para el módulo Por Cobrar
-
 // Estados de factura (catálogo dinámico)
 export interface EstadoFactura {
   id: number;
@@ -112,6 +110,8 @@ export interface Factura {
     fechaFinRecurrencia: string | null;
     facturasGeneradas: number;
     ultimaFacturaGenerada: string | null;
+    orden: string | null;
+    identificador: string | null;
   };
   templateOrigenNumero?: string | null;
   facturasHijas?: {

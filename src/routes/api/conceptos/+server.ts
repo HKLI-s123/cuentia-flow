@@ -26,10 +26,10 @@ export const GET: RequestHandler = async (event) => {
     }
 
     // Buscar conceptos guardados por nombre o descripción, filtrando por organización y cliente
-    // Usamos DISTINCT para no traer duplicados si el mismo concepto está en varias facturas
+    // Agrupamos por campos de negocio para no traer duplicados si el mismo concepto está en varias facturas
     let conceptosQuery = `
-      SELECT DISTINCT
-        c.Id,
+      SELECT
+        MAX(c.Id) as Id,
         c.Nombre,
         c.Descripcion,
         c.ClaveProdServ,
@@ -45,7 +45,7 @@ export const GET: RequestHandler = async (event) => {
       INNER JOIN Facturas f ON c.FacturaId = f.Id
       INNER JOIN Clientes cl ON f.ClienteId = cl.Id
       WHERE cl.OrganizacionId = ?
-        AND (c.Nombre LIKE ? OR c.Descripcion LIKE ? OR c.ClaveProdServ LIKE ?)
+        AND (c.Nombre ILIKE ? OR c.Descripcion ILIKE ? OR c.ClaveProdServ ILIKE ?)
     `;
 
     const queryParams: any[] = [
@@ -61,7 +61,8 @@ export const GET: RequestHandler = async (event) => {
       queryParams.push(clienteId);
     }
 
-    conceptosQuery += ` ORDER BY c.Nombre ASC OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY `;
+    conceptosQuery += ` GROUP BY c.Nombre, c.Descripcion, c.ClaveProdServ, c.UnidadMedida, c.Cantidad, c.PrecioUnitario, c.Subtotal, c.MonedaProducto, c.ObjetoImpuesto, c.TotalImpuestos, c.Total `;
+    conceptosQuery += ` ORDER BY c.Nombre ASC LIMIT ? `;
     queryParams.push(limit);
 
     const conceptos = await db.query(conceptosQuery, queryParams);

@@ -4,13 +4,13 @@ import type { RequestHandler } from '@sveltejs/kit';
 export const GET: RequestHandler = async () => {
 	try {
 		const pool = await getConnection();
-		const result = await pool.request().query(`
-			SELECT ID, NombrePais 
+		const result = await pool.query(`
+			SELECT id as "ID", nombrepais as "NombrePais"
 			FROM Paises 
-			ORDER BY ID
+			ORDER BY id
 		`);
 
-		const paises = result.recordset;
+		const paises = result.rows;
 
 		return new Response(JSON.stringify(paises), {
 			status: 200,

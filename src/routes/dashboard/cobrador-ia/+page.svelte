@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import {
     Bot,
     Users,
@@ -51,14 +53,14 @@
   let whatsappBannerDismissed = false;
 
   function checkWhatsAppBannerDismissed() {
-    const orgId = sessionStorage.getItem('organizacionActualId');
+    const orgId = get(orgIdStore)?.toString() || null;
     if (orgId) {
       whatsappBannerDismissed = localStorage.getItem(`wa_banner_dismissed_${orgId}`) === 'true';
     }
   }
 
   function dismissWhatsAppBanner() {
-    const orgId = sessionStorage.getItem('organizacionActualId');
+    const orgId = get(orgIdStore)?.toString() || null;
     if (orgId) {
       localStorage.setItem(`wa_banner_dismissed_${orgId}`, 'true');
     }

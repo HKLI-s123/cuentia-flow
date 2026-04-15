@@ -1,119 +1,97 @@
-// Función para obtener datos del usuario desde el token/sesión
-export function obtenerDatosUsuario() {
+/**
+ * Módulo de autenticación del cliente
+ * Usa HttpOnly cookies para tokens (manejado por el servidor)
+ * CSRF token en localStorage para protección contra CSRF
+ */
+
+// Obtener CSRF token del servidor y guardarlo en localStorage
+export async function obtenerCSRFToken(): Promise<string | null> {
     if (typeof window === 'undefined') return null;
 
     try {
-        const userData = sessionStorage.getItem('userData');
-        if (userData) {
-            return JSON.parse(userData);
-        }
-        return null;
-    } catch (error) {
-        return null;
-    }
-}
+        const response = await fetch('/api/auth/csrf', {
+            method: 'GET',
+            credentials: 'include'
+        });
 
-// Función helper para obtener SOLO el organizacionId actual (más rápida y directa)
-export function obtenerOrganizacionIdActual(): number | null {
-    if (typeof window === 'undefined') return null;
-
-    try {
-        const userData = sessionStorage.getItem('userData');
-        if (userData) {
-            const user = JSON.parse(userData);
-            return user.organizacionId || null;
-        }
-        return null;
-    } catch (error) {
-        return null;
-    }
-}
-
-// Función para obtener organizacionId del usuario desde la BD
-export async function obtenerOrganizacionId(): Promise<number> {
-    const userData = obtenerDatosUsuario();
-
-    if (!userData?.id) {
-        throw new Error('No se encontró ID del usuario. Por favor vuelve a iniciar sesión.');
-    }
-
-    // Si ya tenemos organizacionId en cache, usarlo
-    if (userData.organizacionId) {
-        return userData.organizacionId;
-    }
-
-    // Obtener organizacionId desde la base de datos
-    try {
-        const { authFetch } = await import('$lib/api');
-        const response = await authFetch(`/api/usuario/${userData.id}/organizacion`);
         if (!response.ok) {
-            throw new Error('Error al obtener organización del usuario');
+            console.error('[AUTH] Error al obtener CSRF token:', response.status);
+            return null;
         }
 
         const data = await response.json();
 
-        // Guardar en cache para próximas llamadas
-        userData.organizacionId = data.organizacionId;
-        if (typeof window !== 'undefined') {
-            sessionStorage.setItem('userData', JSON.stringify(userData));
+        if (data.csrf_token) {
+            localStorage.setItem('csrf_token', data.csrf_token);
+            return data.csrf_token;
         }
 
-        return data.organizacionId;
+        return null;
     } catch (error) {
-        throw new Error('No se pudo obtener la organización del usuario');
+        console.error('[AUTH] Error al obtener CSRF token:', error);
+        return null;
     }
 }
 
-// Función para obtener organizacionId desde API (más confiable)
-export async function obtenerOrganizacionIdFromAPI(): Promise<number> {
-    const userData = obtenerDatosUsuario();
-    if (!userData?.id) {
-        throw new Error('No se encontró información del usuario');
-    }
+// Obtener CSRF token desde localStorage
+export function getCSRFToken(): string | null {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('csrf_token');
+}
+
+// Obtener datos del usuario autenticado desde el servidor
+export async function obtenerDatosUsuario(): Promise<any | null> {
+    if (typeof window === 'undefined') return null;
 
     try {
-        const { authFetch } = await import('$lib/api');
-        const response = await authFetch(`/api/usuario/${userData.id}/organizacion`);
+        const response = await fetch('/api/auth/me', {
+            method: 'GET',
+            credentials: 'include'
+        });
+
         if (response.ok) {
-            const data = await response.json();
-            return data.organizacionId;
-        } else {
-            throw new Error('Error al obtener organización del usuario');
+            return await response.json();
         }
-    } catch (error) {
-        throw error;
+
+        return null;
+    } catch {
+        return null;
     }
 }
 
-// Función para guardar datos del usuario después del login
-export function guardarDatosUsuario(userData: any) {
-    if (typeof window === 'undefined') return;
+// Obtener organizacionId del usuario actual
+export async function obtenerOrganizacionIdActual(): Promise<number | null> {
+    return obtenerOrganizacionId();
+}
+
+export async function obtenerOrganizacionId(): Promise<number | null> {
+    if (typeof window === 'undefined') return null;
 
     try {
-        sessionStorage.setItem('userData', JSON.stringify(userData));
-    } catch (error) {
+        const user = await obtenerDatosUsuario();
+        return user?.organizacion || null;
+    } catch {
+        return null;
     }
 }
 
-// Función para limpiar datos del usuario
-export function limpiarDatosUsuario() {
-    if (typeof window === 'undefined') return;
-
+// Login con credenciales
+export async function loginExterno(correo: string, contrasena: string, recaptchaToken?: string) {
     try {
-        sessionStorage.removeItem('userData');
-        sessionStorage.removeItem('jwt');
-        sessionStorage.removeItem('organizacionActualId');
-    } catch (error) {
-    }
-}
+        const csrfToken = getCSRFToken();
 
-// Función para hacer login con el endpoint local
-export async function loginExterno(correo: string, contrasena: string) {
-    try {
+        if (!csrfToken) {
+            throw new Error('CSRF token no disponible. Por favor recarga la página.');
+        }
+
         const response = await fetch('/api/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ correo, contrasena })
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
+            },
+            credentials: 'include',
+            body: JSON.stringify({ correo, contrasena, recaptchaToken })
         });
 
         const data = await response.json();
@@ -122,51 +100,92 @@ export async function loginExterno(correo: string, contrasena: string) {
             throw new Error(data.error || 'Error en el login');
         }
 
-        // Guardar token y datos básicos
-        if (typeof window !== 'undefined') {
-            sessionStorage.setItem('jwt', data.token);
-            sessionStorage.setItem('userData', JSON.stringify(data.usuario));
+        return { success: true, message: data.message, usuario: data.usuario };
+    } catch (error) {
+        console.error('[AUTH CLIENTE] Error en login:', error);
+        throw error;
+    }
+}
+
+// Verificar si el usuario está autenticado
+export async function estaAutenticado(): Promise<boolean> {
+    if (typeof window === 'undefined') return false;
+
+    try {
+        return (await obtenerDatosUsuario()) != null;
+    } catch {
+        return false;
+    }
+}
+
+// Cerrar sesión
+export async function logout(): Promise<void> {
+    try {
+        await fetch('/api/auth/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+    } catch (error) {
+        console.error('Error al hacer logout:', error);
+    }
+}
+
+// Registro de usuario
+export async function registroExterno(
+    correo: string,
+    contrasena: string,
+    nombre: string,
+    apellido: string,
+    numero_tel: string,
+    recaptchaToken: string
+) {
+    try {
+        const csrfToken = getCSRFToken();
+
+        if (!csrfToken) {
+            throw new Error('CSRF token no disponible. Por favor recarga la página.');
         }
 
-        // Obtener información completa del usuario (organización)
-        try {
-            const { authFetch } = await import('$lib/api');
-            const orgResponse = await authFetch(`/api/usuario/${data.usuario.id}/organizacion`);
-            if (orgResponse.ok) {
-                const orgData = await orgResponse.json();
+        const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': csrfToken
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                correo,
+                contrasena,
+                nombre,
+                apellido,
+                numero_tel: numero_tel || null,
+                recaptchaToken
+            })
+        });
 
-                const completeUserData = {
-                    ...data.usuario,
-                    organizacionId: orgData.organizacionId,
-                    organizacionNombre: orgData.organizacionNombre,
-                    rolId: orgData.rolId,
-                    rolNombre: orgData.rolNombre
-                };
+        const data = await response.json();
 
-                // Actualizar sessionStorage con la información completa
-                if (typeof window !== 'undefined') {
-                    sessionStorage.setItem('userData', JSON.stringify(completeUserData));
-                    // Establecer organizacionActualId para que coincida con organizacionId
-                    sessionStorage.setItem('organizacionActualId', orgData.organizacionId.toString());
-                }
-
-                return completeUserData;
-            }
-        } catch (orgError) {
+        if (!response.ok) {
+            throw new Error(data.error || 'Error al registrarse');
         }
 
-        return data.usuario;
+        return {
+            success: true,
+            message: data.message,
+            usuarioId: data.usuarioId,
+            pendingVerification: data.pendingVerification
+        };
     } catch (error) {
         throw error;
     }
 }
 
-// Función para verificar si el usuario está autenticado
-export function estaAutenticado(): boolean {
-    if (typeof window === 'undefined') return false;
-
-    const token = sessionStorage.getItem('jwt');
-    const userData = sessionStorage.getItem('userData');
-
-    return !!(token && userData);
+// Login con Google OAuth
+export async function loginConGoogle(): Promise<void> {
+    try {
+        window.location.href = '/api/auth/google/authorize';
+    } catch (error) {
+        console.error('[AUTH] Error al iniciar Google login:', error);
+        throw error;
+    }
 }

@@ -1,17 +1,26 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
-import nodemailer from 'nodemailer';
 import axios from 'axios';
-import {
-	SMTP_HOST,
-	SMTP_PORT,
-	SMTP_USER,
-	SMTP_PASSWORD,
-	SMTP_FROM_EMAIL,
-	SMTP_FROM_NAME
-} from '$env/static/private';
 import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
+import { RESEND_API_KEY, RESEND_FROM } from '$lib/server/email-config';
+import { validarAccesoFuncion } from '$lib/server/validar-plan';
+
+// Límites de seguridad
+const MAX_ASUNTO_LENGTH = 200;
+const MAX_MENSAJE_LENGTH = 5000;
+const MAX_CC_LENGTH = 500;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Sanitizar texto para prevenir XSS en HTML
+function sanitizeHtml(text: string): string {
+	return text
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#039;');
+}
 
 export const POST: RequestHandler = async (event) => {
 	// Verificar autenticación
@@ -25,13 +34,26 @@ export const POST: RequestHandler = async (event) => {
 
 	try {
 		// Obtener organizacionId y datos del formulario del body
-		const { organizacionId, destinatario, cc, asunto, mensaje } = await request.json();
+		let body: any;
+		try {
+			body = await request.json();
+		} catch {
+			return json({ success: false, error: 'Cuerpo de solicitud inválido' }, { status: 400 });
+		}
 
-		if (!organizacionId) {
+		const { organizacionId, destinatario, cc, asunto, mensaje } = body;
+
+		if (!organizacionId || isNaN(Number(organizacionId))) {
 			return json({
 				success: false,
-				error: 'organizacionId es requerido para sistema multi-tenant'
+				error: 'organizacionId es requerido y debe ser numérico'
 			}, { status: 400 });
+		}
+
+		// Validar acceso a envío de email según plan
+		const accesoEmail = await validarAccesoFuncion(parseInt(organizacionId), 'email');
+		if (!accesoEmail.permitido) {
+			return json({ success: false, error: accesoEmail.mensaje }, { status: 403 });
 		}
 
 		// Validar campos requeridos
@@ -40,6 +62,104 @@ export const POST: RequestHandler = async (event) => {
 				success: false,
 				error: 'Los campos destinatario, asunto y mensaje son requeridos'
 			}, { status: 400 });
+		}
+
+		// Validar formato de email del destinatario
+		const destinatarioTrimmed = String(destinatario).trim();
+		if (!EMAIL_REGEX.test(destinatarioTrimmed)) {
+			return json({
+				success: false,
+				error: 'El formato del correo destinatario no es válido'
+			}, { status: 400 });
+		}
+
+		// Validar CC si existe
+		const ccTrimmed = cc ? String(cc).trim() : '';
+		if (ccTrimmed) {
+			if (ccTrimmed.length > MAX_CC_LENGTH) {
+				return json({
+					success: false,
+					error: `El campo CC no puede exceder ${MAX_CC_LENGTH} caracteres`
+				}, { status: 400 });
+			}
+			const ccEmails = ccTrimmed.split(',').map((e: string) => e.trim()).filter(Boolean);
+			for (const email of ccEmails) {
+				if (!EMAIL_REGEX.test(email)) {
+					return json({
+						success: false,
+						error: `Correo CC inválido: ${email}`
+					}, { status: 400 });
+				}
+			}
+		}
+
+		// Validar longitudes
+		const asuntoTrimmed = String(asunto).trim();
+		const mensajeTrimmed = String(mensaje).trim();
+
+		if (asuntoTrimmed.length > MAX_ASUNTO_LENGTH) {
+			return json({
+				success: false,
+				error: `El asunto no puede exceder ${MAX_ASUNTO_LENGTH} caracteres`
+			}, { status: 400 });
+		}
+
+		if (mensajeTrimmed.length > MAX_MENSAJE_LENGTH) {
+			return json({
+				success: false,
+				error: `El mensaje no puede exceder ${MAX_MENSAJE_LENGTH} caracteres`
+			}, { status: 400 });
+		}
+
+		// Verificar que el usuario pertenece a la organización
+		const orgCheckQuery = `
+			SELECT 1 FROM usuario_organizacion
+			WHERE usuarioid = $1 AND organizacionid = $2
+		`;
+		const orgCheck = await db.query(orgCheckQuery, [user.id, organizacionId]);
+		if (!orgCheck || orgCheck.length === 0) {
+			return json({
+				success: false,
+				error: 'No tienes acceso a esta organización'
+			}, { status: 403 });
+		}
+
+		// Límite diario: máximo 1 recordatorio por factura por día
+		const limitQuery = `
+			SELECT COUNT(*) as total FROM Recordatorios
+			WHERE FacturaId = $1 AND Estado = 'Enviado'
+			AND CAST(FechaEnvio AS DATE) = CURRENT_DATE
+		`;
+		const limitResult = await db.query(limitQuery, [facturaId]);
+		if (limitResult && parseInt(limitResult[0]?.total) >= 1) {
+			return json({
+				success: false,
+				error: 'Ya se envió un recordatorio para esta factura el día de hoy. Límite: 1 recordatorio por factura por día (correo o WhatsApp).'
+			}, { status: 429 });
+		}
+
+		// Verificar si la factura está cancelada
+		const estadoCheck = await db.query(
+			'SELECT estado_factura_id FROM Facturas WHERE Id = $1',
+			[facturaId]
+		);
+		if (estadoCheck && estadoCheck[0]?.estado_factura_id === 6) {
+			return json({
+				success: false,
+				error: 'Esta factura está cancelada. No se pueden enviar recordatorios.'
+			}, { status: 403 });
+		}
+
+		// Verificar que el Agente IA no esté activo para esta factura
+		const agenteCheck = await db.query(
+			'SELECT COALESCE(AgenteIAActivo, false) as AgenteIAActivo FROM Facturas WHERE Id = $1',
+			[facturaId]
+		);
+		if (agenteCheck && agenteCheck[0]?.agenteiactivo) {
+			return json({
+				success: false,
+				error: 'El cobrador IA está activo para esta factura. Desactívalo para enviar recordatorios manualmente.'
+			}, { status: 403 });
 		}
 
 		// Obtener información de la factura con el correo del cliente y la API key
@@ -58,11 +178,12 @@ export const POST: RequestHandler = async (event) => {
 				c.NombreComercial as ClienteNombreComercial,
 				c.RFC as ClienteRFC,
 				c.CorreoPrincipal as ClienteEmail,
-				co.facturapi_key as FacturapiKey
+				COALESCE(co.facturapi_key, o.apikeyfacturaapi) as FacturapiKey
 			FROM Facturas f
 			INNER JOIN Clientes c ON f.ClienteId = c.Id
-			INNER JOIN configuracion_organizacion co ON c.OrganizacionId = co.organizacion_id
-			WHERE f.Id = ? AND c.OrganizacionId = ?
+			INNER JOIN Organizaciones o ON c.OrganizacionId = o.Id
+			LEFT JOIN configuracion_organizacion co ON o.Id = co.organizacion_id
+			WHERE f.Id = $1 AND c.OrganizacionId = $2
 		`;
 
 		const facturaResult = await db.query(facturaQuery, [facturaId, organizacionId]);
@@ -80,9 +201,6 @@ export const POST: RequestHandler = async (event) => {
 				error: 'La factura debe estar timbrada antes de enviarla por correo'
 			}, { status: 400 });
 		}
-
-		// Ya no validamos el correo del cliente porque lo recibimos del formulario
-		// El usuario puede personalizar el destinatario
 
 		// Validar que la organización tenga API key configurada
 		if (!factura.FacturapiKey) {
@@ -108,7 +226,7 @@ export const POST: RequestHandler = async (event) => {
 			},
 			responseType: 'arraybuffer'
 		});
-		const pdfBuffer = Buffer.from(pdfResponse.data);
+		const pdfBase64Attachment = Buffer.from(pdfResponse.data).toString('base64');
 
 		// Descargar XML desde Facturapi usando la API key de la organización
 		const xmlResponse = await axios.get(factura.XMLUrl, {
@@ -118,27 +236,13 @@ export const POST: RequestHandler = async (event) => {
 			},
 			responseType: 'arraybuffer'
 		});
-		const xmlBuffer = Buffer.from(xmlResponse.data);
-
-		// Configurar transporte SMTP
-		const transporter = nodemailer.createTransport({
-			host: SMTP_HOST,
-			port: parseInt(SMTP_PORT),
-			secure: false, // true para 465, false para otros puertos
-			auth: {
-				user: SMTP_USER,
-				pass: SMTP_PASSWORD
-			},
-			tls: {
-				// No fallar en certificados inválidos
-				rejectUnauthorized: false
-			}
-		});
+		const xmlBase64Attachment = Buffer.from(xmlResponse.data).toString('base64');
 
 		const numeroFactura = factura.numero_factura;
 
-		// Convertir el mensaje de texto plano a HTML con saltos de línea
-		const mensajeHtml = mensaje.replace(/\n/g, '<br>');
+		// Sanitizar y convertir el mensaje de texto plano a HTML con saltos de línea
+		const mensajeHtml = sanitizeHtml(mensajeTrimmed).replace(/\n/g, '<br>');
+		const asuntoSanitizado = sanitizeHtml(asuntoTrimmed);
 
 		// Primero guardar el recordatorio en la base de datos para obtener el ID
 		const insertQuery = `
@@ -154,8 +258,8 @@ export const POST: RequestHandler = async (event) => {
 				Estado,
 				CreadoPor
 			)
-			OUTPUT INSERTED.Id
-			VALUES (?, ?, ?, ?, ?, ?, GETDATE(), ?, ?, ?)
+			VALUES ($1, $2, $3, $4, $5, $6, NOW(), $7, $8, $9)
+			RETURNING id
 		`;
 
 		const recordatorioResult = await db.query(insertQuery, [
@@ -170,7 +274,7 @@ export const POST: RequestHandler = async (event) => {
 			user.id || null
 		]);
 
-		const recordatorioId = recordatorioResult[0]?.Id;
+		const recordatorioId = recordatorioResult[0]?.id;
 
 		// Obtener la URL base del servidor (para el tracking pixel)
 		const protocol = event.url.protocol;
@@ -178,12 +282,11 @@ export const POST: RequestHandler = async (event) => {
 		const baseUrl = `${protocol}//${host}`;
 		const trackingPixelUrl = `${baseUrl}/api/tracking/email/${recordatorioId}`;
 
-		// Configurar el correo con los datos del formulario y tracking pixel
-		const mailOptions = {
-			from: `"${SMTP_FROM_NAME}" <${SMTP_FROM_EMAIL}>`,
-			to: destinatario,
-			cc: cc || undefined, // Solo agregar CC si existe
-			subject: asunto,
+		// Enviar correo con Resend
+		const resendPayload: any = {
+			from: RESEND_FROM || 'no-reply@cuentia.mx',
+			to: destinatarioTrimmed,
+			subject: asuntoTrimmed,
 			html: `
 				<!DOCTYPE html>
 				<html>
@@ -219,42 +322,58 @@ export const POST: RequestHandler = async (event) => {
 			attachments: [
 				{
 					filename: `Factura_${numeroFactura}.pdf`,
-					content: pdfBuffer,
-					contentType: 'application/pdf'
+					content: pdfBase64Attachment,
+					type: 'application/pdf'
 				},
 				{
 					filename: `Factura_${numeroFactura}.xml`,
-					content: xmlBuffer,
-					contentType: 'application/xml'
+					content: xmlBase64Attachment,
+					type: 'application/xml'
 				}
 			]
 		};
 
-		// Enviar el correo
-		const info = await transporter.sendMail(mailOptions);
+		if (cc) {
+			resendPayload.cc = cc;
+		}
+
+		const resendResponse = await fetch('https://api.resend.com/emails', {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${RESEND_API_KEY}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(resendPayload)
+		});
+
+		if (!resendResponse.ok) {
+			const resendError = await resendResponse.text();
+			throw new Error(`Resend error: ${resendError}`);
+		}
+
+		const resendData = await resendResponse.json();
 
 		// Actualizar el recordatorio con el MessageId
 		const updateQuery = `
 			UPDATE Recordatorios
-			SET MessageId = ?
-			WHERE Id = ?
+			SET MessageId = $1
+			WHERE Id = $2
 		`;
 
-		await db.query(updateQuery, [info.messageId, recordatorioId]);
+		await db.query(updateQuery, [resendData.id, recordatorioId]);
 
 		return json({
 			success: true,
 			message: 'Correo enviado exitosamente',
-			messageId: info.messageId,
-			destinatario: destinatario
+			messageId: resendData.id,
+			destinatario: destinatarioTrimmed
 		});
 
 	} catch (error) {
 		console.error('Error al enviar correo:', error);
 		return json({
 			success: false,
-			error: 'Error al enviar el correo electrónico',
-			details: error instanceof Error ? error.message : 'Error desconocido'
+			error: 'Error al enviar el correo electrónico'
 		}, { status: 500 });
 	}
 };

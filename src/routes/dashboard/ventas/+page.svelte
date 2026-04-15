@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import { goto } from '$app/navigation';
   import {
     TrendingUp,
@@ -23,6 +25,7 @@
   } from 'lucide-svelte';
   import { authFetch } from '$lib/api';
   import { Button, Input, Badge } from '$lib/components/ui';
+  import ModalAgregarPago from '../pagos/ModalAgregarPago.svelte';
   import type { Venta, Paginacion } from './types';
   import {
     formatearMoneda,
@@ -51,6 +54,11 @@
 
   // Estado de menú dropdown
   let menuAbiertoId: number | null = null;
+
+  // Modal de pago
+  let modalPagoAbierto = false;
+  let facturaInicialPago: any = null;
+  let clienteInicialPago: any = null;
 
   // Modal de cancelación
   let modalMotivoCancelacionAbierto = false;
@@ -168,8 +176,18 @@
   // Función para agregar pago
   function abrirModalPago(venta: Venta) {
     cerrarMenu();
-    // Ir a la página de por-cobrar donde está el modal de pago
-    goto(`/dashboard/por-cobrar/${venta.id}`);
+    clienteInicialPago = {
+      id: venta.cliente?.id || venta.clienteId,
+      razonSocial: venta.cliente?.razonSocial || '',
+      rfc: venta.cliente?.rfc || ''
+    };
+    facturaInicialPago = {
+      id: venta.id,
+      numeroFactura: venta.numero_venta,
+      montoTotal: venta.montoTotal,
+      saldoPendiente: venta.saldoPendiente || venta.montoTotal
+    };
+    modalPagoAbierto = true;
   }
 
   // Función para abrir modal de selección de motivo
@@ -209,7 +227,7 @@
 
     cancelando = true;
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId) {
         mostrarNotif('error', 'Error', 'No se pudo obtener la información de la organización.');
         cancelando = false;
@@ -257,7 +275,7 @@
     error = '';
 
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
 
       if (!organizacionId) {
         error = 'No se pudo obtener la información de la organización. Por favor, inicie sesión nuevamente.';
@@ -308,6 +326,7 @@
         ventas = (data.facturas || []).map((f: any) => ({
           id: f.id,
           numero_venta: f.numeroFactura,
+          clienteId: f.clienteId || f.cliente?.id,
           cliente: f.cliente,
           montoTotal: f.montoTotal,
           fechaEmision: f.fechaEmision,
@@ -316,6 +335,7 @@
           estado_venta_id: f.estado?.id,
           createdAt: f.createdAt,
           saldoPendiente: f.saldoPendiente,
+          metodoPago: f.metodoPago || null,
           Timbrado: f.timbrado || f.Timbrado || false
         }));
         paginacion = { ...paginacion, ...data.pagination };
@@ -405,9 +425,13 @@
     return ordenDireccion === 'ASC' ? 'up' : 'down';
   }
 
-  onMount(() => {
+  let cargaInicial = false;
+  $: if ($orgIdStore && !cargaInicial) {
+    cargaInicial = true;
     cargarVentas();
+  }
 
+  onMount(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (!target.closest('.relative')) {
@@ -665,9 +689,15 @@
 
                 <!-- Estatus -->
                 <td class="px-6 py-4 text-center">
-                  <span class="inline-flex px-2.5 py-1 text-xs font-medium rounded-full {getEstadoBadgeClass(getEstadoCodigo(venta.estado_venta_id || 0))}">
-                    {getEstadoNombre(venta.estado_venta_id || 0)}
-                  </span>
+                  {#if venta.metodoPago === 'PUE' && venta.estado_venta_id !== 6}
+                    <span class="inline-flex px-2.5 py-1 text-xs font-medium rounded-full {getEstadoBadgeClass('pagada')}">
+                      Pagada
+                    </span>
+                  {:else}
+                    <span class="inline-flex px-2.5 py-1 text-xs font-medium rounded-full {getEstadoBadgeClass(getEstadoCodigo(venta.estado_venta_id || 0))}">
+                      {getEstadoNombre(venta.estado_venta_id || 0)}
+                    </span>
+                  {/if}
                 </td>
 
                 <!-- Total -->
@@ -696,13 +726,15 @@
                         <Eye class="w-4 h-4" />
                         Ver detalle
                       </button>
-                      <button
-                        on:click={() => abrirModalPago(venta)}
-                        class="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2 border-t border-gray-100"
-                      >
-                        <CreditCard class="w-4 h-4" />
-                        Agregar pago
-                      </button>
+                      {#if venta.metodoPago !== 'PUE' && venta.estado_venta_id !== 3 && venta.estado_venta_id !== 6}
+                        <button
+                          on:click={() => abrirModalPago(venta)}
+                          class="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2 border-t border-gray-100"
+                        >
+                          <CreditCard class="w-4 h-4" />
+                          Agregar pago
+                        </button>
+                      {/if}
                       {#if venta.estado_venta_id !== 6}
                         <button
                           on:click={() => abrirModalMotivoCancelacion(venta)}
@@ -1002,3 +1034,20 @@
     </div>
   {/if}
 </div>
+
+<!-- Modal Agregar Pago -->
+<ModalAgregarPago
+  bind:open={modalPagoAbierto}
+  organizacionId={$orgIdStore?.toString() || ''}
+  facturaInicial={facturaInicialPago}
+  clienteInicial={clienteInicialPago}
+  abrirConFactura={true}
+  on:pagoGuardado={() => {
+    cargarVentas();
+  }}
+  on:cerrar={() => {
+    modalPagoAbierto = false;
+    facturaInicialPago = null;
+    clienteInicialPago = null;
+  }}
+/>

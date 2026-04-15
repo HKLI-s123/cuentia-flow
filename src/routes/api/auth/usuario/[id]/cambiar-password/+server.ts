@@ -62,7 +62,7 @@ export const POST: RequestHandler = async (event) => {
 		}
 
 		// Hash de la nueva contraseña
-		const hashedPassword = await bcrypt.hash(nuevaContrasena, 10);
+		const hashedPassword = await bcrypt.hash(nuevaContrasena, 12);
 
 		// Actualizar contraseña
 		await pool.query(

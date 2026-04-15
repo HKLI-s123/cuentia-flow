@@ -57,7 +57,7 @@ export async function validarLimiteFacturas(organizacionId: number): Promise<{
     [organizacionId]
   );
 
-  const facturasMes = result.rows[0]?.total || 0;
+  const facturasMes = parseInt(result.rows[0]?.total, 10) || 0;
 
   if (facturasMes >= limites.maxFacturasMes) {
     return {
@@ -129,7 +129,7 @@ export async function validarLimiteClientes(organizacionId: number): Promise<{
     [organizacionId]
   );
 
-  const clientesActual = result.rows[0]?.total || 0;
+  const clientesActual = parseInt(result.rows[0]?.total, 10) || 0;
 
   if (clientesActual >= limites.maxClientes) {
     return {

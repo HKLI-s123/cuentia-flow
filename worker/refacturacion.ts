@@ -621,7 +621,7 @@ export async function ejecutarCicloRefacturacion(): Promise<void> {
           `,
 			[template.organizacionid]
 		);
-        const facturasMes = conteoMes.rows[0]?.total || 0;
+        const facturasMes = parseInt(conteoMes.rows[0]?.total || '0', 10);
         if (facturasMes >= maxFacturas) {
           console.warn(`[REFACT] ⚠ Template #${template.numero_factura} omitida: org ${template.organizacionid} alcanzó límite mensual (${facturasMes}/${maxFacturas})`);
           continue;

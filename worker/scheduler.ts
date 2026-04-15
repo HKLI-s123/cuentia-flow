@@ -88,7 +88,7 @@ export async function agentContactedToday(clientePhone: string, organizacionId: 
     `,
 			[clientePhone, organizacionId]
 		);
-  return (result.rows[0]?.cnt || 0) > 0;
+  return parseInt(result.rows[0]?.cnt || '0', 10) > 0;
 }
 
 /**
@@ -108,7 +108,7 @@ async function contarMensajesHoyCliente(clienteId: number, organizacionId: numbe
     `,
 			[clienteId, organizacionId]
 		);
-  return result.rows[0]?.total || 0;
+  return parseInt(result.rows[0]?.total || '0', 10);
 }
 
 /**
@@ -288,7 +288,7 @@ export async function ejecutarCicloCobranza(): Promise<void> {
 			[clienteId]
 		);
 
-        if (hoy.rows[0]?.contactosHoy > 0) {
+        if (parseInt(hoy.rows[0]?.contactosHoy || '0', 10) > 0) {
           console.log(`[SCHEDULER] Cliente ${cliente.clientenombre} ya fue contactado hoy, saltando`);
           continue;
         }

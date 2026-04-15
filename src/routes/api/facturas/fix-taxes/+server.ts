@@ -1,8 +1,16 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
+import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
 
-export const POST: RequestHandler = async () => {
+export const POST: RequestHandler = async (event) => {
+  // Solo permitir en desarrollo
+  if (process.env.NODE_ENV === 'production') {
+    return json({ error: 'No disponible' }, { status: 404 });
+  }
+  const user = getUserFromRequest(event);
+  if (!user) return unauthorizedResponse();
+
   try {
     // Obtener todas las facturas con sus conceptos e impuestos
     const query = `
@@ -14,7 +22,7 @@ export const POST: RequestHandler = async () => {
         cf.Subtotal,
         cf.TotalImpuestos,
         cf.Total,
-        ISNULL(imp.TasaTotal, 0) as TasaTotal
+        COALESCE(imp.TasaTotal, 0) as TasaTotal
       FROM ConceptosFactura cf
       LEFT JOIN (
         SELECT ConceptoId, SUM(Tasa) as TasaTotal
@@ -67,18 +75,18 @@ export const POST: RequestHandler = async () => {
         // Actualizar concepto
         await db.query(
           `UPDATE ConceptosFactura
-           SET PrecioUnitario = ?,
-               Subtotal = ?,
-               TotalImpuestos = ?
-           WHERE Id = ?`,
+           SET PrecioUnitario = $1,
+               Subtotal = $2,
+               TotalImpuestos = $3
+           WHERE Id = $4`,
           [precioUnitarioSinIVA, subtotal, totalImpuestos, concepto.ConceptoId]
         );
 
         // Actualizar impuestos del concepto
         await db.query(
           `UPDATE ImpuestosConcepto
-           SET Monto = Tasa * ?
-           WHERE ConceptoId = ?`,
+           SET Monto = Tasa * $1
+           WHERE ConceptoId = $2`,
           [subtotal, concepto.ConceptoId]
         );
 
@@ -88,20 +96,20 @@ export const POST: RequestHandler = async () => {
 
     // Actualizar MontoTotal en Facturas (debe coincidir con la suma de totales de conceptos)
     await db.query(`
-      UPDATE f
+      UPDATE Facturas f
       SET MontoTotal = totales.TotalFactura,
-          SaldoPendiente = totales.TotalFactura - ISNULL(pagos.TotalPagado, 0)
-      FROM Facturas f
-      INNER JOIN (
+          SaldoPendiente = totales.TotalFactura - COALESCE(pagos.TotalPagado, 0)
+      FROM (
         SELECT FacturaId, SUM(Total) as TotalFactura
         FROM ConceptosFactura
         GROUP BY FacturaId
-      ) totales ON f.Id = totales.FacturaId
+      ) totales
       LEFT JOIN (
         SELECT FacturaId, SUM(Monto) as TotalPagado
         FROM Pagos
         GROUP BY FacturaId
-      ) pagos ON f.Id = pagos.FacturaId
+      ) pagos ON totales.FacturaId = pagos.FacturaId
+      WHERE f.Id = totales.FacturaId
     `, []);
 
     return json({

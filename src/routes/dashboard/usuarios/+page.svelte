@@ -2,6 +2,9 @@
   import { onMount } from 'svelte';
   import { UserPlus, Search, Edit2, Trash2, Eye, EyeOff, Mail, Phone, Lock, User, AlertCircle } from "lucide-svelte";
   import { authFetch } from '$lib/api';
+  import { page } from '$app/stores';
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import Swal from 'sweetalert2';
 
   // Importar componentes estandarizados
@@ -57,10 +60,9 @@
   // Verificar si el usuario actual es administrador
   async function verificarRolUsuario() {
     try {
-      const userData = sessionStorage.getItem('userData');
-      if (!userData) return;
+      const user = $page.data.user;
+      if (!user) return;
 
-      const user = JSON.parse(userData);
       usuarioActualId = user.id;
 
       const response = await authFetch(`/api/usuario/${user.id}/organizacion`);
@@ -76,10 +78,9 @@
   // Cargar organizaciones del usuario logueado
   async function cargarOrganizaciones() {
     try {
-      const userData = sessionStorage.getItem('userData');
-      if (!userData) return;
+      const user = $page.data.user;
+      if (!user) return;
 
-      const user = JSON.parse(userData);
       const response = await authFetch(`/api/usuario/${user.id}/organizaciones`);
 
       if (response.ok) {
@@ -113,14 +114,7 @@
   async function cargarUsuarios() {
     loading = true;
     try {
-      const userData = sessionStorage.getItem('userData');
-      if (!userData) {
-        loading = false;
-        return;
-      }
-
-      const user = JSON.parse(userData);
-      const organizacionId = user.organizacionId;
+      const organizacionId = get(orgIdStore);
 
       if (!organizacionId) {
         console.error('No se encontró organizacionId en userData');

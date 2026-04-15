@@ -1,5 +1,8 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import { goto } from '$app/navigation';
   import { authFetch } from '$lib/api';
   import { CheckCircle, Circle, ChevronRight, ChevronDown, ChevronUp, X, Rocket } from 'lucide-svelte';
@@ -20,6 +23,7 @@
   let completados = 0;
   let total = 4;
   let completo = false;
+  let orgCargada = '';
 
   const definicionPasos = [
     {
@@ -56,14 +60,16 @@
   $: porcentaje = total > 0 ? Math.round((completados / total) * 100) : 0;
 
   export async function cargar() {
-    // Usar el prop o leer de sessionStorage como fallback
-    const orgId = organizacionId || (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('organizacionActualId') : null);
+    // Usar el prop o leer del store como fallback
+    const orgId = organizacionId || get(orgIdStore)?.toString() || null;
     if (!orgId) return;
 
     // Actualizar el prop si venía vacío
     if (!organizacionId && orgId) {
       organizacionId = orgId;
     }
+
+    orgCargada = orgId;
 
     // Verificar si el usuario ocultó el onboarding
     const dismissKey = `onboarding_dismissed_${orgId}`;
@@ -100,7 +106,7 @@
   }
 
   function ocultarOnboarding() {
-    const orgId = organizacionId || (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('organizacionActualId') : null);
+    const orgId = organizacionId || get(orgIdStore)?.toString() || null;
     const dismissKey = `onboarding_dismissed_${orgId}`;
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(dismissKey, 'true');
@@ -110,6 +116,20 @@
 
   function toggleMinimizado() {
     minimizado = !minimizado;
+  }
+
+  onMount(() => {
+    cargar();
+  });
+
+  $: {
+    const orgIdActual = organizacionId || get(orgIdStore)?.toString() || '';
+    if (orgIdActual && orgIdActual !== orgCargada) {
+      cargando = true;
+      oculto = false;
+      completo = false;
+      cargar();
+    }
   }
 </script>
 

@@ -13,7 +13,7 @@ export const load: LayoutServerLoad = async (event) => {
 		throw redirect(302, '/login');
 	}
 
-	// Obtener el rol del usuario de sessionStorage via request headers o validar en BD
+	// Validar rol del usuario en BD
 	// Por seguridad, validar en la BD
 	try {
 		const { getConnection } = await import('$lib/server/db');

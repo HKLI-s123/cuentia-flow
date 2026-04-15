@@ -435,7 +435,7 @@ export const PATCH: RequestHandler = async (event) => {
 			'SELECT COUNT(*) as totalpagos FROM Pagos WHERE FacturaId = $1',
 			[fp.facturaId]
 		);
-          const parcialidad = conteoResult.rows[0]?.totalpagos || 1;
+          const parcialidad = parseInt(conteoResult.rows[0]?.totalpagos || '1', 10);
 
           let customerPayload: any;
           if (comprobante.idclientefacturaapi) {

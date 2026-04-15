@@ -197,8 +197,7 @@ export const DELETE: RequestHandler = async ({ params, locals, request, getClien
 		console.error('[DELETE CERT] Error al eliminar certificados:', error);
 		return json(
 			{
-				error: 'Error al eliminar los certificados',
-				details: error instanceof Error ? error.message : 'Error desconocido'
+				error: 'Error al eliminar los certificados'
 			},
 			{ status: 500 }
 		);

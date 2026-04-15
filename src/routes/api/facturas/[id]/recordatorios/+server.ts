@@ -64,8 +64,8 @@ export const GET: RequestHandler = async (event) => {
 		const statsQuery = `
 			SELECT
 				COUNT(*) as Total,
-				SUM(CASE WHEN Visto = 1 THEN 1 ELSE 0 END) as Vistos,
-				SUM(CASE WHEN Visto = 0 THEN 1 ELSE 0 END) as NoVistos
+				SUM(CASE WHEN Visto = true THEN 1 ELSE 0 END) as Vistos,
+				SUM(CASE WHEN Visto = false THEN 1 ELSE 0 END) as NoVistos
 			FROM Recordatorios
 			WHERE FacturaId = ?
 		`;

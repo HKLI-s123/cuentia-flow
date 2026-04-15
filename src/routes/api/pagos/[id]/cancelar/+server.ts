@@ -219,7 +219,7 @@ export const POST: RequestHandler = async (event) => {
     console.error('[CANCELAR PAGO] Error general:', error);
     return json({
       success: false,
-      error: error.message || 'Error al cancelar el pago'
+      error: 'Error al cancelar el pago'
     }, { status: 500 });
   }
 };

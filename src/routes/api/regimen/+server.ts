@@ -4,11 +4,11 @@ import type { RequestHandler } from '@sveltejs/kit';
 export const GET: RequestHandler = async () => {
 	try {
 		const pool = await getConnection();
-		const result = await pool.request().query(`
-			SELECT ID_Regimen, Codigo, Descripcion FROM Regimen ORDER BY ID_Regimen
+		const result = await pool.query(`
+			SELECT id_regimen as "ID_Regimen", codigo as "Codigo", descripcion as "Descripcion" FROM Regimen ORDER BY id_regimen
 		`);
 
-		const regimenes = result.recordset;
+		const regimenes = result.rows;
 
 		return new Response(JSON.stringify(regimenes), {
 			status: 200,

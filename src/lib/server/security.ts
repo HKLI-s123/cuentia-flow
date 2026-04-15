@@ -271,7 +271,7 @@ export function secureLog(level: 'info' | 'warn' | 'error', message: string, dat
  * ============================================
  */
 
-import { randomBytes } from 'crypto';
+import { randomBytes, timingSafeEqual } from 'crypto';
 
 /**
  * Genera un nuevo CSRF token seguro usando crypto
@@ -281,15 +281,22 @@ export function generateCSRFToken(): string {
 }
 
 /**
- * Valida el CSRF token
+ * Valida el CSRF token con comparación timing-safe
  */
 export function validateCSRFToken(provided: string | null | undefined, session: string | null | undefined): boolean {
 	if (!provided || !session) {
 		return false;
 	}
 
-	// Usar timing-safe comparison para prevenir timing attacks
-	return provided === session;
+	if (provided.length !== session.length) {
+		return false;
+	}
+
+	try {
+		return timingSafeEqual(Buffer.from(provided, 'utf8'), Buffer.from(session, 'utf8'));
+	} catch {
+		return false;
+	}
 }
 
 /**

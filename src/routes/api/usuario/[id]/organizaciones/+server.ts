@@ -1,40 +1,35 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getConnection } from '$lib/server/db';
+import { getUserFromRequest, unauthorizedResponse, forbiddenResponse } from '$lib/server/auth';
 
-interface Organizacion {
-  Id: number;
-  RazonSocial: string;
-  RFC: string;
-  RolId: number;
-  Nombre: string;
-}
+export const GET: RequestHandler = async (event) => {
+  const { id } = event.params;
 
-export const GET: RequestHandler = async ({ params }) => {
-  const { id } = params;
+  // Verificar autenticación y que el usuario solo acceda a sus propios datos
+  const user = getUserFromRequest(event);
+  if (!user) return unauthorizedResponse();
+  if (user.id !== parseInt(id)) return forbiddenResponse('No puedes acceder a datos de otro usuario');
 
   try {
-    // Consulta para obtener las organizaciones del usuario
     const query = `
       SELECT DISTINCT
-        o.Id,
-        o.RazonSocial,
-        o.RFC,
-        uo.RolId,
-        r.Nombre
+        o.id,
+        o.razonsocial,
+        o.rfc,
+        uo.rolid,
+        r.nombre
       FROM Usuario_Organizacion uo
-      INNER JOIN Organizaciones o ON uo.OrganizacionId = o.Id
-      INNER JOIN Roles r ON uo.RolId = r.Id
-      WHERE uo.UsuarioId = @userId
-      ORDER BY o.RazonSocial ASC
+      INNER JOIN Organizaciones o ON uo.organizacionid = o.id
+      INNER JOIN Roles r ON uo.rolid = r.id
+      WHERE uo.usuarioid = $1
+      ORDER BY o.razonsocial ASC
     `;
 
     const connection = await getConnection();
-    const result = await connection.request()
-      .input('userId', parseInt(id))
-      .query(query);
+    const result = await connection.query(query, [id]);
 
-    if (!result.recordset || result.recordset.length === 0) {
+    if (!result.rows || result.rows.length === 0) {
       return json({
         success: false,
         message: 'No se encontraron organizaciones para este usuario',
@@ -42,12 +37,12 @@ export const GET: RequestHandler = async ({ params }) => {
       });
     }
 
-    const organizaciones = result.recordset.map((org: Organizacion) => ({
-      id: org.Id,
-      razonSocial: org.RazonSocial,
-      rfc: org.RFC,
-      rolId: org.RolId,
-      rolNombre: org.Nombre
+    const organizaciones = result.rows.map((org: any) => ({
+      id: org.id,
+      razonSocial: org.razonsocial,
+      rfc: org.rfc,
+      rolId: org.rolid,
+      rolNombre: org.nombre
     }));
 
     return json({

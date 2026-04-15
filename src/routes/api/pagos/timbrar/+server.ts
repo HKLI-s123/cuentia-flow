@@ -183,7 +183,7 @@ export const POST: RequestHandler = async (event) => {
 			[f.facturaId]
 		);
 
-      const parcialidad = (conteoResult.rows[0]?.totalpagos || 0) + 1;
+      const parcialidad = parseInt(conteoResult.rows[0]?.totalpagos || '0', 10) + 1;
 
       facturasData.push({
         ...factura,
@@ -314,8 +314,7 @@ export const POST: RequestHandler = async (event) => {
     console.error('[TIMBRAR PAGO] Error general:', error);
     return json({
       success: false,
-      error: 'Error al procesar el pago',
-      details: error.message
+      error: 'Error al procesar el pago'
     }, { status: 500 });
   }
 };

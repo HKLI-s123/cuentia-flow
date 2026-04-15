@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
+	import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { authFetch } from '$lib/api';
 	import { hoyLocal, fechaLocal } from '$lib/utils/date';
 	import ModalConcepto from './ModalConcepto.svelte';
@@ -154,14 +157,14 @@
 
 	// Verificar si el banner fue descartado previamente
 	function checkWhatsAppBannerDismissed() {
-		const orgId = sessionStorage.getItem('organizacionActualId');
+		const orgId = get(orgIdStore)?.toString() || null;
 		if (orgId) {
 			whatsappBannerDismissed = localStorage.getItem(`wa_banner_dismissed_${orgId}`) === 'true';
 		}
 	}
 
 	function dismissWhatsAppBanner() {
-		const orgId = sessionStorage.getItem('organizacionActualId');
+		const orgId = get(orgIdStore)?.toString() || null;
 		if (orgId) {
 			localStorage.setItem(`wa_banner_dismissed_${orgId}`, 'true');
 		}
@@ -225,7 +228,7 @@
 
 	async function verificarWhatsAppOrg() {
 		try {
-			const organizacionId = sessionStorage.getItem('organizacionActualId');
+			const organizacionId = get(orgIdStore)?.toString() || null;
 			if (!organizacionId) {
 				verificandoWhatsApp = false;
 				return;
@@ -247,7 +250,7 @@
 	}
 
 	async function cargarClientes() {
-		const organizacionId = sessionStorage.getItem('organizacionActualId');
+		const organizacionId = get(orgIdStore)?.toString() || null;
 		if (!organizacionId) return;
 
 		const response = await authFetch(`/api/clientes?organizacionId=${organizacionId}&all=true`);
@@ -259,7 +262,7 @@
 	}
 
 	function filtrarClientes() {
-		if (!busquedaCliente.trim()) {
+		if (!(busquedaCliente || '').trim()) {
 			clientesFiltrados = clientes;
 			mostrarListaClientes = true;
 			return;
@@ -277,7 +280,7 @@
 
 	function seleccionarCliente(cliente: Cliente) {
 		clienteSeleccionado = cliente;
-		busquedaCliente = cliente.nombreComercial || cliente.razonSocial;
+		busquedaCliente = cliente.nombreComercial || cliente.razonSocial || '';
 		mostrarListaClientes = false;
 
 		// Limpiar búsqueda de conceptos al cambiar de cliente
@@ -343,7 +346,7 @@
 		timeoutBusquedaConceptos = setTimeout(async () => {
 			cargandoConceptosGuardados = true;
 			try {
-				const organizacionId = sessionStorage.getItem('organizacionActualId');
+				const organizacionId = get(orgIdStore)?.toString() || null;
 				if (!organizacionId) {
 					console.error('No se encontró organizacionId');
 					return;
@@ -553,8 +556,7 @@
 
 		try {
 			// Obtener el ID del usuario logueado
-			const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-			const usuarioCreadorId = userData.id;
+			const usuarioCreadorId = $page.data.user?.id;
 
 			const payload = {
 				clienteId: clienteSeleccionado!.id,

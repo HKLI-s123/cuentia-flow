@@ -1,4 +1,4 @@
-// Utilidades para el módulo Por Cobrar
+// Utilidades para CuentIA Flow - facturación y cobranza
 import type {
   Factura,
   AgingCartera,
@@ -38,23 +38,25 @@ export function formatearMoneda(monto: number | string | undefined): string {
 
 // Formatear fecha corta
 export function formatearFecha(fecha: string | Date): string {
+  if (!fecha) return 'N/A';
   let date: Date;
-
   if (typeof fecha === 'string') {
-    // Extraer solo la parte de fecha (YYYY-MM-DD) para evitar problemas de zona horaria
-    const fechaSolo = fecha.split('T')[0].split(' ')[0];
-    const [year, month, day] = fechaSolo.split('-').map(Number);
-    // Crear fecha en zona horaria local (no UTC)
-    date = new Date(year, month - 1, day);
+    const match = fecha.match(/(\d{4})-(\d{2})-(\d{2})/);
+    if (match) {
+      date = new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
+    } else {
+      date = new Date(fecha);
+    }
   } else {
     date = fecha;
   }
+  if (isNaN(date.getTime())) return 'N/A';
 
-  return date.toLocaleDateString('es-ES', {
+  return new Intl.DateTimeFormat('es-MX', {
     day: '2-digit',
     month: 'short',
     year: 'numeric'
-  });
+  }).format(date);
 }
 
 // Formatear fecha con hora

@@ -1,50 +1,59 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { db } from '$lib/server/db';
-import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
+import { getConnection } from '$lib/server/db';
+import { validateOrganizationAccess } from '$lib/server/auth';
 
 export const POST: RequestHandler = async (event) => {
-  // Verificar autenticación
-  const user = getUserFromRequest(event);
-  if (!user) {
-    return unauthorizedResponse('Token de autenticación requerido');
-  }
   try {
-    // Query para actualizar todos los días vencidos
-    const updateQuery = `
-      UPDATE Facturas
-      SET DiasVencido = DATEDIFF(day, FechaVencimiento, GETDATE())
-      WHERE FechaVencimiento IS NOT NULL
-    `;
+    const organizacionId = event.url.searchParams.get('organizacionId');
+    if (!organizacionId) {
+      return json({ error: 'organizacionId es requerido' }, { status: 400 });
+    }
 
-    const result = await db.query(updateQuery);
+    // Validar acceso a la organización
+    const auth = await validateOrganizationAccess(event, organizacionId);
+    if (!auth.valid) return auth.error!;
 
-    // Obtener estadísticas después de la actualización
-    const statsQuery = `
-      SELECT
-        COUNT(*) as totalFacturas,
-        COUNT(CASE WHEN DiasVencido > 0 THEN 1 END) as facturasVencidas,
-        COUNT(CASE WHEN DiasVencido <= 0 THEN 1 END) as facturasVigentes,
-        MIN(DiasVencido) as minDiasVencido,
-        MAX(DiasVencido) as maxDiasVencido,
-        AVG(DiasVencido) as promedioDiasVencido
-      FROM Facturas
-      WHERE FechaVencimiento IS NOT NULL
-    `;
+    const pool = await getConnection();
 
-    const stats = await db.query(statsQuery);
-    const estadisticas = stats[0] || {};
+    // Query para actualizar días vencidos SOLO de la organización del usuario
+    await pool.query(
+      `UPDATE Facturas f
+       SET DiasVencido = (CURRENT_DATE - FechaVencimiento::date)
+       FROM Clientes c
+       WHERE f.clienteid = c.id
+         AND c.organizacionid = $1
+         AND f.FechaVencimiento IS NOT NULL`,
+      [organizacionId]
+    );
+
+    // Obtener estadísticas de la organización
+    const statsResult = await pool.query(
+      `SELECT
+        COUNT(*) as "totalFacturas",
+        COUNT(CASE WHEN f.DiasVencido > 0 THEN 1 END) as "facturasVencidas",
+        COUNT(CASE WHEN f.DiasVencido <= 0 THEN 1 END) as "facturasVigentes",
+        MIN(f.DiasVencido) as "minDiasVencido",
+        MAX(f.DiasVencido) as "maxDiasVencido",
+        AVG(f.DiasVencido) as "promedioDiasVencido"
+      FROM Facturas f
+      INNER JOIN Clientes c ON f.clienteid = c.id
+      WHERE c.organizacionid = $1
+        AND f.FechaVencimiento IS NOT NULL`,
+      [organizacionId]
+    );
+    const estadisticas = statsResult.rows[0] || {};
 
     return json({
       success: true,
       message: 'Días vencidos actualizados correctamente',
       estadisticas: {
-        totalFacturas: estadisticas.totalFacturas || 0,
-        facturasVencidas: estadisticas.facturasVencidas || 0,
-        facturasVigentes: estadisticas.facturasVigentes || 0,
-        minDiasVencido: estadisticas.minDiasVencido || 0,
-        maxDiasVencido: estadisticas.maxDiasVencido || 0,
-        promedioDiasVencido: Math.round(estadisticas.promedioDiasVencido || 0)
+        totalFacturas: parseInt(estadisticas.totalFacturas || '0', 10),
+        facturasVencidas: parseInt(estadisticas.facturasVencidas || '0', 10),
+        facturasVigentes: parseInt(estadisticas.facturasVigentes || '0', 10),
+        minDiasVencido: parseInt(estadisticas.minDiasVencido || '0', 10),
+        maxDiasVencido: parseInt(estadisticas.maxDiasVencido || '0', 10),
+        promedioDiasVencido: Math.round(parseFloat(estadisticas.promedioDiasVencido || '0'))
       }
     });
 
@@ -52,8 +61,7 @@ export const POST: RequestHandler = async (event) => {
     console.error('Error actualizando días vencidos:', error);
     return json({
       success: false,
-      error: 'Error interno del servidor',
-      details: error instanceof Error ? error.message : 'Error desconocido'
+      error: 'Error interno del servidor'
     }, { status: 500 });
   }
 };

@@ -34,7 +34,7 @@ export const GET = async ({ cookies }) => {
 	// Guardar state en cookie segura (httpOnly, no secure en dev)
 	cookies.set('google_oauth_state', state, {
 		httpOnly: true,
-		secure: false, // localhost no es HTTPS
+		secure: process.env.NODE_ENV === 'production',
 		sameSite: 'lax',
 		maxAge: 60 * 10, // 10 minutos
 		path: '/'

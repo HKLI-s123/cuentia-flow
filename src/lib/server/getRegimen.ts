@@ -9,6 +9,6 @@ export interface Regimen {
 
 export async function getRegimenes(): Promise<Regimen[]> {
     const pool = await getConnection();
-    const result = await pool.request().query('SELECT ID_Regimen, Codigo, Descripcion FROM Regimen');
-    return result.recordset;
+    const result = await pool.query('SELECT ID_Regimen, Codigo, Descripcion FROM Regimen');
+    return result.rows;
 }

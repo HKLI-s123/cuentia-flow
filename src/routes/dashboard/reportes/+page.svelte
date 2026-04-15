@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import { browser } from '$app/environment';
   import {
     FileText,
@@ -108,7 +110,7 @@
     descargarCSV([{
       'Total Facturado': metricas.totalFacturado,
       'Total Cobrado': metricas.totalCobrado,
-      'Por Cobrar': metricas.totalPorCobrar,
+      'Por cobrar': metricas.totalPorCobrar,
       'Saldo Vencido': metricas.saldoVencido,
       'Facturas Emitidas': metricas.cantidadFacturasEmitidas,
       'Facturas Pendientes': metricas.facturasPendientes,
@@ -163,7 +165,7 @@
     error = '';
 
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
 
       if (!organizacionId) {
         error = 'No se pudo obtener la organización activa.';

@@ -1,5 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import { X, Save, AlertCircle, FileText } from 'lucide-svelte';
   import { authFetch } from '$lib/api';
   import { hoyLocal } from '$lib/utils/date';
@@ -155,29 +157,13 @@
       let organizacionId = null;
       if (typeof window !== 'undefined') {
         try {
-          const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+          const userData = { organizacionId: get(orgIdStore) };
           organizacionId = userData.organizacionId;
         } catch (error) {
         }
       }
 
-      // Si no tenemos organizacionId, intentar obtenerlo del API
-      if (!organizacionId) {
-        try {
-          const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
-          if (userData.id) {
-            const orgResponse = await authFetch(`/api/usuario/${userData.id}/organizacion`);
-            if (orgResponse.ok) {
-              const orgData = await orgResponse.json();
-              organizacionId = orgData.organizacionId;
-              // Actualizar sessionStorage con el organizacionId
-              userData.organizacionId = organizacionId;
-              sessionStorage.setItem('userData', JSON.stringify(userData));
-            }
-          }
-        } catch (error) {
-        }
-      }
+
 
       if (!organizacionId) {
         error = 'No se pudo cargar la información de la organización';

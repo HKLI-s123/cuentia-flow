@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import { goto } from '$app/navigation';
   import {
     DollarSign,
@@ -24,7 +26,7 @@
   } from 'lucide-svelte';
   import Swal from 'sweetalert2';
   import { authFetch } from '$lib/api';
-  import { hoyLocal } from '$lib/utils/date';
+  import { hoyLocal, fechaLocal } from '$lib/utils/date';
   import { Button, Input, Badge } from '$lib/components/ui';
   import ModalPago from './ModalPago.svelte';
   import ModalGestion from './ModalGestion.svelte';
@@ -246,7 +248,7 @@
   // Función para cargar recordatorios de una factura específica
   async function cargarRecordatoriosFactura(facturaId: number) {
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId) return;
 
       const response = await authFetch(`/api/facturas/${facturaId}/recordatorios?organizacionId=${organizacionId}`);
@@ -273,7 +275,7 @@
     if (facturas.length === 0) return;
 
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId) return;
 
       const facturaIds = facturas.map(f => f.id).join(',');
@@ -340,7 +342,7 @@
     if (!facturaSeleccionada) return;
     cancelando = true;
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId) { cancelando = false; return; }
       const motivoDescripcion = motivosCancelacion.find(m => m.codigo === motivoSeleccionado)?.nombre || '';
       const response = await authFetch(`/api/facturas/${facturaSeleccionada.id}/cancelar?organizacionId=${organizacionId}`, {
@@ -388,7 +390,7 @@
     if (!confirmacion.isConfirmed) return;
 
     try {
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      const organizacionId = get(orgIdStore)?.toString() || null;
       const response = await authFetch(`/api/facturas/${factura.id}?organizacionId=${organizacionId}`, {
         method: 'DELETE'
       });
@@ -427,8 +429,8 @@
     error = '';
 
     try {
-      // Obtener organizacionId actual de sessionStorage
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      // Obtener organizacionId actual del store
+      const organizacionId = get(orgIdStore)?.toString() || null;
 
       if (!organizacionId) {
         error = 'No se pudo obtener la información de la organización. Por favor, inicie sesión nuevamente.';
@@ -461,22 +463,23 @@
       // Agregar filtro de periodo (calcular fechas)
       if (filtroPeriodo) {
         const hoy = new Date();
+        const hoyStr = hoyLocal();
         let fechaInicio = '';
         if (filtroPeriodo === 'hoy') {
-          fechaInicio = hoy.toISOString().split('T')[0];
+          fechaInicio = hoyStr;
         } else if (filtroPeriodo === 'semana') {
           const inicioSemana = new Date(hoy);
           inicioSemana.setDate(hoy.getDate() - hoy.getDay());
-          fechaInicio = inicioSemana.toISOString().split('T')[0];
+          fechaInicio = fechaLocal(inicioSemana);
         } else if (filtroPeriodo === 'mes') {
-          fechaInicio = new Date(hoy.getFullYear(), hoy.getMonth(), 1).toISOString().split('T')[0];
+          fechaInicio = fechaLocal(new Date(hoy.getFullYear(), hoy.getMonth(), 1));
         } else if (filtroPeriodo === 'trimestre') {
           const mesInicioTrimestre = Math.floor(hoy.getMonth() / 3) * 3;
-          fechaInicio = new Date(hoy.getFullYear(), mesInicioTrimestre, 1).toISOString().split('T')[0];
+          fechaInicio = fechaLocal(new Date(hoy.getFullYear(), mesInicioTrimestre, 1));
         }
         if (fechaInicio) {
           params.append('fechaInicio', fechaInicio);
-          params.append('fechaFin', hoy.toISOString().split('T')[0]);
+          params.append('fechaFin', hoyStr);
         }
       }
 
@@ -524,6 +527,7 @@
           prioridad_cobranza_id: f.prioridad.id,
           ultimaGestion: f.ultimaGestion,
           timbrado: f.timbrado || false,
+          metodoPago: f.metodoPago || null,
           createdAt: f.createdAt
         }));
 
@@ -629,10 +633,13 @@
     return ordenDireccion === 'ASC' ? 'up' : 'down';
   }
 
-  onMount(() => {
-    // Cargar datos iniciales
+  let cargaInicial = false;
+  $: if ($orgIdStore && !cargaInicial) {
+    cargaInicial = true;
     cargarFacturas();
+  }
 
+  onMount(() => {
     // Listener para cerrar menú al hacer click fuera
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -922,7 +929,7 @@
 
                 <!-- Creación -->
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm text-gray-600">{formatearFecha(factura.createdAt || factura.fechaEmision)}</div>
+                  <div class="text-sm text-gray-600">{formatearFecha(factura.fechaEmision || factura.createdAt)}</div>
                 </td>
 
                 <!-- Emisión de factura -->
@@ -959,9 +966,15 @@
 
                 <!-- Estatus -->
                 <td class="px-6 py-4 text-center">
-                  <span class="inline-flex px-2.5 py-1 text-xs font-medium rounded-full {getEstadoBadgeClass(getEstadoCodigo(factura.estado_factura_id || 0))}">
-                    {getEstadoNombre(factura.estado_factura_id || 0)}
-                  </span>
+                  {#if factura.metodoPago === 'PUE' && factura.estado_factura_id !== 6}
+                    <span class="inline-flex px-2.5 py-1 text-xs font-medium rounded-full {getEstadoBadgeClass('pagada')}">
+                      Pagada
+                    </span>
+                  {:else}
+                    <span class="inline-flex px-2.5 py-1 text-xs font-medium rounded-full {getEstadoBadgeClass(getEstadoCodigo(factura.estado_factura_id || 0))}">
+                      {getEstadoNombre(factura.estado_factura_id || 0)}
+                    </span>
+                  {/if}
                 </td>
 
                 <!-- Menú opciones -->
@@ -975,16 +988,18 @@
 
                   {#if menuAbiertoId === factura.id}
                     <div class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                      <button
-                        on:click={() => {
-                          abrirModalRecordatorios(factura, true);
-                          cerrarMenu();
-                        }}
-                        class="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2"
-                      >
-                        <Send class="w-4 h-4" />
-                        Enviar recordatorio
-                      </button>
+                      {#if factura.metodoPago !== 'PUE' && factura.estado_factura_id !== 6 && factura.estado_factura_id !== 3 && (factura.saldoPendiente || 0) > 0}
+                        <button
+                          on:click={() => {
+                            abrirModalRecordatorios(factura, true);
+                            cerrarMenu();
+                          }}
+                          class="w-full px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-2"
+                        >
+                          <Send class="w-4 h-4" />
+                          Enviar recordatorio
+                        </button>
+                      {/if}
                       <button
                         on:click={() => {
                           abrirModalRecordatorios(factura, false);

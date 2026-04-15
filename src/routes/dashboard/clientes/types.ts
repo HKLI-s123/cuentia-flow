@@ -71,6 +71,7 @@ export interface ClienteAPI {
 	PaisId?: number | null;
 	CodigoPais: string | null;
 	Telefono: string | null;
+	TelefonoWhatsApp?: string | null;
 	Estado: string | null;
 	EstadoId?: number | null;
 	Calle: string | null;

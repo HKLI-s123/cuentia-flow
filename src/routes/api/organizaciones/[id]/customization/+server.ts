@@ -107,8 +107,7 @@ export const GET: RequestHandler = async ({ params, locals }) => {
 		console.error('[GET CUSTOM] Error al obtener personalización:', error);
 		return json(
 			{
-				error: 'Error en el servidor al obtener la personalización',
-				details: error instanceof Error ? error.message : 'Error desconocido'
+				error: 'Error en el servidor al obtener la personalización'
 			},
 			{ status: 500 }
 		);
@@ -228,8 +227,7 @@ export const PUT: RequestHandler = async ({ params, request, locals }) => {
 		console.error('[PUT CUSTOM] Error al actualizar personalización:', error);
 		return json(
 			{
-				error: 'Error en el servidor al actualizar la personalización',
-				details: error instanceof Error ? error.message : 'Error desconocido'
+				error: 'Error en el servidor al actualizar la personalización'
 			},
 			{ status: 500 }
 		);

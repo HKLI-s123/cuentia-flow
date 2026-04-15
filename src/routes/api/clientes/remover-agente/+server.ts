@@ -1,9 +1,13 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { getConnection } from '$lib/server/db';
+import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
 
-export const POST: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async (event) => {
     try {
-        const { clienteId } = await request.json();
+        const user = getUserFromRequest(event);
+        if (!user) return unauthorizedResponse();
+
+        const { clienteId } = await event.request.json();
 
         if (!clienteId) {
             return new Response(
@@ -15,12 +19,10 @@ export const POST: RequestHandler = async ({ request }) => {
         const pool = await getConnection();
 
         // Eliminar todas las asignaciones existentes para este cliente
-        await pool.request()
-            .input('clienteId', parseInt(clienteId))
-            .query(`
+        await pool.query(`
                 DELETE FROM Agentes_Clientes
-                WHERE ClienteId = @clienteId
-            `);
+                WHERE ClienteId = $1
+            `, [parseInt(clienteId)]);
 
         return new Response(
             JSON.stringify({

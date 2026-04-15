@@ -24,23 +24,15 @@ function crearOrganizacionStore() {
 
   return {
     subscribe,
-    // Inicializar desde sessionStorage
-    init: () => {
-      if (browser) {
-        try {
-          const userData = sessionStorage.getItem('userData');
-          if (userData) {
-            const user = JSON.parse(userData);
-            set({
-              id: user.organizacionId || null,
-              nombre: user.organizacionNombre || null,
-              rolId: user.rolId || null,
-              rolNombre: user.rolNombre || null
-            });
-          }
-        } catch (e) {
-          console.error('Error al inicializar store de organización:', e);
-        }
+    // Inicializar desde datos del servidor (pasados desde +layout.server.ts)
+    init: (userData?: { organizacionId?: number; organizacionNombre?: string; rolId?: number; rolNombre?: string }) => {
+      if (userData) {
+        set({
+          id: userData.organizacionId || null,
+          nombre: userData.organizacionNombre || null,
+          rolId: userData.rolId || null,
+          rolNombre: userData.rolNombre || null
+        });
       }
     },
     // Actualizar cuando cambie la organización

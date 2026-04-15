@@ -1,41 +1,27 @@
-import jwt, { type SignOptions } from 'jsonwebtoken';
 import type { RequestEvent } from '@sveltejs/kit';
 import { json } from '@sveltejs/kit';
 import { getConnection } from './db';
-import sql from 'mssql';
+import { extractTokenFromHeader, verifyAccessToken } from './tokens';
+import type { AuthToken } from './tokens';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecreto';
+export type JWTPayload = AuthToken;
 
-export interface JWTPayload {
-	id: number;
-	correo: string;
-	organizacion?: number;
-}
-
-// Verificar y decodificar token JWT
-export function verifyToken(token: string): JWTPayload | null {
-	try {
-		return jwt.verify(token, JWT_SECRET) as JWTPayload;
-	} catch (error) {
-		return null;
-	}
-}
-
-// Generar token JWT
-export function generateToken(payload: JWTPayload, expiresIn: string | number = '12h'): string {
-	return jwt.sign(payload, JWT_SECRET, { expiresIn } as SignOptions);
-}
-
-// Middleware helper para obtener usuario del token
+// Middleware helper para obtener usuario del request
 export function getUserFromRequest(event: RequestEvent): JWTPayload | null {
-	const authHeader = event.request.headers.get('authorization');
+	// Primero intentar desde locals (ya verificado por hooks)
+	if (event.locals?.user) {
+		return event.locals.user;
+	}
 
-	if (!authHeader || !authHeader.startsWith('Bearer ')) {
+	// Fallback: verificar header Authorization
+	const authHeader = event.request.headers.get('authorization');
+	const token = extractTokenFromHeader(authHeader);
+
+	if (!token) {
 		return null;
 	}
 
-	const token = authHeader.substring(7);
-	return verifyToken(token);
+	return verifyAccessToken(token);
 }
 
 // Respuesta de error de autenticación
@@ -93,18 +79,15 @@ export async function validateOrganizationAccess(
 	try {
 		const pool = await getConnection();
 
-		const result = await pool
-			.request()
-			.input('UsuarioId', sql.Int, user.id)
-			.input('OrganizacionId', sql.Int, orgId)
-			.query(`
-				SELECT COUNT(*) as Count
-				FROM Usuario_Organizacion
-				WHERE UsuarioId = @UsuarioId
-				AND OrganizacionId = @OrganizacionId
-			`);
+		const result = await pool.query(
+			`SELECT COUNT(*) as "Count"
+			 FROM usuario_organizacion
+			 WHERE usuarioid = $1
+			 AND organizacionid = $2`,
+			[user.id, orgId]
+		);
 
-		const hasAccess = result.recordset[0].Count > 0;
+		const hasAccess = parseInt(result.rows[0].Count) > 0;
 
 		if (!hasAccess) {
 			return {

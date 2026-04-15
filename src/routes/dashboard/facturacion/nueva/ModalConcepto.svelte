@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
+	import { get } from 'svelte/store';
+	import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
 	import { X } from 'lucide-svelte';
 	import { authFetch } from '$lib/api';
 
@@ -323,7 +325,7 @@
 				const searchTerm = busquedaProductoSAT.toLowerCase().trim();
 				
 				// Primero, intentar obtener de FacturaAPI si la organización tiene API key
-				const userData = JSON.parse(sessionStorage.getItem('userData') || '{}');
+				const userData = { organizacionId: get(orgIdStore) };
 				const organizacionId = userData.organizacionId;
 				let resultadosAPI: any[] = [];
 

@@ -1,14 +1,15 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { getConnection } from '$lib/server/db';
+import { getUserFromRequest, unauthorizedResponse, validateOrganizationAccess } from '$lib/server/auth';
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async (event) => {
   try {
-    const organizacionId = url.searchParams.get('organizacionId');
-    const page = parseInt(url.searchParams.get('page') || '1');
-    const limit = parseInt(url.searchParams.get('limit') || '10');
-    const cliente = url.searchParams.get('cliente') || '';
-    const ordenCampo = url.searchParams.get('ordenCampo') || 'fechaPago';
-    const ordenDireccion = url.searchParams.get('ordenDireccion') || 'DESC';
+    const organizacionId = event.url.searchParams.get('organizacionId');
+    const page = parseInt(event.url.searchParams.get('page') || '1');
+    const limit = parseInt(event.url.searchParams.get('limit') || '10');
+    const cliente = event.url.searchParams.get('cliente') || '';
+    const ordenCampo = event.url.searchParams.get('ordenCampo') || 'fechapago';
+    const ordenDireccion = event.url.searchParams.get('ordenDireccion') || 'DESC';
 
     if (!organizacionId) {
       return new Response(
@@ -20,100 +21,117 @@ export const GET: RequestHandler = async ({ url }) => {
       );
     }
 
+    // Validar acceso a la organización
+    const auth = await validateOrganizationAccess(event, organizacionId);
+    if (!auth.valid) return auth.error!;
+
     const pool = await getConnection();
     const offset = (page - 1) * limit;
 
+    // Validar campo de orden para prevenir SQL injection
+    const allowedOrderFields: Record<string, string> = {
+      'fechaPago': 'p.fechapago',
+      'fechapago': 'p.fechapago',
+      'monto': 'p.monto',
+      'createdAt': 'p.createdat',
+      'createdat': 'p.createdat'
+    };
+    const orderField = allowedOrderFields[ordenCampo] || 'p.fechapago';
+    const orderDir = ordenDireccion.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+
     // Construir WHERE clause con filtro obligatorio de organización
-    let whereClause = 'WHERE cl.OrganizacionId = @organizacionId';
+    const params: any[] = [organizacionId];
+    let paramIndex = 2;
+    let whereClause = 'WHERE cl.organizacionid = $1';
     if (cliente) {
       whereClause += `
         AND (
-          cl.RazonSocial LIKE @cliente OR
-          f.numero_factura LIKE @cliente OR
-          CAST(p.Id AS VARCHAR) LIKE @cliente
+          cl.razonsocial ILIKE $${paramIndex} OR
+          f.numero_factura ILIKE $${paramIndex} OR
+          CAST(p.id AS TEXT) ILIKE $${paramIndex}
         )
       `;
+      params.push(`%${cliente}%`);
+      paramIndex++;
     }
 
     // Query principal con JOINs
     const query = `
       SELECT
-        p.Id as id,
-        p.FacturaId as facturaId,
-        p.UsuarioId as usuarioId,
-        p.Monto as monto,
-        p.FechaPago as fechaPago,
-        p.Metodo as metodo,
-        p.CreatedAt as createdAt,
-        p.UpdatedAt as updatedAt,
-        f.numero_factura as numero_factura,
-        f.MontoTotal as montoFactura,
-        f.SaldoPendiente as saldoPendiente,
-        f.FechaEmision as fechaEmision,
-        f.FechaVencimiento as fechaVencimiento,
-        cl.Id as clienteId,
-        cl.RazonSocial as razonSocial,
-        cl.RFC as rfc,
-        cl.CorreoPrincipal as correo,
-        cl.Telefono as telefono,
-        u.Nombre as usuarioNombre,
-        u.Apellido as usuarioApellido,
-        u.Correo as usuarioCorreo
-      FROM Pagos p
-      INNER JOIN Facturas f ON p.FacturaId = f.Id
-      INNER JOIN Clientes cl ON f.ClienteId = cl.Id
-      LEFT JOIN Usuarios u ON p.UsuarioId = u.Id
+        p.id,
+        p.facturaid as "facturaId",
+        p.usuarioid as "usuarioId",
+        p.monto,
+        p.fechapago as "fechaPago",
+        p.metodo,
+        COALESCE(p.cancelado, false) as cancelado,
+        p.createdat as "createdAt",
+        p.updatedat as "updatedAt",
+        f.numero_factura,
+        f.montototal as "montoFactura",
+        f.saldopendiente as "saldoPendiente",
+        f.fechaemision as "fechaEmision",
+        f.fechavencimiento as "fechaVencimiento",
+        cl.id as "clienteId",
+        cl.razonsocial as "razonSocial",
+        cl.rfc,
+        cl.correoprincipal as correo,
+        cl.telefono,
+        u.nombre as "usuarioNombre",
+        u.apellido as "usuarioApellido",
+        u.correo as "usuarioCorreo"
+      FROM pagos p
+      INNER JOIN facturas f ON p.facturaid = f.id
+      INNER JOIN clientes cl ON f.clienteid = cl.id
+      LEFT JOIN usuarios u ON p.usuarioid = u.id
       ${whereClause}
-      ORDER BY p.${ordenCampo} ${ordenDireccion}
-      OFFSET @offset ROWS
-      FETCH NEXT @limit ROWS ONLY
+      ORDER BY COALESCE(p.cancelado, false) ASC, ${orderField} ${orderDir}
+      LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
     `;
+    params.push(limit, offset);
 
     // Query para contar total de registros
+    const countParams: any[] = [organizacionId];
+    let countWhereClause = 'WHERE cl.organizacionid = $1';
+    if (cliente) {
+      countWhereClause += `
+        AND (
+          cl.razonsocial ILIKE $2 OR
+          f.numero_factura ILIKE $2 OR
+          CAST(p.id AS TEXT) ILIKE $2
+        )
+      `;
+      countParams.push(`%${cliente}%`);
+    }
+
     const countQuery = `
       SELECT COUNT(*) as total
-      FROM Pagos p
-      INNER JOIN Facturas f ON p.FacturaId = f.Id
-      INNER JOIN Clientes cl ON f.ClienteId = cl.Id
-      ${whereClause}
+      FROM pagos p
+      INNER JOIN facturas f ON p.facturaid = f.id
+      INNER JOIN clientes cl ON f.clienteid = cl.id
+      ${countWhereClause}
     `;
 
-    const request = pool.request()
-      .input('organizacionId', organizacionId);
+    const [dataResult, countResult] = await Promise.all([
+      pool.query(query, params),
+      pool.query(countQuery, countParams)
+    ]);
 
-    if (cliente) {
-      request.input('cliente', `%${cliente}%`);
-    }
-
-    request.input('offset', offset);
-    request.input('limit', limit);
-
-    const dataResult = await request.query(query);
-
-    // Para contar, crear nuevo request
-    const countRequest = pool.request()
-      .input('organizacionId', organizacionId);
-
-    if (cliente) {
-      countRequest.input('cliente', `%${cliente}%`);
-    }
-
-    const countResult = await countRequest.query(countQuery);
-
-    const pagos = dataResult.recordset.map((row: any) => ({
+    const pagos = dataResult.rows.map((row: any) => ({
       id: row.id,
       facturaId: row.facturaId,
       usuarioId: row.usuarioId,
-      monto: row.monto,
+      monto: parseFloat(row.monto) || 0,
       fechaPago: row.fechaPago,
       metodo: row.metodo,
+      cancelado: row.cancelado === true || row.cancelado === 'true',
       createdAt: row.createdAt,
       updatedAt: row.updatedAt,
       factura: {
         id: row.facturaId,
         numero_factura: row.numero_factura,
-        montoTotal: row.montoFactura,
-        saldoPendiente: row.saldoPendiente,
+        montoTotal: parseFloat(row.montoFactura) || 0,
+        saldoPendiente: parseFloat(row.saldoPendiente) || 0,
         fechaEmision: row.fechaEmision,
         fechaVencimiento: row.fechaVencimiento,
         cliente: {
@@ -132,7 +150,7 @@ export const GET: RequestHandler = async ({ url }) => {
       }
     }));
 
-    const total = countResult.recordset[0].total;
+    const total = parseInt(countResult.rows[0].total);
     const totalPages = Math.ceil(total / limit);
 
     return new Response(
@@ -153,17 +171,17 @@ export const GET: RequestHandler = async ({ url }) => {
     return new Response(
       JSON.stringify({
         success: false,
-        message: error instanceof Error ? error.message : 'Error al cargar pagos'
+        message: 'Error al cargar pagos'
       }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 };
 
-export const POST: RequestHandler = async ({ request: req, url }) => {
+export const POST: RequestHandler = async (event) => {
   try {
-    const body = await req.json();
-    const organizacionId = url.searchParams.get('organizacionId');
+    const body = await event.request.json();
+    const organizacionId = event.url.searchParams.get('organizacionId');
 
     if (!organizacionId) {
       return new Response(
@@ -174,6 +192,10 @@ export const POST: RequestHandler = async ({ request: req, url }) => {
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
+
+    // Validar acceso a la organización
+    const auth = await validateOrganizationAccess(event, organizacionId);
+    if (!auth.valid) return auth.error!;
 
     if (!body.facturaId || !body.usuarioId || !body.monto || !body.fechaPago || !body.metodo) {
       return new Response(
@@ -188,17 +210,15 @@ export const POST: RequestHandler = async ({ request: req, url }) => {
     const pool = await getConnection();
 
     // Verificar que la factura pertenezca a la organización del usuario
-    const facturaCheck = await pool.request()
-      .input('facturaId', body.facturaId)
-      .input('organizacionId', organizacionId)
-      .query(`
-        SELECT f.Id
-        FROM Facturas f
-        INNER JOIN Clientes cl ON f.ClienteId = cl.Id
-        WHERE f.Id = @facturaId AND cl.OrganizacionId = @organizacionId
-      `);
+    const facturaCheck = await pool.query(
+      `SELECT f.id
+       FROM facturas f
+       INNER JOIN clientes cl ON f.clienteid = cl.id
+       WHERE f.id = $1 AND cl.organizacionid = $2`,
+      [body.facturaId, organizacionId]
+    );
 
-    if (facturaCheck.recordset.length === 0) {
+    if (facturaCheck.rows.length === 0) {
       return new Response(
         JSON.stringify({
           success: false,
@@ -208,22 +228,17 @@ export const POST: RequestHandler = async ({ request: req, url }) => {
       );
     }
 
-    const result = await pool.request()
-      .input('facturaId', body.facturaId)
-      .input('usuarioId', body.usuarioId)
-      .input('monto', body.monto)
-      .input('fechaPago', body.fechaPago)
-      .input('metodo', body.metodo)
-      .query(`
-        INSERT INTO Pagos (FacturaId, UsuarioId, Monto, FechaPago, Metodo, CreatedAt, UpdatedAt)
-        VALUES (@facturaId, @usuarioId, @monto, @fechaPago, @metodo, GETDATE(), GETDATE())
-        SELECT SCOPE_IDENTITY() as id
-      `);
+    const result = await pool.query(
+      `INSERT INTO pagos (facturaid, usuarioid, monto, fechapago, metodo, createdat, updatedat)
+       VALUES ($1, $2, $3, $4, $5, NOW(), NOW())
+       RETURNING id`,
+      [body.facturaId, body.usuarioId, body.monto, body.fechaPago, body.metodo]
+    );
 
     return new Response(
       JSON.stringify({
         success: true,
-        id: result.recordset[0].id,
+        id: result.rows[0].id,
         message: 'Pago creado correctamente'
       }),
       { status: 201, headers: { 'Content-Type': 'application/json' } }
@@ -233,7 +248,7 @@ export const POST: RequestHandler = async ({ request: req, url }) => {
     return new Response(
       JSON.stringify({
         success: false,
-        message: error instanceof Error ? error.message : 'Error al crear pago'
+        message: 'Error al crear pago'
       }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );

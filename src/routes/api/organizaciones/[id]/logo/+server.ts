@@ -124,8 +124,7 @@ export const PUT: RequestHandler = async ({ params, request, locals }) => {
 		console.error('[PUT LOGO] Error al subir logotipo:', error);
 		return json(
 			{
-				error: 'Error en el servidor al subir el logotipo',
-				details: error instanceof Error ? error.message : 'Error desconocido'
+				error: 'Error en el servidor al subir el logotipo'
 			},
 			{ status: 500 }
 		);

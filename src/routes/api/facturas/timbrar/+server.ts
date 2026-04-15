@@ -3,15 +3,7 @@ import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import axios from 'axios';
 import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
-import nodemailer from 'nodemailer';
-import {
-	SMTP_HOST,
-	SMTP_PORT,
-	SMTP_USER,
-	SMTP_PASSWORD,
-	SMTP_FROM_EMAIL,
-	SMTP_FROM_NAME
-} from '$env/static/private';
+import { RESEND_API_KEY, RESEND_FROM } from '$lib/server/email-config';
 
 export const POST: RequestHandler = async (event) => {
   // Verificar autenticación
@@ -42,6 +34,9 @@ export const POST: RequestHandler = async (event) => {
         f.CondicionesPago,
         f.Moneda,
         f.TipoCambio,
+        f.Timbrado,
+        f.UUID,
+        f.NotasCliente,
         c.RazonSocial as ClienteRazonSocial,
         c.RFC as ClienteRFC,
         c.CorreoPrincipal as ClienteEmail,
@@ -58,7 +53,7 @@ export const POST: RequestHandler = async (event) => {
         o.RazonSocial as OrganizacionRazonSocial,
         o.RFC as OrganizacionRFC,
         co.nombre_comercial as OrganizacionNombreComercial,
-        co.facturapi_key as FacturapiKey,
+        COALESCE(co.facturapi_key, o.apikeyfacturaapi) as FacturapiKey,
         rOrg.Codigo as OrganizacionRegimenFiscalCodigo
       FROM Facturas f
       INNER JOIN Clientes c ON f.ClienteId = c.Id
@@ -78,6 +73,15 @@ export const POST: RequestHandler = async (event) => {
     }
 
     const factura = facturaResult[0];
+
+    // Prevenir re-timbrado de facturas ya timbradas
+    if (factura.Timbrado || factura.UUID) {
+      return json({
+        success: false,
+        error: 'Esta factura ya fue timbrada previamente',
+        uuid: factura.UUID
+      }, { status: 409 });
+    }
 
     // Validaciones de datos requeridos
     if (!factura.FacturapiKey) {
@@ -281,7 +285,8 @@ export const POST: RequestHandler = async (event) => {
       payment_method: factura.MetodoPago,
       use: factura.UsoCFDI,
       series: serie,
-      folio_number: folio ? parseInt(folio) : undefined
+      folio_number: folio ? parseInt(folio) : undefined,
+      ...(factura.NotasCliente && { pdf_custom_section: factura.NotasCliente })
     };
 
     // Si es RFC genérico, agregar nodo global (Factura Global)
@@ -341,127 +346,134 @@ export const POST: RequestHandler = async (event) => {
     // Guardar toda la información del timbrado en la base de datos
     await db.query(
       `UPDATE Facturas
-       SET UUID = ?,
-           UUIDFacturapi = ?,
-           Timbrado = 1,
-           FechaTimbrado = GETDATE(),
-           FacturapiId = ?,
-           PDFUrl = ?,
-           XMLUrl = ?,
-           PDFBase64 = ?,
-           XMLBase64 = ?
-       WHERE Id = ?`,
+       SET UUID = $1,
+           UUIDFacturapi = $2,
+           Timbrado = true,
+           FechaTimbrado = NOW(),
+           FacturapiId = $3,
+           PDFUrl = $4,
+           XMLUrl = $5,
+           PDFBase64 = $6,
+           XMLBase64 = $7
+       WHERE Id = $8`,
       [invoice.uuid, invoice.uuid, invoice.id, pdfUrl, xmlUrl, pdfBase64, xmlBase64, facturaId]
     );
+
+    // Si la factura es PUE, marcarla como pagada (saldo 0) ya que el pago se recibe al momento
+    if (factura.MetodoPago === 'PUE') {
+      await db.query(
+        `UPDATE Facturas
+         SET SaldoPendiente = 0,
+             estado_factura_id = 3
+         WHERE Id = $1`,
+        [facturaId]
+      );
+    }
 
     // Enviar correo automáticamente al cliente después de timbrar
     let emailEnviado = false;
     let emailError = null;
 
-    if (factura.ClienteEmail) {
+    if (factura.ClienteEmail && RESEND_API_KEY) {
       try {
-        // Convertir buffers de PDF y XML
-        const pdfBuffer = Buffer.from(pdfResponse.data);
-        const xmlBuffer = Buffer.from(xmlResponse.data);
-
-        // Configurar transporte SMTP
-        const transporter = nodemailer.createTransport({
-          host: SMTP_HOST,
-          port: parseInt(SMTP_PORT),
-          secure: false,
-          auth: {
-            user: SMTP_USER,
-            pass: SMTP_PASSWORD
-          },
-          tls: {
-            rejectUnauthorized: false
-          }
-        });
+        // Convertir buffers de PDF y XML a base64
+        const pdfBase64Attachment = Buffer.from(pdfResponse.data).toString('base64');
+        const xmlBase64Attachment = Buffer.from(xmlResponse.data).toString('base64');
 
         const nombreCliente = factura.ClienteRazonSocial;
         const numeroFactura = factura.numero_factura;
 
-        // Configurar el correo
-        const mailOptions = {
-          from: `"${SMTP_FROM_NAME}" <${SMTP_FROM_EMAIL}>`,
-          to: factura.ClienteEmail,
-          subject: `Factura ${numeroFactura} - ${nombreCliente}`,
-          html: `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            </head>
-            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-              <div style="background-color: #f8f9fa; border-radius: 10px; padding: 30px; margin-bottom: 20px;">
-                <h2 style="color: #2563eb; margin-top: 0;">Factura Electrónica</h2>
-                <p style="font-size: 16px; margin-bottom: 20px;">Estimado(a) <strong>${nombreCliente}</strong>,</p>
-                <p style="font-size: 14px; color: #555;">
-                  Le enviamos su factura electrónica correspondiente al servicio prestado.
-                </p>
-              </div>
+        const resendResponse = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${RESEND_API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            from: RESEND_FROM || 'no-reply@cuentia.mx',
+            to: factura.ClienteEmail,
+            subject: `Factura ${numeroFactura} - ${nombreCliente}`,
+            html: `
+              <!DOCTYPE html>
+              <html>
+              <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              </head>
+              <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="background-color: #f8f9fa; border-radius: 10px; padding: 30px; margin-bottom: 20px;">
+                  <h2 style="color: #2563eb; margin-top: 0;">Factura Electrónica</h2>
+                  <p style="font-size: 16px; margin-bottom: 20px;">Estimado(a) <strong>${nombreCliente}</strong>,</p>
+                  <p style="font-size: 14px; color: #555;">
+                    Le enviamos su factura electrónica correspondiente al servicio prestado.
+                  </p>
+                </div>
 
-              <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
-                <h3 style="color: #374151; margin-top: 0; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">
-                  Detalles de la Factura
-                </h3>
-                <table style="width: 100%; border-collapse: collapse;">
-                  <tr>
-                    <td style="padding: 8px 0; color: #6b7280;"><strong>Folio:</strong></td>
-                    <td style="padding: 8px 0; text-align: right;">${numeroFactura}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 8px 0; color: #6b7280;"><strong>UUID:</strong></td>
-                    <td style="padding: 8px 0; text-align: right; font-size: 12px;">${invoice.uuid}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 8px 0; color: #6b7280;"><strong>Fecha de emisión:</strong></td>
-                    <td style="padding: 8px 0; text-align: right;">${new Date(factura.FechaEmision).toLocaleDateString('es-MX')}</td>
-                  </tr>
-                  <tr style="border-top: 2px solid #e5e7eb;">
-                    <td style="padding: 12px 0; color: #6b7280; font-size: 16px;"><strong>Total:</strong></td>
-                    <td style="padding: 12px 0; text-align: right; font-size: 18px; color: #2563eb; font-weight: bold;">
-                      $${parseFloat(factura.MontoTotal).toFixed(2)} ${factura.Moneda || 'MXN'}
-                    </td>
-                  </tr>
-                </table>
-              </div>
+                <div style="background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                  <h3 style="color: #374151; margin-top: 0; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">
+                    Detalles de la Factura
+                  </h3>
+                  <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                      <td style="padding: 8px 0; color: #6b7280;"><strong>Folio:</strong></td>
+                      <td style="padding: 8px 0; text-align: right;">${numeroFactura}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; color: #6b7280;"><strong>UUID:</strong></td>
+                      <td style="padding: 8px 0; text-align: right; font-size: 12px;">${invoice.uuid}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 8px 0; color: #6b7280;"><strong>Fecha de emisión:</strong></td>
+                      <td style="padding: 8px 0; text-align: right;">${new Date(factura.FechaEmision).toLocaleDateString('es-MX')}</td>
+                    </tr>
+                    <tr style="border-top: 2px solid #e5e7eb;">
+                      <td style="padding: 12px 0; color: #6b7280; font-size: 16px;"><strong>Total:</strong></td>
+                      <td style="padding: 12px 0; text-align: right; font-size: 18px; color: #2563eb; font-weight: bold;">
+                        $${parseFloat(factura.MontoTotal).toFixed(2)} ${factura.Moneda || 'MXN'}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
 
-              <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-                <p style="margin: 0; font-size: 14px; color: #92400e;">
-                  📎 <strong>Archivos adjuntos:</strong> Esta factura incluye los archivos PDF y XML.
-                </p>
-              </div>
+                <div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                  <p style="margin: 0; font-size: 14px; color: #92400e;">
+                    📎 <strong>Archivos adjuntos:</strong> Esta factura incluye los archivos PDF y XML.
+                  </p>
+                </div>
 
-              <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-                <p style="font-size: 12px; color: #9ca3af; margin: 5px 0;">
-                  Este es un correo automático, por favor no responder.
-                </p>
-                <p style="font-size: 12px; color: #9ca3af; margin: 5px 0;">
-                  Si tiene alguna duda, póngase en contacto con nosotros.
-                </p>
-              </div>
-            </body>
-            </html>
-          `,
-          attachments: [
-            {
-              filename: `Factura_${numeroFactura}.pdf`,
-              content: pdfBuffer,
-              contentType: 'application/pdf'
-            },
-            {
-              filename: `Factura_${numeroFactura}.xml`,
-              content: xmlBuffer,
-              contentType: 'application/xml'
-            }
-          ]
-        };
+                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                  <p style="font-size: 12px; color: #9ca3af; margin: 5px 0;">
+                    Este es un correo automático, por favor no responder.
+                  </p>
+                  <p style="font-size: 12px; color: #9ca3af; margin: 5px 0;">
+                    Si tiene alguna duda, póngase en contacto con nosotros.
+                  </p>
+                </div>
+              </body>
+              </html>
+            `,
+            attachments: [
+              {
+                filename: `Factura_${numeroFactura}.pdf`,
+                content: pdfBase64Attachment,
+                type: 'application/pdf'
+              },
+              {
+                filename: `Factura_${numeroFactura}.xml`,
+                content: xmlBase64Attachment,
+                type: 'application/xml'
+              }
+            ]
+          })
+        });
 
-        // Enviar el correo
-        await transporter.sendMail(mailOptions);
-        emailEnviado = true;
+        if (resendResponse.ok) {
+          emailEnviado = true;
+        } else {
+          const resendError = await resendResponse.text();
+          console.error('Error de Resend al enviar correo automático:', resendError);
+          emailError = resendError;
+        }
 
       } catch (emailErr) {
         console.error('Error al enviar correo automático:', emailErr);

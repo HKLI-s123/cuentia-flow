@@ -10,9 +10,9 @@ export const GET: RequestHandler = async (event) => {
 		// Actualizar el registro de recordatorio para marcar como visto
 		const updateQuery = `
 			UPDATE Recordatorios
-			SET Visto = 1,
-				FechaVisto = GETDATE()
-			WHERE Id = ? AND Visto = 0
+			SET Visto = true,
+				FechaVisto = NOW()
+			WHERE Id = $1 AND Visto = false
 		`;
 
 		await db.query(updateQuery, [recordatorioId]);

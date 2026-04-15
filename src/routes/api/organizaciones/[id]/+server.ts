@@ -296,8 +296,7 @@ export const PUT: RequestHandler = async ({ params, request, locals }) => {
 		console.error('[PUT ORG] Error al actualizar organización:', error);
 		return json(
 			{
-				error: 'Error al actualizar la organización',
-				details: error instanceof Error ? error.message : 'Error desconocido'
+				error: 'Error al actualizar la organización'
 			},
 			{ status: 500 }
 		);
@@ -501,7 +500,7 @@ export const DELETE: RequestHandler = async ({ params, locals, request, getClien
 				userId,
 				organizacionId,
 				action: 'DELETE_ORGANIZATION',
-				details: `Error en transacción de eliminación: ${transactionError instanceof Error ? transactionError.message : 'Error desconocido'}`,
+				details: 'Error en transacción de eliminación',
 				ipAddress: clientIP
 			});
 
@@ -513,8 +512,7 @@ export const DELETE: RequestHandler = async ({ params, locals, request, getClien
 		console.error('[DELETE ORG] Error al eliminar organización:', error);
 		return json(
 			{
-				error: 'Error al eliminar la organización',
-				details: error instanceof Error ? error.message : 'Error desconocido'
+				error: 'Error al eliminar la organización'
 			},
 			{ status: 500 }
 		);

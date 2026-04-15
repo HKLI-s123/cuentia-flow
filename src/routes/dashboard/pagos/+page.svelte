@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
+  import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import { goto } from '$app/navigation';
   import {
     DollarSign,
@@ -24,6 +26,7 @@
     XCircle
   } from 'lucide-svelte';
   import { authFetch } from '$lib/api';
+  import Swal from 'sweetalert2';
   import { Button, Input, Badge, Table } from '$lib/components/ui';
   import type { Pago, Paginacion } from './types';
   import {
@@ -33,6 +36,7 @@
     calcularMetricas
   } from './utils';
   import ModalAgregarPago from './ModalAgregarPago.svelte';
+  import ModalDetallePago from './ModalDetallePago.svelte';
 
   // Estado de filtros
   let filtroTexto = '';
@@ -85,8 +89,8 @@
     error = null;
 
     try {
-      // Obtener organizacionId actual de sessionStorage
-      const organizacionId = sessionStorage.getItem('organizacionActualId');
+      // Obtener organizacionId actual del store
+      const organizacionId = get(orgIdStore)?.toString() || null;
       if (!organizacionId) {
         error = 'No se ha seleccionado una organización';
         return;
@@ -247,43 +251,58 @@
    */
   function abrirModalPago(pago: Pago) {
     pagoSeleccionado = pago;
-    // TODO: Implementar modal de detalle de pago
-    console.log('Ver detalle de pago:', pago);
+    modalPagoAbierto = true;
     cerrarMenu();
   }
 
   /**
-   * Elimina un pago
+   * Cancela un pago (desde la tabla)
    */
-  async function eliminarPago(pagoId: number) {
-    if (confirm('¿Está seguro que desea eliminar este pago?')) {
-      try {
-        const organizacionId = sessionStorage.getItem('organizacionActualId');
-        if (!organizacionId) {
-          alert('No se ha seleccionado una organización');
-          return;
-        }
+  async function cancelarPagoDesdeTabla(pagoId: number) {
+    const confirmacion = await Swal.fire({
+      icon: 'warning',
+      title: '¿Cancelar pago?',
+      html: `<p>Esta acción cancelará el pago <strong>#${pagoId}</strong> y revertirá el saldo en la factura.</p>`,
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, cancelar pago',
+      cancelButtonText: 'Volver'
+    });
 
-        const response = await authFetch(
-          `/api/pagos/${pagoId}?organizacionId=${organizacionId}`,
-          { method: 'DELETE' }
-        );
-        const data = await response.json();
+    if (!confirmacion.isConfirmed) return;
 
-        if (data.success) {
-          cargarPagos();
-        } else {
-          alert(data.message || 'Error al eliminar pago');
-        }
-      } catch (err) {
-        console.error('Error deleting pago:', err);
-        alert('Error al eliminar pago');
+    try {
+      const organizacionId = get(orgIdStore)?.toString() || null;
+      if (!organizacionId) {
+        await Swal.fire({ icon: 'warning', title: 'Sin organización', text: 'No se ha seleccionado una organización.', confirmButtonColor: '#3b82f6' });
+        return;
       }
+
+      const response = await authFetch(
+        `/api/pagos/${pagoId}/cancelar?organizacionId=${organizacionId}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ motivo: 'Cancelación solicitada por el usuario' })
+        }
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        await Swal.fire({ icon: 'success', title: 'Pago cancelado', text: 'El pago se ha cancelado exitosamente.', timer: 2000, showConfirmButton: false });
+        cargarPagos();
+      } else {
+        await Swal.fire({ icon: 'error', title: 'Error', text: data.error || 'Error al cancelar pago', confirmButtonColor: '#3b82f6' });
+      }
+    } catch (err) {
+      console.error('Error cancelling pago:', err);
+      await Swal.fire({ icon: 'error', title: 'Error', text: 'Error al cancelar pago', confirmButtonColor: '#3b82f6' });
     }
   }
 
   onMount(() => {
-    organizacionId = sessionStorage.getItem('organizacionActualId') || '';
+    organizacionId = get(orgIdStore)?.toString() || '';
     cargarPagos();
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -499,6 +518,9 @@
               </button>
             </th>
             <th class="px-6 py-3 text-center text-xs font-medium text-gray-700 tracking-wider">
+              Estado
+            </th>
+            <th class="px-6 py-3 text-center text-xs font-medium text-gray-700 tracking-wider">
               <Settings class="w-4 h-4 inline" />
             </th>
           </tr>
@@ -506,14 +528,14 @@
         <tbody class="bg-white divide-y divide-gray-200">
           {#if cargando}
             <tr>
-              <td colspan="7" class="px-6 py-12 text-center">
+              <td colspan="8" class="px-6 py-12 text-center">
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                 <p class="mt-2 text-gray-600">Cargando pagos...</p>
               </td>
             </tr>
           {:else if error}
             <tr>
-              <td colspan="7" class="px-6 py-12 text-center">
+              <td colspan="8" class="px-6 py-12 text-center">
                 <div class="text-red-600">
                   <AlertTriangle class="w-12 h-12 mx-auto mb-2" />
                   <p class="font-medium">Error al cargar pagos</p>
@@ -528,7 +550,7 @@
             </tr>
           {:else if pagos.length === 0}
             <tr>
-              <td colspan="7" class="px-6 py-12 text-center">
+              <td colspan="8" class="px-6 py-12 text-center">
                 <FileText class="w-12 h-12 text-gray-400 mx-auto mb-2" />
                 <p class="text-gray-600">No hay pagos registrados</p>
                 <p class="text-sm text-gray-500 mt-1">No se encontraron pagos con los filtros aplicados</p>
@@ -572,6 +594,15 @@
                   <div class="text-sm text-gray-600">{getMetodoNombre(pago.metodo)}</div>
                 </td>
 
+                <!-- Estado -->
+                <td class="px-6 py-4 whitespace-nowrap text-center">
+                  {#if pago.cancelado}
+                    <Badge variant="danger">Cancelado</Badge>
+                  {:else}
+                    <Badge variant="success">Vigente</Badge>
+                  {/if}
+                </td>
+
                 <!-- Menú opciones -->
                 <td class="px-6 py-4 text-center relative">
                   <button
@@ -590,16 +621,18 @@
                         <Eye class="w-4 h-4" />
                         Ver Detalle
                       </button>
+                      {#if !pago.cancelado}
                       <button
                         on:click={() => {
-                          eliminarPago(pago.id);
+                          cancelarPagoDesdeTabla(pago.id);
                           cerrarMenu();
                         }}
                         class="w-full px-4 py-3 text-left text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2 border-t border-gray-100"
                       >
                         <Trash2 class="w-4 h-4" />
-                        Eliminar
+                        Cancelar Pago
                       </button>
+                      {/if}
                     </div>
                   {/if}
                 </td>
@@ -675,7 +708,57 @@
   bind:open={modalAgregarPagoAbierto}
   {organizacionId}
   on:pagoGuardado={() => {
+    cargarPagos();
+  }}
+  on:cerrar={() => {
     modalAgregarPagoAbierto = false;
+  }}
+/>
+
+<!-- Modal Detalle Pago -->
+<ModalDetallePago
+  bind:open={modalPagoAbierto}
+  pagoId={pagoSeleccionado?.id ?? null}
+  {organizacionId}
+  on:cancelar={async (e) => {
+    const pagoId = e.detail?.pagoId;
+    if (!pagoId) return;
+    
+    const confirmacion = await Swal.fire({
+      icon: 'warning',
+      title: '¿Cancelar pago?',
+      html: `<p>Esta acción cancelará el pago <strong>#${pagoId}</strong> y revertirá el saldo en la factura.</p>`,
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sí, cancelar pago',
+      cancelButtonText: 'No, volver'
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    try {
+      const response = await authFetch(
+        `/api/pagos/${pagoId}/cancelar?organizacionId=${organizacionId}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ motivo: '02' })
+        }
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        await Swal.fire({ icon: 'success', title: 'Pago cancelado', text: data.message || 'El pago se ha cancelado exitosamente.', timer: 2500, showConfirmButton: false });
+      } else {
+        await Swal.fire({ icon: 'error', title: 'Error al cancelar', text: data.error || 'No se pudo cancelar el pago.', confirmButtonColor: '#3b82f6' });
+      }
+    } catch (err) {
+      console.error('Error cancelling pago:', err);
+      await Swal.fire({ icon: 'error', title: 'Error', text: 'Error al cancelar el pago.', confirmButtonColor: '#3b82f6' });
+    }
+
+    modalPagoAbierto = false;
     cargarPagos();
   }}
 />

@@ -1,10 +1,13 @@
-// routes/dashboard/+layout.ts
-import { onMount } from 'svelte';
-import { goto } from '$app/navigation';
+import { redirect } from '@sveltejs/kit';
+import type { LayoutServerLoad } from './$types';
 
-onMount(() => {
-  const token = sessionStorage.getItem('jwt');
-  if (!token) {
-    goto('/'); // redirige al login si no hay token
+export const load: LayoutServerLoad = async ({ locals }) => {
+  if (!locals.user) {
+    throw redirect(302, '/login');
   }
-});
+  return {
+    user: locals.user,
+    organizacionId: locals.user.organizacion || null,
+    rolId: locals.user.rolId || null
+  };
+};

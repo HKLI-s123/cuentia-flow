@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import { Button, Badge, Input, Modal } from '$lib/components/ui';
 	import type { Cliente, Regimen, Pais, Estado, Agente, ValidationErrors } from './types.js';
 	import Swal from 'sweetalert2';
@@ -74,6 +75,7 @@
 	let estadoSeleccionado: number | null = null;
 	let codigoPais = '+52';
 	let telefono = '';
+	let telefonoWhatsApp = '';
 	let calle = '';
 	let numExterior = '';
 	let numInterior = '';
@@ -200,7 +202,7 @@
 
 			try {
 				const pdfjsLib = await import('pdfjs-dist');
-				pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
+				pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 				const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
 				const fullText = await extraerTextoPDF(pdf);
 				procesarDatosPDF(fullText);
@@ -404,6 +406,10 @@
 			const clienteCompleto = await cargarClienteIndividual(cliente.id, apiEndpoint);
 			Swal.close();
 
+			// Esperar a que SweetAlert termine de cerrarse para evitar
+			// que su evento de click cierre el modal inmediatamente
+			await new Promise(resolve => setTimeout(resolve, 100));
+
 			nombreComercial = clienteCompleto.NombreComercial || '';
 			razonSocial = clienteCompleto.RazonSocial || '';
 			rfc = clienteCompleto.RFC || '';
@@ -411,6 +417,7 @@
 			correoPrincipal = clienteCompleto.CorreoPrincipal || '';
 			codigoPais = clienteCompleto.CodigoPais ? `+${clienteCompleto.CodigoPais}` : '+52';
 			telefono = clienteCompleto.Telefono || '';
+			telefonoWhatsApp = clienteCompleto.TelefonoWhatsApp || '';
 			calle = clienteCompleto.Calle || '';
 			numExterior = clienteCompleto.NumeroExterior || '';
 			numInterior = clienteCompleto.NumeroInterior || '';
@@ -500,11 +507,15 @@
 					showConfirmButton: false
 				});
 			} catch (error) {
+				const errorMsg = error instanceof Error ? error.message : 'Error desconocido';
+				const tieneFacturas = errorMsg.includes('facturas asociadas') || errorMsg.includes('409');
 				Swal.fire({
-					title: 'Error',
-					text: `No se pudo eliminar el cliente: ${error instanceof Error ? error.message : 'Error desconocido'}`,
-					icon: 'error',
-					confirmButtonColor: '#dc2626',
+					title: tieneFacturas ? 'Cliente con facturas' : 'Error',
+					html: tieneFacturas
+						? '<p>No se puede eliminar este cliente porque tiene <b>facturas asociadas</b>.</p><p style="margin-top:8px">Primero debes <b>cancelar todas las facturas</b> de este cliente antes de poder eliminarlo.</p>'
+						: `No se pudo eliminar el cliente: ${errorMsg}`,
+					icon: tieneFacturas ? 'warning' : 'error',
+					confirmButtonColor: tieneFacturas ? '#f59e0b' : '#dc2626',
 					confirmButtonText: 'Entendido'
 				});
 			}
@@ -555,7 +566,7 @@
 				correoPrincipal, paisSeleccionado, codigoPais, telefono,
 				estadoSeleccionado, calle, numExterior, numInterior,
 				codigoPostal, colonia, ciudad, agenteSeleccionado,
-				paises, estados, regimenes, agentes
+				paises, estados, regimenes, agentes, telefonoWhatsApp
 			);
 
 			await actualizarClienteAPI(clienteEditando.id, clienteData, apiEndpoint);
@@ -642,7 +653,7 @@
 				correoPrincipal, paisSeleccionado, codigoPais, telefono,
 				estadoSeleccionado, calle, numExterior, numInterior,
 				codigoPostal, colonia, ciudad, agenteSeleccionado,
-				paises, estados, regimenes, agentes
+				paises, estados, regimenes, agentes, telefonoWhatsApp
 			);
 
 			await guardarClienteAPI(clienteData, apiEndpoint);
@@ -685,6 +696,7 @@
 		estadoSeleccionado = null;
 		codigoPais = '+52';
 		telefono = '';
+		telefonoWhatsApp = '';
 		calle = '';
 		numExterior = '';
 		numInterior = '';
@@ -1174,6 +1186,19 @@
 							}}
 						/>
 
+						<Input
+							id="telefonoWhatsApp"
+							label="Teléfono WhatsApp"
+							type="text"
+							bind:value={telefonoWhatsApp}
+							placeholder="Ej: 5512345678"
+							on:input={(e) => {
+								const target = e.target as HTMLInputElement;
+								const soloNumeros = target.value.replace(/\D/g, '');
+								telefonoWhatsApp = soloNumeros.slice(0, 10);
+							}}
+						/>
+
 						<!-- Estado -->
 						<div>
 							<label for="estado" class="block text-sm font-medium text-gray-700 mb-2">
@@ -1294,7 +1319,7 @@
 							<option value={null}>Seleccionar agente</option>
 							{#each agentes as agente}
 								<option value={agente.value}>
-									{agente.text}
+									{agente.text}{agente.value === $page.data.user?.id ? ' (Yo — Autoasignar)' : ''}
 								</option>
 							{/each}
 						</select>

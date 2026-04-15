@@ -1,17 +1,9 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
-import nodemailer from 'nodemailer';
 import axios from 'axios';
-import {
-	SMTP_HOST,
-	SMTP_PORT,
-	SMTP_USER,
-	SMTP_PASSWORD,
-	SMTP_FROM_EMAIL,
-	SMTP_FROM_NAME
-} from '$env/static/private';
 import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
+import { RESEND_API_KEY, RESEND_FROM } from '$lib/server/email-config';
 
 export const POST: RequestHandler = async (event) => {
 	// Verificar autenticación
@@ -51,11 +43,12 @@ export const POST: RequestHandler = async (event) => {
 				c.NombreComercial as ClienteNombreComercial,
 				c.RFC as ClienteRFC,
 				c.CorreoPrincipal as ClienteEmail,
-				co.facturapi_key as FacturapiKey
+				COALESCE(co.facturapi_key, o.apikeyfacturaapi) as FacturapiKey
 			FROM Facturas f
 			INNER JOIN Clientes c ON f.ClienteId = c.Id
-			INNER JOIN configuracion_organizacion co ON c.OrganizacionId = co.organizacion_id
-			WHERE f.Id = ? AND c.OrganizacionId = ?
+			INNER JOIN Organizaciones o ON c.OrganizacionId = o.Id
+			LEFT JOIN configuracion_organizacion co ON o.Id = co.organizacion_id
+			WHERE f.Id = $1 AND c.OrganizacionId = $2
 		`;
 
 		const facturaResult = await db.query(facturaQuery, [facturaId, organizacionId]);
@@ -106,7 +99,7 @@ export const POST: RequestHandler = async (event) => {
 			},
 			responseType: 'arraybuffer'
 		});
-		const pdfBuffer = Buffer.from(pdfResponse.data);
+		const pdfBase64Attachment = Buffer.from(pdfResponse.data).toString('base64');
 
 		// Descargar XML desde Facturapi usando la API key de la organización
 		const xmlResponse = await axios.get(factura.XMLUrl, {
@@ -116,21 +109,7 @@ export const POST: RequestHandler = async (event) => {
 			},
 			responseType: 'arraybuffer'
 		});
-		const xmlBuffer = Buffer.from(xmlResponse.data);
-
-		// Configurar transporte SMTP
-		const transporter = nodemailer.createTransport({
-			host: SMTP_HOST,
-			port: parseInt(SMTP_PORT),
-			secure: false,
-			auth: {
-				user: SMTP_USER,
-				pass: SMTP_PASSWORD
-			},
-			tls: {
-				rejectUnauthorized: false
-			}
-		});
+		const xmlBase64Attachment = Buffer.from(xmlResponse.data).toString('base64');
 
 		const numeroFactura = factura.numero_factura;
 		const destinatario = factura.ClienteEmail;
@@ -186,8 +165,8 @@ Saludos cordiales.`;
 				Estado,
 				CreadoPor
 			)
-			OUTPUT INSERTED.Id
-			VALUES (?, ?, ?, ?, ?, GETDATE(), ?, ?, ?)
+			VALUES ($1, $2, $3, $4, $5, NOW(), $6, $7, $8)
+			RETURNING id
 		`;
 
 		const recordatorioResult = await db.query(insertQuery, [
@@ -201,7 +180,7 @@ Saludos cordiales.`;
 			user.id || null
 		]);
 
-		const recordatorioId = recordatorioResult[0]?.Id;
+		const recordatorioId = recordatorioResult[0]?.id;
 
 		// Obtener la URL base del servidor (para el tracking pixel)
 		const protocol = event.url.protocol;
@@ -212,74 +191,85 @@ Saludos cordiales.`;
 		// Convertir saltos de línea a HTML
 		const mensajeHtml = mensaje.replace(/\n/g, '<br>');
 
-		// Configurar el correo
-		const mailOptions = {
-			from: `"${SMTP_FROM_NAME}" <${SMTP_FROM_EMAIL}>`,
-			to: destinatario,
-			subject: asunto,
-			html: `
-				<!DOCTYPE html>
-				<html>
-				<head>
-					<meta charset="UTF-8">
-					<meta name="viewport" content="width=device-width, initial-scale=1.0">
-				</head>
-				<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-					<div style="background-color: #f8f9fa; border-radius: 10px; padding: 30px; margin-bottom: 20px;">
-						<h2 style="color: #1f2937; margin-top: 0;">Factura ${numeroFactura}</h2>
-						<div style="font-size: 14px; white-space: pre-wrap;">${mensajeHtml}</div>
-					</div>
+		// Enviar correo con Resend
+		const resendResponse = await fetch('https://api.resend.com/emails', {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${RESEND_API_KEY}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				from: RESEND_FROM || 'no-reply@cuentia.mx',
+				to: destinatario,
+				subject: asunto,
+				html: `
+					<!DOCTYPE html>
+					<html>
+					<head>
+						<meta charset="UTF-8">
+						<meta name="viewport" content="width=device-width, initial-scale=1.0">
+					</head>
+					<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+						<div style="background-color: #f8f9fa; border-radius: 10px; padding: 30px; margin-bottom: 20px;">
+							<h2 style="color: #1f2937; margin-top: 0;">Factura ${numeroFactura}</h2>
+							<div style="font-size: 14px; white-space: pre-wrap;">${mensajeHtml}</div>
+						</div>
 
-					<div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-						<p style="margin: 0; font-size: 14px; color: #92400e;">
-							📎 <strong>Archivos adjuntos:</strong> Esta factura incluye los archivos PDF y XML.
-						</p>
-					</div>
+						<div style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+							<p style="margin: 0; font-size: 14px; color: #92400e;">
+								📎 <strong>Archivos adjuntos:</strong> Esta factura incluye los archivos PDF y XML.
+							</p>
+						</div>
 
-					<div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-						<p style="font-size: 12px; color: #9ca3af; margin: 5px 0;">
-							Este es un correo automático, por favor no responder.
-						</p>
-						<p style="font-size: 12px; color: #9ca3af; margin: 5px 0;">
-							Si tiene alguna duda, póngase en contacto con nosotros.
-						</p>
-					</div>
+						<div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+							<p style="font-size: 12px; color: #9ca3af; margin: 5px 0;">
+								Este es un correo automático, por favor no responder.
+							</p>
+							<p style="font-size: 12px; color: #9ca3af; margin: 5px 0;">
+								Si tiene alguna duda, póngase en contacto con nosotros.
+							</p>
+						</div>
 
-					<!-- Tracking pixel -->
-					<img src="${trackingPixelUrl}" width="1" height="1" style="display:none;" alt="" />
-				</body>
-				</html>
-			`,
-			attachments: [
-				{
-					filename: `Factura_${numeroFactura}.pdf`,
-					content: pdfBuffer,
-					contentType: 'application/pdf'
-				},
-				{
-					filename: `Factura_${numeroFactura}.xml`,
-					content: xmlBuffer,
-					contentType: 'application/xml'
-				}
-			]
-		};
+						<!-- Tracking pixel -->
+						<img src="${trackingPixelUrl}" width="1" height="1" style="display:none;" alt="" />
+					</body>
+					</html>
+				`,
+				attachments: [
+					{
+						filename: `Factura_${numeroFactura}.pdf`,
+						content: pdfBase64Attachment,
+						type: 'application/pdf'
+					},
+					{
+						filename: `Factura_${numeroFactura}.xml`,
+						content: xmlBase64Attachment,
+						type: 'application/xml'
+					}
+				]
+			})
+		});
 
-		// Enviar el correo
-		const info = await transporter.sendMail(mailOptions);
+		if (!resendResponse.ok) {
+			const resendError = await resendResponse.text();
+			throw new Error(`Resend error: ${resendError}`);
+		}
+
+		const resendData = await resendResponse.json();
 
 		// Actualizar el recordatorio con el MessageId
 		const updateQuery = `
 			UPDATE Recordatorios
-			SET MessageId = ?
-			WHERE Id = ?
+			SET MessageId = $1
+			WHERE Id = $2
 		`;
 
-		await db.query(updateQuery, [info.messageId, recordatorioId]);
+		await db.query(updateQuery, [resendData.id, recordatorioId]);
 
 		return json({
 			success: true,
 			message: 'Factura enviada exitosamente',
-			messageId: info.messageId,
+			messageId: resendData.id,
 			destinatario: destinatario
 		});
 

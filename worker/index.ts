@@ -184,7 +184,7 @@ async function procesarComprobantePago(pool: any, message: any, fueraDeCiclo: bo
 			'SELECT COUNT(*) as totalPagos FROM Pagos WHERE FacturaId = $1',
 			[fac.facturaid]
 		);
-          const parcialidad = conteoResult.rows[0]?.totalPagos || 1;
+          const parcialidad = parseInt(conteoResult.rows[0]?.totalPagos || '1', 10);
 
           let customerPayload: any;
           if (fac.idclientefacturaapi) {
@@ -471,7 +471,7 @@ async function main() {
 			[message.fromPhone, message.organizacionId]
 		);
 
-      const mensajesHoy = rateCheck.rows[0]?.total || 0;
+      const mensajesHoy = parseInt(rateCheck.rows[0]?.total || '0', 10);
       if (mensajesHoy >= 15) {
         console.log(`[Worker] Rate-limit alcanzado para ${maskPhone(message.fromPhone)} (${mensajesHoy}/15 hoy). No responder.`);
         return;

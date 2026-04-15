@@ -7,9 +7,7 @@ export const GET: RequestHandler = async () => {
 		const pool = await getConnection();
 
 		// Obtener todos los roles de la base de datos (solo Id y Nombre)
-		const result = await pool
-			.request()
-			.query(`
+		const result = await pool.query(`
 				SELECT Id, Nombre
 				FROM Roles
 				ORDER BY Nombre ASC
@@ -17,9 +15,9 @@ export const GET: RequestHandler = async () => {
 
 		return json({
 			success: true,
-			roles: result.recordset.map((rol: any) => ({
-				id: rol.Id,
-				nombre: rol.Nombre
+			roles: result.rows.map((rol: any) => ({
+				id: rol.id,
+				nombre: rol.nombre
 			}))
 		});
 

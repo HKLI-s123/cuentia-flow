@@ -13,14 +13,14 @@ export const GET: RequestHandler = async ({ url }) => {
 		}
 
 		const pool = await getConnection();
-		const result = await pool.request().query(`
-			SELECT ID, ClaveEstado, NombreEstado, PaisID
+		const result = await pool.query(`
+			SELECT id as "ID", claveestado as "ClaveEstado", nombreestado as "NombreEstado", paisid as "PaisID"
 			FROM Estados 
-			WHERE PaisID = ${paisId}
-			ORDER BY NombreEstado
-		`);
+			WHERE paisid = $1
+			ORDER BY nombreestado
+		`, [paisId]);
 
-		const estados = result.recordset;
+		const estados = result.rows;
 
 		return new Response(JSON.stringify(estados), {
 			status: 200,
