@@ -16,13 +16,13 @@ module.exports = {
     {
       name: 'cuentia-app',
       script: 'build/index.js',
-      cwd: '/home/cuentia/cuentia-flow',
+      cwd: '/home/cuentia/apps/cuentia-flow',
       env: {
         NODE_ENV: 'production',
         PORT: 3000,
         ORIGIN: 'https://flow.cuentia.mx'
       },
-      env_file: '/home/cuentia/cuentia-flow/.env',
+      env_file: '/home/cuentia/apps/cuentia-flow/.env',
       instances: 1,            // 1 instancia (Baileys necesita singleton)
       exec_mode: 'fork',
       autorestart: true,
@@ -39,11 +39,11 @@ module.exports = {
       name: 'cuentia-worker',
       script: 'node_modules/.bin/tsx',
       args: 'worker/index.ts',
-      cwd: '/home/cuentia/cuentia-flow',
+      cwd: '/home/cuentia/apps/cuentia-flow',
       env: {
         NODE_ENV: 'production',
       },
-      env_file: '/home/cuentia/cuentia-flow/.env',
+      env_file: '/home/cuentia/apps/cuentia-flow/.env',
       instances: 1,
       exec_mode: 'fork',
       autorestart: true,
