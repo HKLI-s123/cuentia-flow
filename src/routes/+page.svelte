@@ -42,7 +42,7 @@
   <meta name="description" content="CuentIA Flow: Plataforma de facturación electrónica y cobranza autónoma con inteligencia artificial. Automatiza tu flujo de cobro." />
   <title>CuentIA Flow — Cobranza inteligente con IA</title>
   <meta name="google-site-verification" content="_HExOmVHs3A5Lrn4J6FiJ60bDBSPjqOU94Crf9IC2sg" />
-  <link rel="preload" as="image" type="image/webp" href="/logotipo3.webp" />
+  <link rel="preload" as="image" type="image/webp" href="/logotipo3_ver2.webp" />
 </svelte:head>
 
 <div class="min-h-screen bg-white overflow-x-hidden">
@@ -51,7 +51,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center gap-2">
-          <img src="/logotipo3.webp" alt="CuentIA Flow" class="h-8" width="120" height="80" />
+          <img src="/logotipo3_ver2.webp" alt="CuentIA Flow" class="h-8" width="104" height="32" />
         </div>
 
         <div class="hidden md:flex items-center gap-1 text-sm font-medium text-slate-600">
