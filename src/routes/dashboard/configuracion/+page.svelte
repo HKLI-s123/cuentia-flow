@@ -351,7 +351,7 @@
   let motivoCancelacion = '';
   let procesandoCancelacion = false;
 
-  const preciosPlanes: Record<string, number> = { basico: 499, pro: 1299, enterprise: 3499 };
+  const preciosPlanes: Record<string, number> = { basico: 399, pro: 799, enterprise: 1499 };
   $: precioOriginal = suscripcion ? (preciosPlanes[suscripcion.plan] || 0) : 0;
   $: precioConDescuento = Math.round(precioOriginal * 0.7);
   $: ahorroMensual = precioOriginal - precioConDescuento;
@@ -360,7 +360,7 @@
     {
       id: 'basico',
       nombre: 'Básico',
-      precio: '$499',
+      precio: '$399',
       periodo: 'MXN/mes',
       descripcion: 'Para emprendedores y freelancers',
       color: 'slate',
@@ -373,7 +373,7 @@
     {
       id: 'pro',
       nombre: 'Pro',
-      precio: '$1,299',
+      precio: '$799',
       periodo: 'MXN/mes',
       descripcion: 'Para PyMEs en crecimiento',
       color: 'indigo',
@@ -387,7 +387,7 @@
     {
       id: 'enterprise',
       nombre: 'Enterprise',
-      precio: '$3,499',
+      precio: '$1,499',
       periodo: 'MXN/mes',
       descripcion: 'Para grandes empresas',
       color: 'slate',

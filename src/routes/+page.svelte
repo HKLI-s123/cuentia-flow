@@ -144,14 +144,14 @@
             Emite CFDI, gestiona cuentas por cobrar y deja que nuestra <strong class="text-slate-800">IA contacte a tus clientes por WhatsApp</strong> para cobrar por ti. Sin intervención manual.
           </p>
 
-          <div class="mt-10 flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4">
-            <a href="/register" class="group w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold px-8 py-4 rounded-2xl hover:from-indigo-700 hover:to-violet-700 transition-all shadow-xl shadow-indigo-300/30 hover:shadow-2xl hover:shadow-indigo-400/30 hover:-translate-y-0.5 text-base">
+          <div class="mt-10 flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3">
+            <a href="/register" class="group w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-2xl hover:from-indigo-700 hover:to-violet-700 transition-all shadow-xl shadow-indigo-300/30 hover:shadow-2xl hover:shadow-indigo-400/30 hover:-translate-y-0.5 text-sm sm:text-base">
               Comenzar gratis
               <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </a>
-            <a href="#como-funciona" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-slate-700 font-semibold px-8 py-4 rounded-2xl bg-white border border-slate-200 hover:border-indigo-300 hover:text-indigo-600 transition-all shadow-sm hover:shadow-md">
+            <a href="#como-funciona" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-slate-700 font-semibold px-6 py-3 sm:px-8 sm:py-4 rounded-2xl bg-white border border-slate-200 hover:border-indigo-300 hover:text-indigo-600 transition-all shadow-sm hover:shadow-md">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -178,7 +178,7 @@
 
         <!-- Mock Dashboard Panel -->
         <div class:hero-animate-right={visible} class="relative">
-          <div class="absolute -top-4 -left-4 z-20 bg-white rounded-2xl shadow-2xl shadow-slate-200/60 p-4 border border-slate-100 floating-card-1">
+          <div class="absolute -top-4 -left-4 z-20 bg-white rounded-2xl shadow-2xl shadow-slate-200/60 p-4 border border-slate-100 floating-card-1 hidden sm:block">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
                 <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -192,7 +192,7 @@
             </div>
           </div>
 
-          <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-200/60 p-6 sm:p-8">
+          <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-200/60 p-5 sm:p-8">
             <div class="flex items-center justify-between mb-6">
               <div>
                 <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Panel de Cobranza</p>
@@ -250,7 +250,7 @@
             </div>
           </div>
 
-          <div class="absolute -bottom-3 -right-3 z-20 bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-2xl shadow-xl shadow-indigo-300/40 p-4 floating-card-2">
+          <div class="absolute -bottom-3 -right-3 z-20 bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-2xl shadow-xl shadow-indigo-300/40 p-4 floating-card-2 hidden sm:block">
             <div class="flex items-center gap-2">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -565,7 +565,7 @@
           <h3 class="text-xl font-bold text-slate-900">Básico</h3>
           <p class="text-sm text-slate-500 mt-1">Para emprendedores y freelancers</p>
           <div class="mt-6 mb-8">
-            <span class="text-4xl font-black text-slate-900">$499</span>
+            <span class="text-4xl font-black text-slate-900">$399</span>
             <span class="text-slate-400 text-sm">MXN/mes</span>
           </div>
           <ul class="space-y-3.5 mb-8">
@@ -590,7 +590,7 @@
           <h3 class="text-xl font-bold text-slate-900">Pro</h3>
           <p class="text-sm text-slate-500 mt-1">Para PyMEs en crecimiento</p>
           <div class="mt-6 mb-8">
-            <span class="text-4xl font-black text-slate-900">$1,299</span>
+            <span class="text-4xl font-black text-slate-900">$799</span>
             <span class="text-slate-400 text-sm">MXN/mes</span>
           </div>
           <ul class="space-y-3.5 mb-8">
@@ -614,7 +614,7 @@
           <h3 class="text-xl font-bold text-slate-900">Enterprise</h3>
           <p class="text-sm text-slate-500 mt-1">Para grandes empresas</p>
           <div class="mt-6 mb-8">
-            <span class="text-4xl font-black text-slate-900">$3,499</span>
+            <span class="text-4xl font-black text-slate-900">$1,499</span>
             <span class="text-slate-400 text-sm">MXN/mes</span>
           </div>
           <ul class="space-y-3.5 mb-8">
