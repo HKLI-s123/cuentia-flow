@@ -173,7 +173,7 @@ async function handleRegister(e: Event) {
 <div class="flex min-h-screen">
   <!-- Lado izquierdo con branding -->
   <div class="hidden lg:flex w-1/2 bg-indigo-900 text-white flex-col justify-center items-center p-12">
-    <img src="/logo-cuentia-flow.png" alt="CuentIA Flow" class="w-[30rem]" />
+    <img src="/logo-cuentia-flow-lg.webp" alt="CuentIA Flow" class="w-[30rem]" width="960" height="640" />
   </div>
 
   <!-- Lado derecho con registro -->
