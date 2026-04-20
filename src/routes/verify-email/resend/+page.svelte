@@ -101,7 +101,7 @@ async function submit() {
 <div class="min-h-screen flex items-center justify-center bg-gray-50">
 	<div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
 		<div class="flex flex-col items-center mb-6">
-			<img src="/logo-cuentia-flow.webp" alt="CuentIA Flow" class="w-32 mb-2" width="120" height="80" />
+			<img src="/logotipo3.webp" alt="CuentIA Flow" class="w-32 mb-2" width="120" height="80" />
 			<h2 class="text-2xl font-bold text-indigo-900 mb-2">Reenviar correo de verificación</h2>
 			<p class="text-gray-600 text-sm mb-4">Ingresa tu correo para recibir nuevamente el enlace de verificación.</p>
 		</div>
