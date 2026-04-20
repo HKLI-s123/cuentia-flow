@@ -178,7 +178,7 @@
 
         <!-- Mock Dashboard Panel -->
         <div class:hero-animate-right={visible} class="relative">
-          <div class="absolute -top-4 -left-4 z-20 bg-white rounded-2xl shadow-2xl shadow-slate-200/60 p-4 border border-slate-100 floating-card-1 hidden sm:block">
+          <div class="sm:absolute sm:-top-4 sm:-left-4 z-20 bg-white rounded-2xl shadow-2xl shadow-slate-200/60 p-3 sm:p-4 border border-slate-100 floating-card-1 mb-3 sm:mb-0">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
                 <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -250,7 +250,7 @@
             </div>
           </div>
 
-          <div class="absolute -bottom-3 -right-3 z-20 bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-2xl shadow-xl shadow-indigo-300/40 p-4 floating-card-2 hidden sm:block">
+          <div class="sm:absolute sm:-bottom-3 sm:-right-3 z-20 bg-gradient-to-br from-indigo-600 to-violet-600 text-white rounded-2xl shadow-xl shadow-indigo-300/40 p-3 sm:p-4 floating-card-2 mt-3 sm:mt-0">
             <div class="flex items-center gap-2">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
