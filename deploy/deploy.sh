@@ -134,6 +134,12 @@ cmd_update() {
     # Build
     cmd_build
 
+    # Actualizar Nginx config y SSL
+    log "Actualizando configuración Nginx..."
+    sudo cp "$APP_DIR/deploy/nginx/flow.cuentia.mx" /etc/nginx/sites-available/flow.cuentia.mx
+    sudo certbot --nginx -d "$DOMAIN" --non-interactive --agree-tos --email soporte@cuentia.mx
+    sudo nginx -t && sudo systemctl reload nginx
+
     # Restart PM2
     log "Reiniciando servicios..."
     pm2 restart ecosystem.config.cjs
