@@ -6,7 +6,7 @@
   import { PasswordInput } from '$lib/components/ui';
 
   // Importar el Site Key de reCAPTCHA (público, seguro de importar)
-  const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LelnYgsAAAAAN3zfH98TtDCdwSpUntBT0UJbiKo';
+  const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LcNcMAsAAAAANh3YnPjv_UGhYQtDQZGcwd-9v6v';
 
   let email = '';
   let password = '';
@@ -85,7 +85,7 @@
 </script>
 
 <svelte:head>
-  <script src="https://www.google.com/recaptcha/api.js?render=6LelnYgsAAAAAN3zfH98TtDCdwSpUntBT0UJbiKo" async defer></script>
+  <script src="https://www.google.com/recaptcha/api.js?render=6LcNcMAsAAAAANh3YnPjv_UGhYQtDQZGcwd-9v6v" async defer></script>
 </svelte:head>
 
 <div class="flex min-h-screen">

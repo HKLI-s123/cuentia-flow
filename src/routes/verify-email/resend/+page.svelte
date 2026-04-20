@@ -6,7 +6,7 @@ let error = '';
 let success = false;
 let csrfToken = '';
 let loading = false;
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LelnYgsAAAAAN3zfH98TtDCdwSpUntBT0UJbiKo';
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LcNcMAsAAAAANh3YnPjv_UGhYQtDQZGcwd-9v6v';
 let recaptchaReady = false;
 
 onMount(() => {
@@ -95,7 +95,7 @@ async function submit() {
 }
 </script>
 <svelte:head>
-	<script src="https://www.google.com/recaptcha/api.js?render=6LelnYgsAAAAAN3zfH98TtDCdwSpUntBT0UJbiKo" async defer></script>
+	<script src="https://www.google.com/recaptcha/api.js?render=6LcNcMAsAAAAANh3YnPjv_UGhYQtDQZGcwd-9v6v" async defer></script>
 </svelte:head>
 
 <div class="min-h-screen flex items-center justify-center bg-gray-50">
