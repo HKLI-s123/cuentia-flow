@@ -41,6 +41,7 @@
 <svelte:head>
   <meta name="description" content="CuentIA Flow: Plataforma de facturación electrónica y cobranza autónoma con inteligencia artificial. Automatiza tu flujo de cobro." />
   <title>CuentIA Flow — Cobranza inteligente con IA</title>
+  <meta name="google-site-verification" content="_HExOmVHs3A5Lrn4J6FiJ60bDBSPjqOU94Crf9IC2sg" />
 </svelte:head>
 
 <div class="min-h-screen bg-white overflow-x-hidden">
