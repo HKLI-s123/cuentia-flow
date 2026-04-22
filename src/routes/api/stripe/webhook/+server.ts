@@ -12,10 +12,16 @@ import { env } from '$env/dynamic/private';
 export const POST: RequestHandler = async ({ request }) => {
   const stripe = getStripe();
   const signature = request.headers.get('stripe-signature');
-  const webhookSecret = env.STRIPE_WEBHOOK_SECRET;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || env.STRIPE_WEBHOOK_SECRET;
 
-  if (!signature || !webhookSecret) {
-    return json({ error: 'Missing signature or webhook secret' }, { status: 400 });
+  if (!webhookSecret) {
+    console.error('[Stripe Webhook] STRIPE_WEBHOOK_SECRET no configurado en runtime');
+    return json({ error: 'Missing webhook secret' }, { status: 400 });
+  }
+
+  if (!signature) {
+    console.error('[Stripe Webhook] Cabecera stripe-signature ausente');
+    return json({ error: 'Missing stripe signature' }, { status: 400 });
   }
 
   let event;
