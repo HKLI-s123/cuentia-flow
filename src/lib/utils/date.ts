@@ -3,9 +3,30 @@
  * Replaces `new Date().toISOString().split('T')[0]` which returns UTC date
  * and can show tomorrow in timezones behind UTC (e.g. Mexico after 6pm).
  */
+const APP_TIME_ZONE = 'America/Mexico_City';
+
+function formatDateParts(date: Date): string {
+	const formatter = new Intl.DateTimeFormat('en-CA', {
+		timeZone: APP_TIME_ZONE,
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit'
+	});
+
+	const parts = formatter.formatToParts(date);
+	const year = parts.find((part) => part.type === 'year')?.value;
+	const month = parts.find((part) => part.type === 'month')?.value;
+	const day = parts.find((part) => part.type === 'day')?.value;
+
+	if (!year || !month || !day) {
+		throw new Error('No se pudo formatear la fecha local');
+	}
+
+	return `${year}-${month}-${day}`;
+}
+
 export function hoyLocal(): string {
-	const d = new Date();
-	return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+	return formatDateParts(new Date());
 }
 
 /**
@@ -19,5 +40,5 @@ export function fechaLocal(date: Date | string): string {
 		return date;
 	}
 	const d = typeof date === 'string' ? new Date(date) : date;
-	return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+	return formatDateParts(d);
 }

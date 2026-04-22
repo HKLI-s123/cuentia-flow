@@ -6,6 +6,12 @@ import type { AuthToken } from './tokens';
 
 export type JWTPayload = AuthToken;
 
+export type ResolvedUserContext = {
+	organizacionId: number | null;
+	rolId: number | null;
+	rolNombre: string | null;
+};
+
 // Middleware helper para obtener usuario del request
 export function getUserFromRequest(event: RequestEvent): JWTPayload | null {
 	// Primero intentar desde locals (ya verificado por hooks)
@@ -22,6 +28,43 @@ export function getUserFromRequest(event: RequestEvent): JWTPayload | null {
 	}
 
 	return verifyAccessToken(token);
+}
+
+export async function resolveUserContext(
+	userId: number,
+	preferredOrganizationId?: number | null
+): Promise<ResolvedUserContext> {
+	const pool = await getConnection();
+	const result = await pool.query(
+		`SELECT uo.organizacionid, uo.rolid, r.nombre as rolnombre
+		 FROM usuario_organizacion uo
+		 INNER JOIN roles r ON r.id = uo.rolid
+		 WHERE uo.usuarioid = $1
+		 ORDER BY CASE
+		   WHEN $2::int IS NOT NULL AND uo.organizacionid = $2::int THEN 0
+		   ELSE 1
+		 END,
+		 uo.fechaasignacion DESC NULLS LAST,
+		 uo.createdat DESC NULLS LAST,
+		 uo.organizacionid DESC
+		 LIMIT 1`,
+		[userId, preferredOrganizationId ?? null]
+	);
+
+	const membership = result.rows[0];
+	if (!membership) {
+		return {
+			organizacionId: null,
+			rolId: null,
+			rolNombre: null
+		};
+	}
+
+	return {
+		organizacionId: membership.organizacionid ?? null,
+		rolId: membership.rolid ?? null,
+		rolNombre: membership.rolnombre ?? null
+	};
 }
 
 // Respuesta de error de autenticación

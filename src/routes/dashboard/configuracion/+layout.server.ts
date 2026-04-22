@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
+import { resolveUserContext } from '$lib/server/auth';
 
 /**
  * Protección de ruta: Solo Administradores pueden acceder a Configuración
@@ -12,13 +13,15 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 		throw redirect(302, '/login');
 	}
 
-	// Si no tiene rolId (usuario sin organización), permitir acceso para contratar plan
-	if (!user.rolId) {
+	const resolvedContext = await resolveUserContext(user.id, user.organizacion ?? null);
+
+	// Si no tiene organización, permitir acceso para contratar plan
+	if (!resolvedContext.organizacionId) {
 		return {};
 	}
 
 	// rolId 3 = Administrador. Si tiene otro rol, redirigir
-	if (user.rolId !== 3) {
+	if (resolvedContext.rolId !== 3) {
 		throw redirect(302, '/dashboard');
 	}
 

@@ -6,6 +6,7 @@
  */
 
 import type { PageServerLoad } from './$types';
+import { resolveUserContext } from '$lib/server/auth';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	// El dashboard layout ya valida autenticación
@@ -14,12 +15,17 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw new Error('No autenticado');
 	}
 
+	const resolvedContext = await resolveUserContext(
+		locals.user.id,
+		locals.user.organizacion ?? null
+	);
+
 	// Pasar datos del usuario al cliente de forma segura
 	return {
 		user: {
 			id: locals.user.id,
 			correo: locals.user.correo,
-			organizacion: locals.user.organizacion
+			organizacion: resolvedContext.organizacionId
 		}
 	};
 };
