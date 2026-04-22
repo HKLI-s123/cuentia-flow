@@ -129,18 +129,7 @@ export const POST: RequestHandler = async (event) => {
 		);
     }
 
-    // Verificar si es primera suscripción (nunca tuvo plan de pago)
-    const historialResult = await pool.query(
-			`
-        SELECT COUNT(*) as total FROM PagosSuscripcion p
-        INNER JOIN Suscripciones s ON p.suscripcionid = s.id
-        WHERE s.organizacionid = $1 AND p.estado = 'paid'
-      `,
-			[orgId]
-		);
-    const esPrimeraSuscripcion = (historialResult.rows[0]?.total || 0) === 0;
-
-    // Crear Checkout Session
+    // Crear Checkout Session con trial de 30 días
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
@@ -157,7 +146,8 @@ export const POST: RequestHandler = async (event) => {
           organizacionId: String(orgId),
           plan,
         },
-        ...(esPrimeraSuscripcion ? { trial_period_days: 30 } : {}),
+        // PRueba gratuita de 30 días para todas las nuevas suscripciones
+        trial_period_days: 30,
       },
     });
 
