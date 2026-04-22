@@ -26,6 +26,13 @@ export const POST: RequestHandler = async (event) => {
   const { plan } = await request.json();
 
   if (!plan || !PLAN_PRICES[plan]) {
+    console.error('[Stripe Checkout Error]', {
+      plan,
+      planValid: !!plan,
+      priceExists: !!PLAN_PRICES[plan],
+      availablePlans: Object.keys(PLAN_PRICES),
+      planPrices: PLAN_PRICES
+    });
     return json({ error: 'Plan inválido' }, { status: 400 });
   }
 
