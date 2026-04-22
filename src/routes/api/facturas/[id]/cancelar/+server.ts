@@ -78,10 +78,14 @@ export const POST: RequestHandler = async (event) => {
         f.numero_factura,
         f.estado_factura_id,
         f.FacturapiId,
+        f.UUID,
+        f.UUIDFacturapi,
         f.Timbrado,
         f.EstadoCancelacion,
         c.OrganizacionId,
-        COALESCE(co.facturapi_key, o.apikeyfacturaapi) as FacturapiKey
+        COALESCE(co.facturapi_key, o.apikeyfacturaapi) as FacturapiKey,
+        co.facturapi_key as FacturapiKeyConfig,
+        o.apikeyfacturaapi as FacturapiKeyLegacy
       FROM Facturas f
       INNER JOIN Clientes c ON f.ClienteId = c.Id
       INNER JOIN Organizaciones o ON c.OrganizacionId = o.Id
@@ -122,7 +126,7 @@ export const POST: RequestHandler = async (event) => {
 
     // Si la factura está timbrada (tiene FacturapiId), cancelarla en Facturapi primero
     if (factura.Timbrado && factura.FacturapiId) {
-      if (!factura.FacturapiKey) {
+      if (!factura.FacturapiKey && !factura.FacturapiKeyConfig && !factura.FacturapiKeyLegacy) {
         return json({
           success: false,
           error: 'La organización no tiene configurada una API key de Facturapi. No se puede cancelar la factura timbrada.'
@@ -130,28 +134,84 @@ export const POST: RequestHandler = async (event) => {
       }
 
       try {
-        // Construir URL con query params según doc de Facturapi
-        let cancelUrl = `https://www.facturapi.io/v2/invoices/${factura.FacturapiId}?motive=${motivo}`;
-        if (motivo === '01' && sustitucion) {
-          cancelUrl += `&substitution=${encodeURIComponent(sustitucion)}`;
+        const candidateIds = [factura.FacturapiId, factura.UUIDFacturapi, factura.UUID]
+          .map((v: any) => String(v || '').trim())
+          .filter((v: string) => !!v);
+        const candidateKeys = [factura.FacturapiKey, factura.FacturapiKeyConfig, factura.FacturapiKeyLegacy]
+          .map((v: any) => String(v || '').trim())
+          .filter((v: string) => !!v);
+
+        const uniqueIds = Array.from(new Set(candidateIds));
+        const uniqueKeys = Array.from(new Set(candidateKeys));
+
+        let lastFacturapiError: any = null;
+        let successResponse: any = null;
+        let usedId = '';
+        let usedKeyPreview = '';
+
+        for (const invoiceId of uniqueIds) {
+          for (const apiKey of uniqueKeys) {
+            try {
+              let cancelUrl = `https://www.facturapi.io/v2/invoices/${encodeURIComponent(invoiceId)}?motive=${motivo}`;
+              if (motivo === '01' && sustitucion) {
+                cancelUrl += `&substitution=${encodeURIComponent(sustitucion)}`;
+              }
+
+              console.log('Intentando cancelación en Facturapi:', {
+                facturaId,
+                invoiceId,
+                motivo,
+                apiKey: `${apiKey.substring(0, 10)}...`
+              });
+
+              const response = await axios.delete(cancelUrl, {
+                auth: {
+                  username: apiKey,
+                  password: ''
+                }
+              });
+
+              successResponse = response.data;
+              usedId = invoiceId;
+              usedKeyPreview = `${apiKey.substring(0, 10)}...`;
+              break;
+            } catch (err: any) {
+              lastFacturapiError = err;
+              const status = err?.response?.status;
+
+              // 404/400/422: intentar con siguiente combinación id/key
+              if (status === 404 || status === 400 || status === 422) {
+                continue;
+              }
+
+              // Otros errores (timeout, 5xx): abortar inmediatamente
+              throw err;
+            }
+          }
+
+          if (successResponse) break;
         }
 
-        console.log('Cancelando factura en Facturapi:', {
-          id: factura.FacturapiId,
-          motivo,
-          motivoDescripcion,
-          apiKey: factura.FacturapiKey?.substring(0, 10) + '...'
-        });
+        if (!successResponse) {
+          const errorMsg = lastFacturapiError?.response?.data?.message || lastFacturapiError?.message || 'Error desconocido';
+          const errorStatus = lastFacturapiError?.response?.status || 500;
 
-        // DELETE request a Facturapi (Basic Auth con API key como username)
-        const response = await axios.delete(cancelUrl, {
-          auth: {
-            username: factura.FacturapiKey,
-            password: ''
-          }
-        });
+          console.error('No se pudo cancelar en Facturapi con ninguna combinación:', {
+            facturaId,
+            numero_factura: factura.numero_factura,
+            idsIntentados: uniqueIds,
+            totalKeysIntentadas: uniqueKeys.length,
+            status: errorStatus,
+            message: errorMsg
+          });
 
-        facturapiResponse = response.data;
+          return json({
+            success: false,
+            error: 'No se encontró el comprobante en Facturapi con las credenciales actuales. Verifica si la factura fue emitida con otra API key/cuenta.'
+          }, { status: errorStatus === 400 || errorStatus === 404 || errorStatus === 422 ? errorStatus : 500 });
+        }
+
+        facturapiResponse = successResponse;
 
         // Facturapi regresa el objeto invoice actualizado
         // Escenario 1: status = "canceled" → cancelación exitosa inmediata
@@ -167,7 +227,10 @@ export const POST: RequestHandler = async (event) => {
           cancellationStatus = facturapiResponse.cancellation_status || 'accepted';
         }
 
-        console.log(`Factura ${factura.numero_factura} cancelada en Facturapi exitosamente, status: ${cancellationStatus}`);
+        console.log(`Factura ${factura.numero_factura} cancelada en Facturapi exitosamente, status: ${cancellationStatus}`, {
+          usedId,
+          usedKey: usedKeyPreview
+        });
       } catch (facturapiError: any) {
         const errorMsg = facturapiError.response?.data?.message || facturapiError.message;
         const errorStatus = facturapiError.response?.status;

@@ -2109,7 +2109,7 @@ Teléfono: {telefono_empresa}
                     </div>
                     {#if suscripcion.canceladaEn}
                       <div class="p-3 bg-red-50 rounded-lg">
-                        <span class="text-xs text-red-500 uppercase tracking-wide">Se cancela el</span>
+                        <span class="text-xs text-red-500 uppercase tracking-wide">Se canceló el</span>
                         <p class="font-medium text-red-700 mt-1">{formatearFecha(suscripcion.canceladaEn)}</p>
                       </div>
                     {:else}
