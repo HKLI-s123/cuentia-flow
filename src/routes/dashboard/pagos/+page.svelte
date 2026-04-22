@@ -284,7 +284,7 @@
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ motivo: 'Cancelación solicitada por el usuario' })
+          body: JSON.stringify({ motivo: '02' })
         }
       );
       const data = await response.json();
