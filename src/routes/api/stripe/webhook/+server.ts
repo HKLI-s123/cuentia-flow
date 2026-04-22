@@ -35,6 +35,10 @@ export const POST: RequestHandler = async ({ request }) => {
 
   const pool = await getConnection();
 
+  const getStripePeriodEndUnix = (subscription: any): number | null => {
+    return subscription?.current_period_end || subscription?.trial_end || subscription?.items?.data?.[0]?.current_period_end || null;
+  };
+
   try {
     switch (event.type) {
       // ═══ CHECKOUT COMPLETADO ═══
@@ -55,23 +59,24 @@ export const POST: RequestHandler = async ({ request }) => {
         const subscription = await stripe.subscriptions.retrieve(subscriptionId) as any;
         const priceId = subscription.items?.data?.[0]?.price?.id || '';
         const plan = session.metadata?.plan || getPlanFromPriceId(priceId);
-        const periodEnd = subscription.items?.data?.[0]?.current_period_end;
+        const periodEnd = getStripePeriodEndUnix(subscription);
+        const status = subscription.status || 'active';
 
         await pool.query(
 			`
             INSERT INTO Suscripciones (OrganizacionId, StripeCustomerId, StripeSubscriptionId, StripePriceId, PlanSeleccionado, Estado, FechaInicio, FechaFinPeriodo, CreatedAt, UpdatedAt)
-            VALUES ($1, $2, $3, $4, $5, 'active', NOW(), $6, NOW(), NOW())
+          VALUES ($1, $2, $3, $4, $5, $6, NOW(), $7, NOW(), NOW())
             ON CONFLICT (organizacionid) DO UPDATE SET
                 StripeCustomerId = EXCLUDED.StripeCustomerId,
                 StripeSubscriptionId = EXCLUDED.StripeSubscriptionId,
                 StripePriceId = EXCLUDED.StripePriceId,
                 PlanSeleccionado = EXCLUDED.PlanSeleccionado,
-                Estado = 'active',
+            Estado = EXCLUDED.Estado,
                 FechaInicio = NOW(),
                 FechaFinPeriodo = EXCLUDED.FechaFinPeriodo,
                 UpdatedAt = NOW()
           `,
-			[orgId, customerId, subscriptionId, priceId, plan, periodEnd ? new Date(periodEnd * 1000) : null]
+    			[orgId, customerId, subscriptionId, priceId, plan, status, periodEnd ? new Date(periodEnd * 1000) : null]
 		);
 
         break;
@@ -113,15 +118,15 @@ export const POST: RequestHandler = async ({ request }) => {
         // Actualizar periodo de la suscripción
         if (subscriptionId) {
           const subscription = await stripe.subscriptions.retrieve(subscriptionId) as any;
-          const periodEnd = subscription.items?.data?.[0]?.current_period_end;
+          const periodEnd = getStripePeriodEndUnix(subscription);
           if (periodEnd) {
             await pool.query(
 			`
                 UPDATE Suscripciones
-                SET Estado = 'active', FechaFinPeriodo = $2, UpdatedAt = NOW()
+                SET Estado = $2, FechaFinPeriodo = $3, UpdatedAt = NOW()
                 WHERE OrganizacionId = $1
               `,
-			[sub.organizacionid, new Date(periodEnd * 1000)]
+			[sub.organizacionid, subscription.status || 'active', new Date(periodEnd * 1000)]
 		);
           }
         }
@@ -153,7 +158,7 @@ export const POST: RequestHandler = async ({ request }) => {
         const priceId = subscription.items?.data?.[0]?.price?.id || '';
         const plan = subscription.metadata?.plan || getPlanFromPriceId(priceId);
         const status = subscription.status;
-        const periodEnd = subscription.items?.data?.[0]?.current_period_end;
+        const periodEnd = getStripePeriodEndUnix(subscription);
         const cancelAt = subscription.cancel_at;
 
         await pool.query(

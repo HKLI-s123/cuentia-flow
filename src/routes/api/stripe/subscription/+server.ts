@@ -25,6 +25,10 @@ async function resolveOrgId(user: { id: number; organizacion?: number }, pool: a
   return result.rows[0]?.organizacionid || null;
 }
 
+function getStripePeriodEndUnix(subscription: any): number | null {
+  return subscription?.current_period_end || subscription?.trial_end || subscription?.items?.data?.[0]?.current_period_end || null;
+}
+
 /**
  * GET /api/stripe/subscription
  * Devuelve la suscripción actual de la organización
@@ -95,14 +99,16 @@ export const GET: RequestHandler = async ({ locals }) => {
           expand: ['discounts'],
         }) as any;
 
-        // Sincronizar fechaFinPeriodo
-        if (!fechaFinPeriodo) {
-          const periodEnd = stripeSub.items?.data?.[0]?.current_period_end;
-          if (periodEnd) {
-            fechaFinPeriodo = new Date(periodEnd * 1000);
+        // Sincronizar fechaFinPeriodo siempre con Stripe para evitar fechas desactualizadas
+        const periodEnd = getStripePeriodEndUnix(stripeSub);
+        if (periodEnd) {
+          const nuevaFechaFin = new Date(periodEnd * 1000);
+          fechaFinPeriodo = nuevaFechaFin;
+          const fechaActualDb = sub.fechafinperiodo ? new Date(sub.fechafinperiodo) : null;
+          if (!fechaActualDb || fechaActualDb.getTime() !== nuevaFechaFin.getTime()) {
             await pool.query(
 			'UPDATE Suscripciones SET FechaFinPeriodo = $2, UpdatedAt = NOW() WHERE Id = $1',
-			[sub.id, fechaFinPeriodo]
+			[sub.id, nuevaFechaFin]
 		);
           }
         }
@@ -327,15 +333,15 @@ export const PUT: RequestHandler = async (event) => {
 
     // Actualizar en BD con plan verificado
     const verifiedPlan = actualPriceId ? (getPlanFromPriceId(actualPriceId) || plan) : plan;
-    const periodEnd = updated.items?.data?.[0]?.current_period_end;
+    const periodEnd = getStripePeriodEndUnix(updated);
     await pool.query(
 			`
         UPDATE Suscripciones
         SET StripePriceId = $2, PlanSeleccionado = $3, FechaFinPeriodo = $4,
-            Estado = 'active', FechaCancelacion = NULL, MotivoCancelacion = NULL, UpdatedAt = NOW()
+            Estado = $5, FechaCancelacion = NULL, MotivoCancelacion = NULL, UpdatedAt = NOW()
         WHERE OrganizacionId = $1
       `,
-			[orgId, PLAN_PRICES[plan], verifiedPlan, periodEnd ? new Date(periodEnd * 1000) : null]
+			[orgId, PLAN_PRICES[plan], verifiedPlan, periodEnd ? new Date(periodEnd * 1000) : null, updated.status || 'active']
 		);
 
     return json({ success: true, plan: verifiedPlan, limites: PLAN_LIMITS[verifiedPlan] });
