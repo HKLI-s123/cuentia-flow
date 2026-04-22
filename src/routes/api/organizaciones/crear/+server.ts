@@ -12,7 +12,7 @@ import {
 	validateNoSQLInjection,
 	validateZipCode
 } from '$lib/server/validation';
-import { PLAN_LIMITS } from '$lib/server/stripe';
+import { PLAN_LIMITS } from '$lib/server/planes';
 
 // Variable de entorno para la API de Facturapi
 const FACTURAPI_USER_KEY = process.env.FACTURAPI_USER_KEY || '';

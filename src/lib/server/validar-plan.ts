@@ -1,5 +1,5 @@
 import { getConnection } from './db';
-import { PLAN_LIMITS } from './stripe';
+import { PLAN_LIMITS } from './planes';
 
 /**
  * Obtiene el plan actual de una organización desde la tabla Suscripciones

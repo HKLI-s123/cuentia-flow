@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
 import { getConnection } from '$lib/server/db';
-import { PLAN_LIMITS } from '$lib/server/stripe';
+import { PLAN_LIMITS } from '$lib/server/planes';
 
 // Nombres legibles de cada plan
 const PLAN_NOMBRES: Record<string, string> = {

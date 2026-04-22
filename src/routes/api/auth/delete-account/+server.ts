@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getConnection } from '$lib/server/db';
-import { stripe } from '$lib/server/stripe';
+import { getStripe } from '$lib/server/stripe';
 import bcrypt from 'bcryptjs';
 
 /**
@@ -46,6 +46,8 @@ export const DELETE: RequestHandler = async ({ locals, request }) => {
        WHERE uo.usuarioid = $1 AND s.stripesubscriptionid IS NOT NULL`,
       [user.id]
     );
+
+    const stripe = getStripe();
 
     for (const sub of subResult.rows) {
       try {

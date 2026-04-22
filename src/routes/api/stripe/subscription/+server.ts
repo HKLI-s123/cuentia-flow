@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { stripe, PLAN_LIMITS, PLAN_PRICES, getPlanFromPriceId } from '$lib/server/stripe';
+import { getStripe, PLAN_PRICES, getPlanFromPriceId } from '$lib/server/stripe';
+import { PLAN_LIMITS } from '$lib/server/planes';
 import { getConnection } from '$lib/server/db';
 import { env } from '$env/dynamic/private';
 import { checkRateLimit, getClientIP } from '$lib/server/security';
@@ -89,6 +90,7 @@ export const GET: RequestHandler = async ({ locals }) => {
     // Sincronizar datos desde Stripe si tiene suscripción
     if (sub.stripesubscriptionid) {
       try {
+        const stripe = getStripe();
         const stripeSub = await stripe.subscriptions.retrieve(sub.stripesubscriptionid, {
           expand: ['discounts'],
         }) as any;
@@ -193,6 +195,7 @@ export const POST: RequestHandler = async (event) => {
   }
 
   try {
+    const stripe = getStripe();
     const pool = await getConnection();
     const orgId = await resolveOrgId(user, pool);
 
@@ -248,6 +251,7 @@ export const PUT: RequestHandler = async (event) => {
   }
 
   try {
+    const stripe = getStripe();
     const { plan } = await request.json();
 
     if (!plan || !PLAN_PRICES[plan]) {
@@ -361,6 +365,7 @@ export const DELETE: RequestHandler = async (event) => {
   }
 
   try {
+    const stripe = getStripe();
     const body = await request.json().catch(() => ({}));
     const { motivo, aplicarCupon } = body as { motivo?: string; aplicarCupon?: boolean };
 

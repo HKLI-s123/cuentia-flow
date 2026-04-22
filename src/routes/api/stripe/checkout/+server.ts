@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { stripe, PLAN_PRICES } from '$lib/server/stripe';
+import { getStripe, PLAN_PRICES } from '$lib/server/stripe';
 import { getConnection } from '$lib/server/db';
 import { checkRateLimit, getClientIP } from '$lib/server/security';
 
@@ -35,6 +35,7 @@ export const POST: RequestHandler = async (event) => {
   }
 
   try {
+    const stripe = getStripe();
     const pool = await getConnection();
 
     // Si user.organizacion es null (usuario nuevo que acaba de crear org),

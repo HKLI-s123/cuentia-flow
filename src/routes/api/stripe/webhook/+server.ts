@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { stripe, getPlanFromPriceId } from '$lib/server/stripe';
+import { getStripe, getPlanFromPriceId } from '$lib/server/stripe';
 import { getConnection } from '$lib/server/db';
 import { env } from '$env/dynamic/private';
 
@@ -10,6 +10,7 @@ import { env } from '$env/dynamic/private';
  * NO requiere autenticación — verificado con firma de Stripe
  */
 export const POST: RequestHandler = async ({ request }) => {
+  const stripe = getStripe();
   const signature = request.headers.get('stripe-signature');
   const webhookSecret = env.STRIPE_WEBHOOK_SECRET;
 
