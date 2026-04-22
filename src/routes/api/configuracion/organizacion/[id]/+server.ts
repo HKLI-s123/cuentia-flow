@@ -40,13 +40,13 @@ export const GET: RequestHandler = async (event) => {
         co.csd_cer_hash,
         co.csd_key_hash,
         COALESCE(co.facturapi_key, o.apikeyfacturaapi) as facturapi_key,
-        o.RazonSocial,
-        o.RFC,
-        r.Codigo as regimen_codigo,
-        r.Descripcion as regimen_descripcion
+        o.razonsocial as razon_social,
+        o.rfc as rfc,
+        r.codigo as regimen_codigo,
+        r.descripcion as regimen_descripcion
       FROM configuracion_organizacion co
-      INNER JOIN Organizaciones o ON co.organizacion_id = o.Id
-      LEFT JOIN Regimen r ON co.regimen_fiscal = r.ID_Regimen
+      INNER JOIN Organizaciones o ON co.organizacion_id = o.id
+      LEFT JOIN Regimen r ON co.regimen_fiscal = r.id_regimen
       WHERE co.organizacion_id = $1
     `;
 
@@ -55,12 +55,12 @@ export const GET: RequestHandler = async (event) => {
     // Obtener configuración de cobranza
     const cobranzaQuery = `
       SELECT
-        DiasGracia,
-        EscalamientoDias,
-        EnvioAutomaticoRecordatorios,
-        DiasRecordatorioPrevio
-      FROM ConfiguracionCobranza
-      WHERE OrganizacionId = $1
+        diasgracia,
+        escalamientodias,
+        envioautomaticorecordatorios,
+        diasrecordatorioprevio
+      FROM configuracioncobranza
+      WHERE organizacionid = $1
     `;
 
     const cobranzaResult = await pool.query(cobranzaQuery, [organizacionId]);
@@ -73,8 +73,8 @@ export const GET: RequestHandler = async (event) => {
       configuracion = {
         id: config.id,
         organizacionId: config.organizacion_id,
-        razonSocial: config.RazonSocial,
-        rfc: config.RFC,
+        razonSocial: config.razon_social,
+        rfc: config.rfc,
         nombreComercial: config.nombre_comercial,
         emailCorporativo: config.email_corporativo,
         telefono: config.telefono,
@@ -106,9 +106,9 @@ export const GET: RequestHandler = async (event) => {
       let escalonamiento = {};
 
       // Parsear escalamiento si existe
-      if (cobranza.EscalamientoDias) {
+      if (cobranza.escalamientodias) {
         try {
-          escalonamiento = JSON.parse(cobranza.EscalamientoDias);
+          escalonamiento = JSON.parse(cobranza.escalamientodias);
         } catch (e) {
           console.error('Error parseando escalamiento:', e);
           escalonamiento = {
@@ -128,10 +128,10 @@ export const GET: RequestHandler = async (event) => {
       }
 
       configCobranza = {
-        diasGracia: cobranza.DiasGracia || 3,
+        diasGracia: cobranza.diasgracia || 3,
         escalonamiento,
-        envioAutomaticoRecordatorios: cobranza.EnvioAutomaticoRecordatorios || false,
-        diasRecordatorioPrevio: cobranza.DiasRecordatorioPrevio || 3,
+        envioAutomaticoRecordatorios: cobranza.envioautomaticorecordatorios || false,
+        diasRecordatorioPrevio: cobranza.diasrecordatorioprevio || 3,
         horariosEnvio: {
           horaInicio: '09:00',
           horaFin: '18:00',

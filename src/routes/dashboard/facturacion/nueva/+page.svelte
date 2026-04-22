@@ -607,8 +607,8 @@
 				if (result.timbrado && result.timbrado.success) {
 					// Factura timbrada correctamente
 					const facturaId = result.facturaId || result.id;
-					const clienteEmail = clienteSeleccionado?.correo;
 					const clienteWhatsApp = clienteSeleccionado?.telefonoWhatsApp;
+					const clienteEmail = result.timbrado.emailDestinatario || clienteSeleccionado?.correo;
 
 					const debeEnviarCorreo = enviarPorCorreo && !!clienteEmail;
 					const debeEnviarWhatsApp = enviarPorWhatsApp && !!clienteWhatsApp && whatsappHabilitado;
@@ -630,22 +630,11 @@
 						const resultadosEnvio: string[] = [];
 						const erroresEnvio: string[] = [];
 
-						// Enviar por correo
 						if (debeEnviarCorreo) {
-							try {
-								const correoResp = await authFetch(`/api/facturas/${facturaId}/enviar-correo`, { method: 'POST' });
-								if (correoResp.status === 403) {
-									erroresEnvio.push('Correo no disponible en tu plan actual');
-								} else {
-									const correoResult = await correoResp.json();
-									if (correoResult.success) {
-										resultadosEnvio.push(`Correo enviado a ${clienteEmail}`);
-									} else {
-										erroresEnvio.push(`Error correo: ${correoResult.error || 'Error desconocido'}`);
-									}
-								}
-							} catch {
-								erroresEnvio.push('Error al enviar correo');
+							if (result.timbrado.emailEnviado) {
+								resultadosEnvio.push(`Correo enviado a ${clienteEmail}`);
+							} else {
+								erroresEnvio.push(`Error correo: ${result.timbrado.emailError || 'No se pudo enviar automáticamente'}`);
 							}
 						}
 

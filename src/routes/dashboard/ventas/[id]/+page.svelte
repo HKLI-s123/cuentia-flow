@@ -19,6 +19,8 @@
   let error = '';
   let tabActivo: 'COBRANZA' | 'DETALLES' = 'COBRANZA';
 
+  $: facturaCancelada = factura?.estado?.id === 6;
+
   // Modal de cancelación
   let modalCancelacionAbierto = false;
   let motivoSeleccionado = '01';
@@ -271,7 +273,13 @@
           </div>
 
           <div class="flex gap-3">
-            <Button variant="success" size="md" on:click={agregarPago}>
+            <Button
+              variant="success"
+              size="md"
+              on:click={agregarPago}
+              disabled={facturaCancelada || factura.metodoPago === 'PUE' || (factura.saldoPendiente || 0) <= 0}
+              title={facturaCancelada ? 'No se pueden agregar pagos a una factura cancelada' : factura.metodoPago === 'PUE' ? 'Las facturas PUE no requieren complemento de pago' : ''}
+            >
               AGREGAR PAGO
             </Button>
             {#if factura.estado?.id !== 6}
@@ -328,56 +336,90 @@
 
             <div class="p-6">
               {#if tabActivo === 'COBRANZA'}
-                <!-- Vencimiento de factura -->
-                <div class="mb-6">
-                  <h3 class="text-xs font-medium text-gray-500 uppercase mb-3">Vencimiento de Factura</h3>
-                  {#if (factura.diasVencido || 0) < 0}
-                    <p class="text-2xl font-bold text-red-600 mb-1">Vencida hace {Math.abs(factura.diasVencido || 0)} días</p>
-                  {:else if (factura.diasVencido || 0) === 0}
-                    <p class="text-2xl font-bold text-yellow-600 mb-1">Vence hoy</p>
-                  {:else}
-                    <p class="text-2xl font-bold text-green-600 mb-1">En {factura.diasVencido || 0} días</p>
-                  {/if}
-                  <p class="text-sm text-gray-600">{formatearFecha(factura.fechaVencimiento)}</p>
+                {#if facturaCancelada}
+                  <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <div class="flex items-center gap-2 mb-2">
+                      <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                      </svg>
+                      <h3 class="text-sm font-semibold text-red-700 uppercase">Factura Cancelada</h3>
+                    </div>
+                    <p class="text-sm text-red-600">Esta factura ha sido cancelada. No hay salud de factura ni gestión de cobranza disponible.</p>
+                  </div>
 
-                  <!-- Barra de salud de factura -->
-                  <div class="mt-4">
-                    <div class="flex justify-between text-xs text-gray-600 mb-1">
-                      <span>Salud de factura</span>
-                      {#if (factura.diasVencido || 0) < -90}
-                        <span class="text-red-600 font-medium">Crítica</span>
-                      {:else if (factura.diasVencido || 0) < -30}
-                        <span class="text-orange-600 font-medium">Requiere atención</span>
-                      {:else if (factura.diasVencido || 0) < 0}
-                        <span class="text-yellow-600 font-medium">Vencida</span>
-                      {:else}
-                        <span class="text-green-600 font-medium">Bueno</span>
-                      {/if}
+                  <div class="mb-6 opacity-50">
+                    <h3 class="text-xs font-medium text-gray-400 uppercase mb-2">Vencimiento de Factura</h3>
+                    <p class="text-lg text-gray-400">N/A — Factura cancelada</p>
+                    <p class="text-sm text-gray-400">{formatearFecha(factura.fechaVencimiento)}</p>
+                  </div>
+                {:else if factura.metodoPago === 'PUE'}
+                  <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div class="flex items-center gap-2 mb-2">
+                      <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <h3 class="text-sm font-semibold text-green-700 uppercase">Factura Pagada (PUE)</h3>
                     </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
-                      <div
-                        class="h-2 rounded-full {(factura.diasVencido || 0) < -90 ? 'bg-red-600' : (factura.diasVencido || 0) < -30 ? 'bg-orange-600' : (factura.diasVencido || 0) < 0 ? 'bg-yellow-600' : 'bg-green-600'}"
-                        style="width: {Math.min(Math.max(((factura.diasVencido || 0) + 90) / 180 * 100, 0), 100)}%"
-                      ></div>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-600 mt-2">
-                      <span>{formatearFecha(factura.fechaEmision)}</span>
-                      <span>{formatearFecha(factura.fechaVencimiento)}</span>
+                    <p class="text-sm text-green-600">Esta factura fue pagada en una sola exhibición. No requiere salud de factura ni cobranza.</p>
+                  </div>
+
+                  <div class="mb-6">
+                    <h3 class="text-xs font-medium text-gray-500 uppercase mb-2">Fecha de emisión</h3>
+                    <p class="text-sm text-gray-600">{formatearFecha(factura.fechaEmision)}</p>
+                  </div>
+
+                  <div class="mb-6 pt-4 border-t border-gray-200">
+                    <h3 class="text-xs font-medium text-gray-500 uppercase mb-3">Monto Total</h3>
+                    <p class="text-2xl font-bold text-green-600">{formatearMoneda(factura.montoTotal || 0)}</p>
+                  </div>
+                {:else}
+                  <div class="mb-6">
+                    <h3 class="text-xs font-medium text-gray-500 uppercase mb-3">Vencimiento de Factura</h3>
+                    {#if (factura.diasVencido || 0) < 0}
+                      <p class="text-2xl font-bold text-red-600 mb-1">Vencida hace {Math.abs(factura.diasVencido || 0)} días</p>
+                    {:else if (factura.diasVencido || 0) === 0}
+                      <p class="text-2xl font-bold text-yellow-600 mb-1">Vence hoy</p>
+                    {:else}
+                      <p class="text-2xl font-bold text-green-600 mb-1">En {factura.diasVencido || 0} días</p>
+                    {/if}
+                    <p class="text-sm text-gray-600">{formatearFecha(factura.fechaVencimiento)}</p>
+
+                    <div class="mt-4">
+                      <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Salud de factura</span>
+                        {#if (factura.diasVencido || 0) < -90}
+                          <span class="text-red-600 font-medium">Crítica</span>
+                        {:else if (factura.diasVencido || 0) < -30}
+                          <span class="text-orange-600 font-medium">Requiere atención</span>
+                        {:else if (factura.diasVencido || 0) < 0}
+                          <span class="text-yellow-600 font-medium">Vencida</span>
+                        {:else}
+                          <span class="text-green-600 font-medium">Bueno</span>
+                        {/if}
+                      </div>
+                      <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div
+                          class="h-2 rounded-full {(factura.diasVencido || 0) < -90 ? 'bg-red-600' : (factura.diasVencido || 0) < -30 ? 'bg-orange-600' : (factura.diasVencido || 0) < 0 ? 'bg-yellow-600' : 'bg-green-600'}"
+                          style="width: {Math.min(Math.max(((factura.diasVencido || 0) + 90) / 180 * 100, 0), 100)}%"
+                        ></div>
+                      </div>
+                      <div class="flex justify-between text-xs text-gray-600 mt-2">
+                        <span>{formatearFecha(factura.fechaEmision)}</span>
+                        <span>{formatearFecha(factura.fechaVencimiento)}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <!-- Saldo Pendiente -->
-                <div class="mb-6 pt-4 border-t border-gray-200">
-                  <h3 class="text-xs font-medium text-gray-500 uppercase mb-3">Saldo Pendiente</h3>
-                  <p class="text-2xl font-bold text-red-600">{formatearMoneda(factura.saldoPendiente || 0)}</p>
-                </div>
+                  <div class="mb-6 pt-4 border-t border-gray-200">
+                    <h3 class="text-xs font-medium text-gray-500 uppercase mb-3">Saldo Pendiente</h3>
+                    <p class="text-2xl font-bold text-red-600">{formatearMoneda(factura.saldoPendiente || 0)}</p>
+                  </div>
 
-                <!-- Monto Total -->
-                <div class="mb-6 pt-4 border-t border-gray-200">
-                  <h3 class="text-xs font-medium text-gray-500 uppercase mb-3">Monto Total</h3>
-                  <p class="text-2xl font-bold text-green-600">{formatearMoneda(factura.montoTotal || 0)}</p>
-                </div>
+                  <div class="mb-6 pt-4 border-t border-gray-200">
+                    <h3 class="text-xs font-medium text-gray-500 uppercase mb-3">Monto Total</h3>
+                    <p class="text-2xl font-bold text-green-600">{formatearMoneda(factura.montoTotal || 0)}</p>
+                  </div>
+                {/if}
               {:else}
                 <!-- Tab DETALLES -->
                 <div class="space-y-4">
