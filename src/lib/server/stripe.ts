@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import Stripe from 'stripe';
 import { env } from '$env/dynamic/private';
 import { PLAN_LIMITS } from './planes';

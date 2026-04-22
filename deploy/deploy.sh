@@ -142,7 +142,7 @@ cmd_update() {
 
     # Restart PM2
     log "Reiniciando servicios..."
-    pm2 restart ecosystem.config.cjs
+    pm2 restart ecosystem.config.cjs --update-env
 
     log "Actualización completada ✓"
     pm2 status
@@ -151,7 +151,7 @@ cmd_update() {
 # ─── RESTART: Solo reiniciar ────────────────────────────
 cmd_restart() {
     cd "$APP_DIR"
-    pm2 restart ecosystem.config.cjs
+    pm2 restart ecosystem.config.cjs --update-env
     pm2 status
 }
 
