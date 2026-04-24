@@ -26,8 +26,9 @@ const MAX_DOC_SIZE = 7_000_000;
 
 export const POST: RequestHandler = async ({ request }) => {
 	// Validar secreto del worker con timing-safe comparison
-	const workerSecret = request.headers.get('x-worker-secret');
-	if (!env.WORKER_SECRET || !workerSecret || !secureCompare(workerSecret, env.WORKER_SECRET)) {
+	const workerSecret = (request.headers.get('x-worker-secret') || '').trim();
+	const expectedSecret = (process.env.WORKER_SECRET || env.WORKER_SECRET || '').trim();
+	if (!expectedSecret || !workerSecret || !secureCompare(workerSecret, expectedSecret)) {
 		return json({ error: 'No autorizado' }, { status: 401 });
 	}
 

@@ -99,8 +99,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 			// Skip CSRF for webhooks and public endpoints
 		} else if (isWorkerEndpoint) {
 			// Validate worker secret
-			const workerSecret = event.request.headers.get('x-worker-secret');
-			const expectedSecret = privateEnv.WORKER_SECRET;
+			const workerSecret = (event.request.headers.get('x-worker-secret') || '').trim();
+			const expectedSecret = (process.env.WORKER_SECRET || privateEnv.WORKER_SECRET || '').trim();
 
 			let isValid = false;
 			if (expectedSecret && workerSecret) {
@@ -114,7 +114,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 			}
 
 			if (!isValid) {
-				console.warn(`[SEGURIDAD] Worker auth fallido desde ${clientIP}`);
+				console.warn(`[SEGURIDAD] Worker auth fallido desde ${clientIP} (expectedLen=${expectedSecret.length}, receivedLen=${workerSecret.length})`);
 				return new Response(
 					JSON.stringify({ error: 'No autorizado' }),
 					{ status: 401, headers: { 'Content-Type': 'application/json' } }

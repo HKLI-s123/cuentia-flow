@@ -21,8 +21,9 @@ function secureCompare(a: string, b: string): boolean {
 }
 
 export const POST: RequestHandler = async ({ request }) => {
-	const workerSecret = request.headers.get('x-worker-secret');
-	if (!env.WORKER_SECRET || !workerSecret || !secureCompare(workerSecret, env.WORKER_SECRET)) {
+	const workerSecret = (request.headers.get('x-worker-secret') || '').trim();
+	const expectedSecret = (process.env.WORKER_SECRET || env.WORKER_SECRET || '').trim();
+	if (!expectedSecret || !workerSecret || !secureCompare(workerSecret, expectedSecret)) {
 		return json({ error: 'No autorizado' }, { status: 401 });
 	}
 
