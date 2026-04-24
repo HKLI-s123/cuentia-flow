@@ -587,7 +587,6 @@ export async function ejecutarCicloRefacturacion(): Promise<void> {
       WHERE f.recurrenciaactiva = true
         AND f.fechainiciorecurrencia <= CAST(NOW() AS DATE)
         AND f.estado_factura_id != 6
-        AND COALESCE(s.planseleccionado, 'free') != 'free'
       ORDER BY f.id
     `);
 
@@ -607,10 +606,17 @@ export async function ejecutarCicloRefacturacion(): Promise<void> {
         console.log(`[REFACT] 📄 Generando factura recurrente desde template #${template.numero_factura} (ID: ${template.id})`);
 
         // SEGURIDAD: Verificar límite de facturas mensuales del plan
+        // Nota: si BD quedó desincronizada (ej. webhook Stripe fallido) y marca free,
+        // no bloqueamos recurrencia activa; usamos Basico como fallback operativo.
+        const planRaw = String((template as any).planorganizacion || 'free').toLowerCase();
+        const planAplicado = planRaw === 'free' ? 'basico' : planRaw;
+        if (planRaw === 'free') {
+          console.warn(`[REFACT] ⚠ Org ${template.organizacionid} con plan=free en BD pero recurrencia activa; aplicando fallback=basico`);
+        }
         const planLimites: Record<string, number> = {
           'free': 3, 'basico': 50, 'pro': 200, 'enterprise': 999999
         };
-        const maxFacturas = planLimites[(template as any).planorganizacion] || 3;
+        const maxFacturas = planLimites[planAplicado] || 50;
         const conteoMes = await pool.query(
 			`
             SELECT COUNT(*) as total FROM Facturas f

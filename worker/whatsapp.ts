@@ -75,7 +75,6 @@ export async function sendWorkerMessage(
   text: string
 ): Promise<{ success: boolean; messageId?: string; error?: string }> {
   try {
-    const secret = process.env.WORKER_SECRET || '';
     const response = await fetch(`${APP_BASE_URL}/api/worker/send-message`, {
       method: 'POST',
       headers: {
@@ -86,8 +85,14 @@ export async function sendWorkerMessage(
     });
 
     if (!response.ok) {
-      const data = await response.json().catch(() => ({}));
-      return { success: false, error: data.error || `HTTP ${response.status}` };
+      const raw = await response.text();
+      let data: any = {};
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch {
+        data = { error: raw?.slice(0, 180) || 'Respuesta no JSON' };
+      }
+      return { success: false, error: `${data.error || 'Error'} (HTTP ${response.status})` };
     }
 
     const data = await response.json();
@@ -121,8 +126,14 @@ export async function sendWorkerDocument(
     });
 
     if (!response.ok) {
-      const data = await response.json().catch(() => ({}));
-      return { success: false, error: data.error || `HTTP ${response.status}` };
+      const raw = await response.text();
+      let data: any = {};
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch {
+        data = { error: raw?.slice(0, 180) || 'Respuesta no JSON' };
+      }
+      return { success: false, error: `${data.error || 'Error'} (HTTP ${response.status})` };
     }
 
     const data = await response.json();

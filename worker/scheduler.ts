@@ -435,7 +435,18 @@ async function verificarSaludBaileys(): Promise<void> {
         }),
       });
 
-      const data = await response.json();
+      const raw = await response.text();
+      let data: any = null;
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch {
+        data = { error: raw?.slice(0, 180) || 'Respuesta no JSON' };
+      }
+
+      if (!response.ok) {
+        console.warn(`[HEALTH] ⚠ Health endpoint respondió HTTP ${response.status} para ${session.sessionName}: ${data?.error || 'sin detalle'}`);
+        continue;
+      }
 
       if (data.status === 'activo') {
         if (data.restored) {
@@ -447,7 +458,7 @@ async function verificarSaludBaileys(): Promise<void> {
         console.warn(`[HEALTH] ⚠ Sesión ${session.sessionName} NO está activa: ${data.status} - ${data.error || ''}`);
       }
     } catch (err) {
-      console.error(`[HEALTH] ❌ No se pudo verificar sesión ${session.sessionName} (¿SvelteKit caído?):`, err instanceof Error ? err.message : err);
+      console.error(`[HEALTH] ❌ Error verificando sesión ${session.sessionName}:`, err instanceof Error ? err.message : err);
     }
   }
 }
