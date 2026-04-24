@@ -39,6 +39,18 @@ export const POST: RequestHandler = async ({ request }) => {
     return subscription?.current_period_end || subscription?.trial_end || subscription?.items?.data?.[0]?.current_period_end || null;
   };
 
+  const getStripeCancellationUnix = (subscription: any): number | null => {
+    if (subscription?.cancel_at) {
+      return subscription.cancel_at;
+    }
+
+    if (subscription?.cancel_at_period_end) {
+      return getStripePeriodEndUnix(subscription);
+    }
+
+    return null;
+  };
+
   try {
     switch (event.type) {
       // ═══ CHECKOUT COMPLETADO ═══
@@ -157,9 +169,9 @@ export const POST: RequestHandler = async ({ request }) => {
         const customerId = subscription.customer as string;
         const priceId = subscription.items?.data?.[0]?.price?.id || '';
         const plan = subscription.metadata?.plan || getPlanFromPriceId(priceId);
-        const status = subscription.status;
+        const status = subscription.cancel_at_period_end ? 'canceling' : subscription.status;
         const periodEnd = getStripePeriodEndUnix(subscription);
-        const cancelAt = subscription.cancel_at;
+        const cancelAt = getStripeCancellationUnix(subscription);
 
         await pool.query(
 			`

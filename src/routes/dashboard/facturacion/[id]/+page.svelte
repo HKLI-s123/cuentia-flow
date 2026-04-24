@@ -41,6 +41,9 @@
 
   // Estado de cancelación
   $: facturaCancelada = factura?.estado_factura_id === 6;
+  $: pagosRegistrados = factura?.pagos || [];
+  $: pagosActivos = pagosRegistrados.filter((p) => !p.cancelado);
+  $: pagosCancelados = pagosRegistrados.filter((p) => p.cancelado);
 
   // Cargar estadísticas de recordatorios
   async function cargarStatsRecordatorios() {
@@ -645,7 +648,41 @@
                 <!-- Pagos -->
                 <div class="mb-6">
                   <h3 class="text-xs font-medium text-gray-500 uppercase mb-3">Pagos</h3>
-                  <p class="text-sm text-gray-600">No hay pagos registrados</p>
+                  {#if pagosRegistrados.length > 0}
+                    <div class="space-y-2">
+                      {#each pagosRegistrados as pago}
+                        <div class="flex items-start justify-between gap-3 rounded-lg border p-3 {pago.cancelado ? 'border-red-200 bg-red-50' : 'border-gray-200 bg-gray-50'}">
+                          <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2">
+                              <span class="inline-flex h-5 w-5 items-center justify-center rounded-full {pago.cancelado ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
+                                {#if pago.cancelado}
+                                  <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.53-10.47a.75.75 0 00-1.06-1.06L10 8.94 7.53 6.47a.75.75 0 10-1.06 1.06L8.94 10l-2.47 2.47a.75.75 0 101.06 1.06L10 11.06l2.47 2.47a.75.75 0 001.06-1.06L11.06 10l2.47-2.47z" clip-rule="evenodd" /></svg>
+                                {:else}
+                                  <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 010 1.42l-7.25 7.25a1 1 0 01-1.415 0l-3-3a1 1 0 111.414-1.42l2.293 2.294 6.543-6.544a1 1 0 011.415 0z" clip-rule="evenodd" /></svg>
+                                {/if}
+                              </span>
+                              <p class="text-sm font-medium {pago.cancelado ? 'text-red-700' : 'text-gray-900'}">{pago.uuidPago ? 'Complemento de pago' : 'Pago registrado'}</p>
+                            </div>
+                            <p class="mt-1 text-xs {pago.cancelado ? 'text-red-600' : 'text-gray-500'}">
+                              {formatearFecha(pago.fechaPago)}
+                              {#if pago.cancelado && pago.fechaCancelacion}
+                                · Cancelado el {formatearFecha(pago.fechaCancelacion)}
+                              {/if}
+                            </p>
+                          </div>
+                          <div class="text-right">
+                            <p class="text-sm font-semibold {pago.cancelado ? 'text-red-700 line-through' : 'text-gray-900'}">{formatearMoneda(pago.monto)}</p>
+                            <p class="text-xs uppercase tracking-wide {pago.cancelado ? 'text-red-500' : 'text-green-600'}">{pago.cancelado ? 'Cancelado' : 'Activo'}</p>
+                          </div>
+                        </div>
+                      {/each}
+                    </div>
+                    {#if pagosCancelados.length > 0}
+                      <p class="mt-2 text-xs text-gray-500">Activos: {pagosActivos.length} · Cancelados: {pagosCancelados.length}</p>
+                    {/if}
+                  {:else}
+                    <p class="text-sm text-gray-600">No hay pagos registrados</p>
+                  {/if}
                 </div>
 
                 <!-- Recordatorios -->
@@ -941,39 +978,63 @@
                   <td class="py-4 text-right text-sm text-gray-400">-</td>
                 </tr>
                 <!-- Complementos de pago -->
-                {#if factura.pagos && factura.pagos.length > 0}
-                  {#each factura.pagos.filter(p => p.uuidPago) as pago}
+                {#if pagosRegistrados.length > 0}
+                  {#each pagosRegistrados.filter(p => p.uuidPago) as pago}
                     <tr class="border-b border-gray-100">
                       <td class="py-4">
-                        <span class="text-sm text-gray-700">Complemento</span>
+                        <div class="flex items-center gap-2">
+                          <span class="inline-flex h-5 w-5 items-center justify-center rounded-full {pago.cancelado ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}">
+                            {#if pago.cancelado}
+                              <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.53-10.47a.75.75 0 00-1.06-1.06L10 8.94 7.53 6.47a.75.75 0 10-1.06 1.06L8.94 10l-2.47 2.47a.75.75 0 101.06 1.06L10 11.06l2.47 2.47a.75.75 0 001.06-1.06L11.06 10l2.47-2.47z" clip-rule="evenodd" /></svg>
+                            {:else}
+                              <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.704 5.29a1 1 0 010 1.42l-7.25 7.25a1 1 0 01-1.415 0l-3-3a1 1 0 111.414-1.42l2.293 2.294 6.543-6.544a1 1 0 011.415 0z" clip-rule="evenodd" /></svg>
+                            {/if}
+                          </span>
+                          <div>
+                            <span class="text-sm {pago.cancelado ? 'text-red-700' : 'text-gray-700'}">Complemento</span>
+                            <p class="text-xs {pago.cancelado ? 'text-red-500' : 'text-gray-400'}">{pago.cancelado ? 'Cancelado' : 'Activo'}</p>
+                          </div>
+                        </div>
                       </td>
                       <td class="py-4">
-                        <span class="inline-flex items-center justify-center w-6 h-6 bg-green-100 rounded text-xs text-green-700 font-semibold">P</span>
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded text-xs font-semibold {pago.cancelado ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}">P</span>
                       </td>
-                      <td class="py-4 text-sm text-gray-900 font-mono text-xs">{pago.uuidPago}</td>
+                      <td class="py-4 text-sm font-mono text-xs {pago.cancelado ? 'text-red-600' : 'text-gray-900'}">{pago.uuidPago}</td>
                       <td class="py-4 text-right text-sm text-gray-400">-</td>
-                      <td class="py-4 text-right text-sm text-gray-900">{formatearMoneda(pago.monto)}</td>
+                      <td class="py-4 text-right text-sm {pago.cancelado ? 'text-red-700 line-through' : 'text-gray-900'}">{formatearMoneda(pago.monto)}</td>
                     </tr>
                   {/each}
                 {/if}
                 <!-- Pagos sin timbrar -->
-                {#if factura.pagos && factura.pagos.some(p => !p.uuidPago)}
-                  {#each factura.pagos.filter(p => !p.uuidPago) as pago}
+                {#if pagosRegistrados.some(p => !p.uuidPago)}
+                  {#each pagosRegistrados.filter(p => !p.uuidPago) as pago}
                     <tr class="border-b border-gray-100">
                       <td class="py-4">
-                        <span class="text-sm text-gray-500">Pago</span>
+                        <div class="flex items-center gap-2">
+                          <span class="inline-flex h-5 w-5 items-center justify-center rounded-full {pago.cancelado ? 'bg-red-100 text-red-600' : 'bg-gray-200 text-gray-500'}">
+                            {#if pago.cancelado}
+                              <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.53-10.47a.75.75 0 00-1.06-1.06L10 8.94 7.53 6.47a.75.75 0 10-1.06 1.06L8.94 10l-2.47 2.47a.75.75 0 101.06 1.06L10 11.06l2.47 2.47a.75.75 0 001.06-1.06L11.06 10l2.47-2.47z" clip-rule="evenodd" /></svg>
+                            {:else}
+                              <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" /></svg>
+                            {/if}
+                          </span>
+                          <div>
+                            <span class="text-sm {pago.cancelado ? 'text-red-700' : 'text-gray-500'}">{pago.cancelado ? 'Pago cancelado' : 'Pago'}</span>
+                            <p class="text-xs {pago.cancelado ? 'text-red-500' : 'text-gray-400'}">{pago.cancelado ? 'Sin timbrar' : 'Pendiente de timbrado'}</p>
+                          </div>
+                        </div>
                       </td>
                       <td class="py-4">
-                        <span class="inline-flex items-center justify-center w-6 h-6 bg-gray-200 rounded text-xs text-gray-500">-</span>
+                        <span class="inline-flex items-center justify-center w-6 h-6 rounded text-xs {pago.cancelado ? 'bg-red-100 text-red-700' : 'bg-gray-200 text-gray-500'}">-</span>
                       </td>
-                      <td class="py-4 text-sm text-gray-400 italic">Sin timbrar</td>
+                      <td class="py-4 text-sm italic {pago.cancelado ? 'text-red-500' : 'text-gray-400'}">Sin timbrar</td>
                       <td class="py-4 text-right text-sm text-gray-400">-</td>
-                      <td class="py-4 text-right text-sm text-gray-900">{formatearMoneda(pago.monto)}</td>
+                      <td class="py-4 text-right text-sm {pago.cancelado ? 'text-red-700 line-through' : 'text-gray-900'}">{formatearMoneda(pago.monto)}</td>
                     </tr>
                   {/each}
                 {/if}
                 <!-- Sin pagos -->
-                {#if !factura.pagos || factura.pagos.length === 0}
+                {#if pagosRegistrados.length === 0}
                   <tr>
                     <td colspan="5" class="py-4 text-center text-sm text-gray-400 italic">Sin complemento de pago</td>
                   </tr>

@@ -62,6 +62,9 @@ export interface PagoComplemento {
   metodo: string;
   facturapiPagoId?: string | null;
   uuidPago?: string | null;
+  cancelado?: boolean;
+  fechaCancelacion?: string | null;
+  motivoCancelacion?: string | null;
 }
 
 // Factura completa

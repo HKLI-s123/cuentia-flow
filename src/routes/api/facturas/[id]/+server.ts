@@ -91,6 +91,7 @@ export const GET: RequestHandler = async (event) => {
       LEFT JOIN (
         SELECT FacturaId, SUM(Monto) as TotalPagado
         FROM Pagos
+        WHERE COALESCE(Cancelado, false) = false
         GROUP BY FacturaId
       ) pagos ON f.id = pagos.facturaid
       WHERE f.id = $1 AND c.organizacionid = $2
@@ -170,7 +171,10 @@ export const GET: RequestHandler = async (event) => {
         p.fechapago,
         p.metodo,
         p.facturapipagoid,
-        p.uuidpago
+        p.uuidpago,
+        COALESCE(p.cancelado, false) as cancelado,
+        p.fechacancelacion,
+        p.motivocancelacion
       FROM Pagos p
       WHERE p.facturaid = $1
       ORDER BY p.fechapago ASC
@@ -183,7 +187,10 @@ export const GET: RequestHandler = async (event) => {
       fechaPago: p.fechapago,
       metodo: p.metodo,
       facturapiPagoId: p.facturapipagoid || null,
-      uuidPago: p.uuidpago || null
+      uuidPago: p.uuidpago || null,
+      cancelado: p.cancelado === true || p.cancelado === 'true',
+      fechaCancelacion: p.fechacancelacion || null,
+      motivoCancelacion: p.motivocancelacion || null
     }));
 
     // Obtener facturas hijas (recurrentes)

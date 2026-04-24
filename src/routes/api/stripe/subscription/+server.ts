@@ -29,6 +29,18 @@ function getStripePeriodEndUnix(subscription: any): number | null {
   return subscription?.current_period_end || subscription?.trial_end || subscription?.items?.data?.[0]?.current_period_end || null;
 }
 
+function getStripeCancellationUnix(subscription: any): number | null {
+  if (subscription?.cancel_at) {
+    return subscription.cancel_at;
+  }
+
+  if (subscription?.cancel_at_period_end) {
+    return getStripePeriodEndUnix(subscription);
+  }
+
+  return null;
+}
+
 /**
  * GET /api/stripe/subscription
  * Devuelve la suscripción actual de la organización
@@ -87,8 +99,10 @@ export const GET: RequestHandler = async ({ locals }) => {
     }
 
     const sub = result.rows[0];
-    const plan = sub.planseleccionado || 'free';
+    let plan = sub.planseleccionado || 'free';
+    let estado = sub.estado || 'active';
     let fechaFinPeriodo = sub.fechafinperiodo;
+    let canceladaEn = sub.fechacancelacion;
     let descuento: { porcentaje: number; nombre: string; mesesRestantes: number | null } | null = null;
 
     // Sincronizar datos desde Stripe si tiene suscripción
@@ -98,6 +112,15 @@ export const GET: RequestHandler = async ({ locals }) => {
         const stripeSub = await stripe.subscriptions.retrieve(sub.stripesubscriptionid, {
           expand: ['discounts'],
         }) as any;
+        const priceId = stripeSub.items?.data?.[0]?.price?.id || '';
+        const stripePlan = getPlanFromPriceId(priceId) || plan;
+        const stripeEstado = stripeSub.cancel_at_period_end ? 'canceling' : (stripeSub.status || 'active');
+        const cancelUnix = getStripeCancellationUnix(stripeSub);
+        const nuevaFechaCancelacion = cancelUnix ? new Date(cancelUnix * 1000) : null;
+
+        plan = stripePlan;
+        estado = stripeEstado;
+        canceladaEn = nuevaFechaCancelacion;
 
         // Sincronizar fechaFinPeriodo siempre con Stripe para evitar fechas desactualizadas
         const periodEnd = getStripePeriodEndUnix(stripeSub);
@@ -105,12 +128,28 @@ export const GET: RequestHandler = async ({ locals }) => {
           const nuevaFechaFin = new Date(periodEnd * 1000);
           fechaFinPeriodo = nuevaFechaFin;
           const fechaActualDb = sub.fechafinperiodo ? new Date(sub.fechafinperiodo) : null;
-          if (!fechaActualDb || fechaActualDb.getTime() !== nuevaFechaFin.getTime()) {
+          const fechaCancelacionDb = sub.fechacancelacion ? new Date(sub.fechacancelacion) : null;
+          const fechaCancelacionCambio =
+            (fechaCancelacionDb === null) !== (nuevaFechaCancelacion === null)
+            || (fechaCancelacionDb !== null && nuevaFechaCancelacion !== null && fechaCancelacionDb.getTime() !== nuevaFechaCancelacion.getTime());
+
+          if (
+            !fechaActualDb
+            || fechaActualDb.getTime() !== nuevaFechaFin.getTime()
+            || sub.planseleccionado !== stripePlan
+            || sub.estado !== stripeEstado
+            || fechaCancelacionCambio
+          ) {
             await pool.query(
-			'UPDATE Suscripciones SET FechaFinPeriodo = $2, UpdatedAt = NOW() WHERE Id = $1',
-			[sub.id, nuevaFechaFin]
+			'UPDATE Suscripciones SET PlanSeleccionado = $2, Estado = $3, FechaFinPeriodo = $4, FechaCancelacion = $5, UpdatedAt = NOW() WHERE Id = $1',
+			[sub.id, stripePlan, stripeEstado, nuevaFechaFin, nuevaFechaCancelacion]
 		);
           }
+        } else if (sub.planseleccionado !== stripePlan || sub.estado !== stripeEstado || sub.fechacancelacion !== nuevaFechaCancelacion) {
+          await pool.query(
+			'UPDATE Suscripciones SET PlanSeleccionado = $2, Estado = $3, FechaCancelacion = $4, UpdatedAt = NOW() WHERE Id = $1',
+			[sub.id, stripePlan, stripeEstado, nuevaFechaCancelacion]
+		);
         }
 
         // Leer descuentos activos (Stripe v21: discounts son IDs sin expand, objetos con expand)
@@ -173,11 +212,11 @@ export const GET: RequestHandler = async ({ locals }) => {
 
     return json({
       plan,
-      estado: sub.estado,
+      estado,
       limites: PLAN_LIMITS[plan] || PLAN_LIMITS['free'],
       fechaInicio: sub.fechainicio,
       fechaFinPeriodo: fechaFinPeriodo,
-      canceladaEn: sub.fechacancelacion,
+      canceladaEn,
       tieneStripe: !!sub.stripesubscriptionid,
       pagos: pagosResult.rows,
       totalPagos: totalPagosResult.rows[0]?.total || 0,
@@ -413,19 +452,25 @@ export const DELETE: RequestHandler = async (event) => {
     }
 
     // Cancelar al final del periodo (no inmediato)
-    await stripe.subscriptions.update(sub.stripesubscriptionid, {
+    const updated = await stripe.subscriptions.update(sub.stripesubscriptionid, {
       cancel_at_period_end: true,
       metadata: { cancel_reason: motivo || 'No especificado' },
     });
+    const cancelUnix = getStripeCancellationUnix(updated);
 
     // Actualizar BD con motivo
     await pool.query(
 			`
         UPDATE Suscripciones
-        SET Estado = 'canceling', FechaCancelacion = NOW(), MotivoCancelacion = $2, UpdatedAt = NOW()
+        SET Estado = $2, FechaCancelacion = $3, MotivoCancelacion = $4, UpdatedAt = NOW()
         WHERE OrganizacionId = $1
       `,
-			[orgId, (motivo || 'No especificado').substring(0, 500)]
+			[
+			  orgId,
+			  updated.cancel_at_period_end ? 'canceling' : (updated.status || 'active'),
+			  cancelUnix ? new Date(cancelUnix * 1000) : null,
+			  (motivo || 'No especificado').substring(0, 500)
+			]
 		);
 
     return json({
