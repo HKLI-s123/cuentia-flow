@@ -14,6 +14,7 @@ import axios from 'axios';
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 const EMAIL_FROM = process.env.EMAIL_FROM || process.env.RESEND_FROM || '';
+const RECURRENCIA_TIMEZONE = process.env.WORKER_TIMEZONE || process.env.TZ || 'America/Mexico_City';
 
 // ═══════════════════════════════════════
 // TIPOS
@@ -96,12 +97,25 @@ function fechaLocal(d: Date | string): Date {
   return new Date(fecha.getUTCFullYear(), fecha.getUTCMonth(), fecha.getUTCDate());
 }
 
+function obtenerHoyEnZona(timeZone: string): Date {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date());
+
+  const year = Number(parts.find((p) => p.type === 'year')?.value || '1970');
+  const month = Number(parts.find((p) => p.type === 'month')?.value || '1');
+  const day = Number(parts.find((p) => p.type === 'day')?.value || '1');
+  return new Date(year, month - 1, day);
+}
+
 /**
  * Calcula si hoy toca generar una nueva factura recurrente
  */
 function evaluarRecurrenciaHoy(factura: FacturaRecurrente): { generar: boolean; motivo?: string } {
-  const ahora = new Date();
-  const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
+  const hoy = obtenerHoyEnZona(RECURRENCIA_TIMEZONE);
 
   const fechaInicio = fechaLocal(factura.fechainiciorecurrencia);
 
@@ -597,13 +611,13 @@ export async function ejecutarCicloRefacturacion(): Promise<void> {
       LEFT JOIN Suscripciones s ON s.organizacionid = c.organizacionid
         AND s.estado NOT IN ('canceled', 'unpaid')
       WHERE f.recurrenciaactiva = true
-        AND f.fechainiciorecurrencia <= CAST(NOW() AS DATE)
+        AND f.fechainiciorecurrencia <= ((NOW() AT TIME ZONE $1)::date)
         AND f.estado_factura_id != 6
       ORDER BY f.id
-    `);
+    `, [RECURRENCIA_TIMEZONE]);
 
     const facturasRecurrentes: FacturaRecurrente[] = result.rows;
-    console.log(`[REFACT] Encontradas ${facturasRecurrentes.length} facturas con recurrencia activa`);
+    console.log(`[REFACT] Encontradas ${facturasRecurrentes.length} facturas con recurrencia activa (tz=${RECURRENCIA_TIMEZONE})`);
 
     let generadas = 0;
     let timbradas = 0;

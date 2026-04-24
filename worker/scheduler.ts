@@ -14,7 +14,7 @@ import { getConnection } from './db.js';
 import { sendWorkerMessage, getActiveSessions, phoneToJid } from './whatsapp.js';
 import { ejecutarCicloRefacturacion, ejecutarEmisionProgramada } from './refacturacion.js';
 
-const APP_BASE_URL = process.env.APP_BASE_URL || 'http://localhost:5173';
+const APP_BASE_URL = process.env.WORKER_API_BASE_URL || process.env.APP_INTERNAL_URL || process.env.APP_BASE_URL || 'http://localhost:5173';
 const WORKER_SECRET = process.env.WORKER_SECRET || '';
 
 // ═══════════════════════════════════════

@@ -13,7 +13,7 @@ import { maskPhone } from './security.js';
 // ═══════════════════════════════════════
 // CONFIGURACIÓN
 // ═══════════════════════════════════════
-const APP_BASE_URL = process.env.APP_BASE_URL || 'http://localhost:5173';
+const APP_BASE_URL = process.env.WORKER_API_BASE_URL || process.env.APP_INTERNAL_URL || process.env.APP_BASE_URL || 'http://localhost:5173';
 
 // Tipo para mensajes entrantes
 export interface IncomingMessage {
@@ -92,7 +92,7 @@ export async function sendWorkerMessage(
       } catch {
         data = { error: raw?.slice(0, 180) || 'Respuesta no JSON' };
       }
-      return { success: false, error: `${data.error || 'Error'} (HTTP ${response.status})` };
+      return { success: false, error: `${data.error || 'Error'} (HTTP ${response.status}) [url=${APP_BASE_URL}]` };
     }
 
     const data = await response.json();
@@ -133,7 +133,7 @@ export async function sendWorkerDocument(
       } catch {
         data = { error: raw?.slice(0, 180) || 'Respuesta no JSON' };
       }
-      return { success: false, error: `${data.error || 'Error'} (HTTP ${response.status})` };
+      return { success: false, error: `${data.error || 'Error'} (HTTP ${response.status}) [url=${APP_BASE_URL}]` };
     }
 
     const data = await response.json();
