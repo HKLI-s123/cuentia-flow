@@ -99,7 +99,7 @@ function fechaLocal(d: Date | string): Date {
 /**
  * Calcula si hoy toca generar una nueva factura recurrente
  */
-function tocaGenerarHoy(factura: FacturaRecurrente): boolean {
+function evaluarRecurrenciaHoy(factura: FacturaRecurrente): { generar: boolean; motivo?: string } {
   const ahora = new Date();
   const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
 
@@ -107,14 +107,14 @@ function tocaGenerarHoy(factura: FacturaRecurrente): boolean {
 
   // Si aún no llegamos a la fecha de inicio, no generar
   if (hoy < fechaInicio) {
-    return false;
+    return { generar: false, motivo: `fecha inicio futura (${fechaInicio.toISOString().split('T')[0]})` };
   }
 
   // Si la última factura fue generada hoy, no duplicar
   if (factura.ultimafacturagenerada) {
     const ultimaGen = fechaLocal(factura.ultimafacturagenerada);
     if (ultimaGen.getTime() === hoy.getTime()) {
-      return false;
+      return { generar: false, motivo: `ya generada hoy (${ultimaGen.toISOString().split('T')[0]})` };
     }
   }
 
@@ -122,13 +122,13 @@ function tocaGenerarHoy(factura: FacturaRecurrente): boolean {
   if (factura.finrecurrencia === 'el-dia' && factura.fechafinrecurrencia) {
     const fechaFin = fechaLocal(factura.fechafinrecurrencia);
     if (hoy > fechaFin) {
-      return false;
+      return { generar: false, motivo: `recurrencia finalizada por fecha (${fechaFin.toISOString().split('T')[0]})` };
     }
   }
 
   if (factura.finrecurrencia === 'despues-de' && factura.numeroocurrencias) {
     if (factura.facturasgeneradas >= factura.numeroocurrencias) {
-      return false;
+      return { generar: false, motivo: `recurrencia finalizada por ocurrencias (${factura.facturasgeneradas}/${factura.numeroocurrencias})` };
     }
   }
 
@@ -138,7 +138,10 @@ function tocaGenerarHoy(factura: FacturaRecurrente): boolean {
   if (periodo === 'diario') {
     // Cada N días desde la fecha de inicio
     const diffDias = Math.floor((hoy.getTime() - fechaInicio.getTime()) / 86400000);
-    return diffDias % cada === 0;
+    const generar = diffDias % cada === 0;
+    return generar
+      ? { generar: true }
+      : { generar: false, motivo: `periodo diario: hoy no coincide con intervalo cada ${cada} dia(s)` };
   }
 
   if (periodo === 'semanal') {
@@ -146,7 +149,10 @@ function tocaGenerarHoy(factura: FacturaRecurrente): boolean {
     const diffDias = Math.floor((hoy.getTime() - fechaInicio.getTime()) / 86400000);
     const diffSemanas = Math.floor(diffDias / 7);
     const diaSemanaInicio = fechaInicio.getDay();
-    return diffDias % 7 === 0 && diffSemanas % cada === 0 && hoy.getDay() === diaSemanaInicio;
+    const generar = diffDias % 7 === 0 && diffSemanas % cada === 0 && hoy.getDay() === diaSemanaInicio;
+    return generar
+      ? { generar: true }
+      : { generar: false, motivo: `periodo semanal: hoy no coincide con semana/dia configurado` };
   }
 
   if (periodo === 'mensual') {
@@ -158,12 +164,15 @@ function tocaGenerarHoy(factura: FacturaRecurrente): boolean {
     const diaEfectivo = Math.min(diaDelMes, ultimoDiaDelMes);
     
     if (hoy.getDate() !== diaEfectivo) {
-      return false;
+      return { generar: false, motivo: `periodo mensual: dia esperado ${diaEfectivo}, hoy ${hoy.getDate()}` };
     }
 
     // Verificar que hayan pasado N meses desde el inicio
     const mesesDesdeInicio = (hoy.getFullYear() - fechaInicio.getFullYear()) * 12 + (hoy.getMonth() - fechaInicio.getMonth());
-    return mesesDesdeInicio >= 0 && mesesDesdeInicio % cada === 0;
+    const generar = mesesDesdeInicio >= 0 && mesesDesdeInicio % cada === 0;
+    return generar
+      ? { generar: true }
+      : { generar: false, motivo: `periodo mensual: meses desde inicio ${mesesDesdeInicio}, intervalo cada ${cada}` };
   }
 
   if (periodo === 'personalizado') {
@@ -173,14 +182,17 @@ function tocaGenerarHoy(factura: FacturaRecurrente): boolean {
     const diaEfectivo = Math.min(diaDelMes, ultimoDiaDelMes);
     
     if (hoy.getDate() !== diaEfectivo) {
-      return false;
+      return { generar: false, motivo: `periodo personalizado: dia esperado ${diaEfectivo}, hoy ${hoy.getDate()}` };
     }
 
     const mesesDesdeInicio = (hoy.getFullYear() - fechaInicio.getFullYear()) * 12 + (hoy.getMonth() - fechaInicio.getMonth());
-    return mesesDesdeInicio >= 0 && mesesDesdeInicio % cada === 0;
+    const generar = mesesDesdeInicio >= 0 && mesesDesdeInicio % cada === 0;
+    return generar
+      ? { generar: true }
+      : { generar: false, motivo: `periodo personalizado: meses desde inicio ${mesesDesdeInicio}, intervalo cada ${cada}` };
   }
 
-  return false;
+  return { generar: false, motivo: `periodo no soportado: ${periodo}` };
 }
 
 /**
@@ -599,7 +611,9 @@ export async function ejecutarCicloRefacturacion(): Promise<void> {
 
     for (const template of facturasRecurrentes) {
       try {
-        if (!tocaGenerarHoy(template)) {
+        const evaluacion = evaluarRecurrenciaHoy(template);
+        if (!evaluacion.generar) {
+          console.log(`[REFACT] ⏭ Template #${template.numero_factura} (ID: ${template.id}) omitida: ${evaluacion.motivo || 'hoy no corresponde'}`);
           continue;
         }
 
