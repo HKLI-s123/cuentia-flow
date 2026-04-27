@@ -139,6 +139,14 @@
 	let notasCliente = '';
 	let notasInternas = '';
 
+	// Plantillas de notas reutilizables
+	interface PlantillaNota { id: number; nombre: string; contenido: string; }
+	let plantillasNotas: PlantillaNota[] = [];
+	let mostrarPlantillas = false;
+	let guardandoPlantilla = false;
+	let nombreNuevaPlantilla = '';
+	let mostrarFormGuardar = false;
+
 	// Opciones de envío
 	let enviarPorCorreo = true;
 	let enviarPorWhatsApp = false;
@@ -207,7 +215,7 @@
 
 	onMount(async () => {
 		checkWhatsAppBannerDismissed();
-		await Promise.all([cargarClientes(), verificarWhatsAppOrg(), cargarPlanOrganizacion()]);
+		await Promise.all([cargarClientes(), verificarWhatsAppOrg(), cargarPlanOrganizacion(), cargarPlantillasNotas()]);
 	});
 
 	async function cargarPlanOrganizacion() {
@@ -247,6 +255,74 @@
 		} finally {
 			verificandoWhatsApp = false;
 		}
+	}
+
+	async function cargarPlantillasNotas() {
+		const organizacionId = get(orgIdStore)?.toString() || null;
+		if (!organizacionId) return;
+		try {
+			const response = await authFetch(`/api/notas-cliente?organizacionId=${organizacionId}`);
+			if (response.ok) {
+				const data = await response.json();
+				plantillasNotas = data.plantillas || [];
+			}
+		} catch {}
+	}
+
+	async function guardarPlantilla() {
+		const nombreLimpio = nombreNuevaPlantilla.trim().substring(0, 100);
+		const contenidoLimpio = notasCliente.trim().substring(0, 1000);
+		if (!nombreLimpio || !contenidoLimpio) return;
+
+		// Duplicate name check (client-side)
+		if (plantillasNotas.some((p) => p.nombre.toLowerCase() === nombreLimpio.toLowerCase())) {
+			await Swal.fire({ icon: 'warning', title: 'Nombre duplicado', text: 'Ya existe una plantilla con ese nombre.', confirmButtonColor: '#3b82f6' });
+			return;
+		}
+
+		guardandoPlantilla = true;
+		const organizacionId = get(orgIdStore)?.toString() || null;
+		try {
+			const response = await authFetch('/api/notas-cliente', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ organizacionId, nombre: nombreLimpio, contenido: contenidoLimpio })
+			});
+			if (response.ok) {
+				const data = await response.json();
+				plantillasNotas = [...plantillasNotas, data.plantilla].sort((a, b) => a.nombre.localeCompare(b.nombre));
+				nombreNuevaPlantilla = '';
+				mostrarFormGuardar = false;
+			} else {
+				const data = await response.json().catch(() => ({}));
+				await Swal.fire({ icon: 'error', title: 'Error', text: data.error || 'No se pudo guardar la plantilla.', confirmButtonColor: '#3b82f6' });
+			}
+		} catch {
+			await Swal.fire({ icon: 'error', title: 'Error de conexión', text: 'No se pudo guardar la plantilla.', confirmButtonColor: '#3b82f6' });
+		} finally {
+			guardandoPlantilla = false;
+		}
+	}
+
+	async function eliminarPlantilla(id: number) {
+		const organizacionId = get(orgIdStore)?.toString() || null;
+		if (!organizacionId) return;
+		const confirm = await Swal.fire({
+			icon: 'question',
+			title: '¿Eliminar plantilla?',
+			text: 'Esta acción no se puede deshacer.',
+			showCancelButton: true,
+			confirmButtonText: 'Eliminar',
+			cancelButtonText: 'Cancelar',
+			confirmButtonColor: '#ef4444'
+		});
+		if (!confirm.isConfirmed) return;
+		try {
+			const response = await authFetch(`/api/notas-cliente?id=${id}&organizacionId=${organizacionId}`, { method: 'DELETE' });
+			if (response.ok) {
+				plantillasNotas = plantillasNotas.filter((p) => p.id !== id);
+			}
+		} catch {}
 	}
 
 	async function cargarClientes() {
@@ -1653,15 +1729,98 @@
 
 	<!-- NOTAS PARA EL CLIENTE -->
 	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-		<h2 class="text-lg font-semibold text-gray-900 mb-4">NOTAS PARA EL CLIENTE</h2>
+		<div class="flex items-center justify-between mb-4">
+			<h2 class="text-lg font-semibold text-gray-900">NOTAS PARA EL CLIENTE</h2>
+			{#if plantillasNotas.length > 0}
+				<button
+					type="button"
+					on:click={() => { mostrarPlantillas = !mostrarPlantillas; mostrarFormGuardar = false; }}
+					class="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+					</svg>
+					Notas guardadas ({plantillasNotas.length})
+				</button>
+			{/if}
+		</div>
+
+		{#if mostrarPlantillas && plantillasNotas.length > 0}
+			<div class="mb-4 border border-gray-200 rounded-lg overflow-hidden">
+				{#each plantillasNotas as p (p.id)}
+					<div class="flex items-start justify-between gap-2 px-3 py-2 hover:bg-gray-50 border-b border-gray-100 last:border-b-0">
+						<button
+							type="button"
+							class="flex-1 text-left text-sm text-gray-700 hover:text-blue-600"
+							on:click={() => { notasCliente = p.contenido; mostrarPlantillas = false; }}
+						>
+							<span class="font-medium">{p.nombre}</span>
+							<span class="text-gray-400 text-xs block truncate">{p.contenido.substring(0, 80)}{p.contenido.length > 80 ? '…' : ''}</span>
+						</button>
+						<button
+							type="button"
+							on:click={() => eliminarPlantilla(p.id)}
+							class="text-gray-400 hover:text-red-500 flex-shrink-0 mt-0.5"
+							title="Eliminar plantilla"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+							</svg>
+						</button>
+					</div>
+				{/each}
+			</div>
+		{/if}
+
 		<textarea
 			bind:value={notasCliente}
 			rows="4"
 			maxlength="1000"
-			placeholder="Notas que aparecerán en la factura..."
+			placeholder="Ejemplo: Datos de transferencia: BBVA, Cuenta: 1234-5678, CLABE: 012345678901234567. Referencia: número de factura. Pago en un plazo máximo de 30 días."
 			class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 		></textarea>
-		<p class="text-xs text-gray-400 text-right mt-1">{notasCliente.length}/1000</p>
+
+		<div class="flex items-center justify-between mt-1">
+			<div>
+				{#if notasCliente.trim() && !mostrarFormGuardar}
+					<button
+						type="button"
+						on:click={() => { mostrarFormGuardar = true; mostrarPlantillas = false; }}
+						class="text-xs text-blue-600 hover:text-blue-700 flex items-center gap-1"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+						</svg>
+						Guardar como plantilla
+					</button>
+				{/if}
+				{#if mostrarFormGuardar}
+					<div class="flex items-center gap-2">
+						<input
+							type="text"
+							bind:value={nombreNuevaPlantilla}
+							placeholder="Nombre de la plantilla"
+							maxlength="100"
+							class="text-xs px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 w-48"
+						/>
+						<button
+							type="button"
+							on:click={guardarPlantilla}
+							disabled={guardandoPlantilla || !nombreNuevaPlantilla.trim()}
+							class="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 disabled:opacity-50"
+						>
+							{guardandoPlantilla ? 'Guardando…' : 'Guardar'}
+						</button>
+						<button
+							type="button"
+							on:click={() => { mostrarFormGuardar = false; nombreNuevaPlantilla = ''; }}
+							class="text-xs text-gray-500 hover:text-gray-700"
+						>Cancelar</button>
+					</div>
+				{/if}
+			</div>
+			<p class="text-xs text-gray-400">{notasCliente.length}/1000</p>
+		</div>
 	</div>
 
 	<!-- NOTAS INTERNAS -->
