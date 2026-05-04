@@ -683,7 +683,6 @@
 			const result = await response.json();
 
 			if (result.success) {
-				const facturaIdGenerada = result.facturaId || result.id;
 				const linkComprobanteGenerado = result.linkComprobante || '';
 
 				// Verificar si la factura fue timbrada o no

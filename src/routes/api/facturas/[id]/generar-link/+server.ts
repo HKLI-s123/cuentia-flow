@@ -5,6 +5,30 @@ import crypto from 'crypto';
 import { getUserFromRequest, unauthorizedResponse, validateOrganizationAccess } from '$lib/server/auth';
 import { checkRateLimit, getClientIP, secureLog } from '$lib/server/security';
 
+const LINK_COMPROBANTE_LABEL = 'Link para subir comprobante:';
+const MAX_NOTAS_CLIENTE_LENGTH = 1000;
+
+function mergeNotasClienteConLink(notasActuales: string | null | undefined, link: string): string {
+	const normalizado = String(notasActuales || '').replace(/\r\n/g, '\n');
+	const lineasSinLink = normalizado
+		.split('\n')
+		.filter((linea) => {
+			const lower = linea.toLowerCase();
+			return !lower.includes('link para subir comprobante:') && !linea.includes('/comprobante-factura/');
+		})
+		.join('\n')
+		.trim();
+
+	const textoConLink = `${LINK_COMPROBANTE_LABEL} ${link}`;
+	const combinado = lineasSinLink ? `${lineasSinLink}\n\n${textoConLink}` : textoConLink;
+
+	if (combinado.length > MAX_NOTAS_CLIENTE_LENGTH) {
+		return textoConLink;
+	}
+
+	return combinado;
+}
+
 /**
  * POST /api/facturas/[id]/generar-link?organizacionId=X
  * Genera un token público para que el cliente suba su comprobante de la factura.
@@ -35,8 +59,14 @@ export const POST: RequestHandler = async (event) => {
 
 	let agregarEnNotasCliente = false;
 	try {
-		const body = await event.request.json();
-		agregarEnNotasCliente = !!body?.agregarEnNotasCliente;
+		const contentType = (event.request.headers.get('content-type') || '').toLowerCase();
+		if (contentType.includes('application/json')) {
+			const body = await event.request.json();
+			if (body && typeof body === 'object' && 'agregarEnNotasCliente' in body && typeof body.agregarEnNotasCliente !== 'boolean') {
+				return json({ success: false, error: 'agregarEnNotasCliente debe ser booleano' }, { status: 400 });
+			}
+			agregarEnNotasCliente = !!body?.agregarEnNotasCliente;
+		}
 	} catch {
 		agregarEnNotasCliente = false;
 	}
@@ -76,15 +106,14 @@ export const POST: RequestHandler = async (event) => {
 		const link = `${origin}/comprobante-factura/${token}`;
 
 		if (agregarEnNotasCliente) {
+			const notasConLink = mergeNotasClienteConLink(facturaResult.rows[0]?.notascliente, link);
 			await pool.query(
 				`UPDATE Facturas
 				 SET tokencomprobantecf = $1,
 				     tokenexpiracioncf = $2,
-				     notascliente = CONCAT(COALESCE(notascliente, ''),
-				       CASE WHEN COALESCE(notascliente, '') = '' THEN '' ELSE E'\n\n' END,
-				       $3::text)
+				     notascliente = $3::text
 				 WHERE id = $4`,
-				[token, expiracion, `Link para subir comprobante: ${link}`, parseInt(facturaId)]
+				[token, expiracion, notasConLink, parseInt(facturaId)]
 			);
 		} else {
 			await pool.query(
@@ -109,7 +138,7 @@ export const POST: RequestHandler = async (event) => {
 					);
 					const notasActualizadas = notasResult.rows[0]?.notascliente || '';
 					const credentials = Buffer.from(`${facturapiKey}:`).toString('base64');
-					await fetch(`https://www.facturapi.io/v2/invoices/${encodeURIComponent(facturapiId)}`, {
+					const facturapiResp = await fetch(`https://www.facturapi.io/v2/invoices/${encodeURIComponent(facturapiId)}`, {
 						method: 'PUT',
 						headers: {
 							'Authorization': `Basic ${credentials}`,
@@ -117,7 +146,16 @@ export const POST: RequestHandler = async (event) => {
 						},
 						body: JSON.stringify({ pdf_custom_section: notasActualizadas })
 					});
-					secureLog('info', `[LINK CF] Facturapi actualizado - FacturaId: ${facturaId}`);
+					if (!facturapiResp.ok) {
+						const facturapiText = await facturapiResp.text();
+						console.warn('[LINK CF] Facturapi respondio con error', {
+							facturaId,
+							status: facturapiResp.status,
+							body: facturapiText.slice(0, 500)
+						});
+					} else {
+						secureLog('info', `[LINK CF] Facturapi actualizado - FacturaId: ${facturaId}`);
+					}
 				} catch (facturapiErr) {
 					// No fallar si Facturapi no responde, el DB ya fue actualizado
 					console.warn('[LINK CF] No se pudo actualizar Facturapi:', facturapiErr);

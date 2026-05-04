@@ -6,6 +6,31 @@ import { validarLimiteFacturas, validarAccesoFuncion } from '$lib/server/validar
 import { hoyLocal, fechaLocal } from '$lib/utils/date';
 import crypto from 'crypto';
 
+const LINK_COMPROBANTE_LABEL = 'Link para subir comprobante:';
+const MAX_NOTAS_CLIENTE_LENGTH = 1000;
+
+function mergeNotasClienteConLink(notasActuales: string | null | undefined, link: string): string {
+  const normalizado = String(notasActuales || '').replace(/\r\n/g, '\n');
+  const lineasSinLink = normalizado
+    .split('\n')
+    .filter((linea) => {
+      const lower = linea.toLowerCase();
+      return !lower.includes('link para subir comprobante:') && !linea.includes('/comprobante-factura/');
+    })
+    .join('\n')
+    .trim();
+
+  const textoConLink = `${LINK_COMPROBANTE_LABEL} ${link}`;
+  const combinado = lineasSinLink ? `${lineasSinLink}\n\n${textoConLink}` : textoConLink;
+
+  // Prioriza conservar el link si el texto excede el límite permitido.
+  if (combinado.length > MAX_NOTAS_CLIENTE_LENGTH) {
+    return textoConLink;
+  }
+
+  return combinado;
+}
+
 export const GET: RequestHandler = async (event) => {
   // Verificar autenticación
   const user = getUserFromRequest(event);
@@ -344,10 +369,35 @@ export const POST: RequestHandler = async (event) => {
   try {
     const data = await request.json();
 
+    if (!data || typeof data !== 'object') {
+      return json({ success: false, error: 'Payload inválido' }, { status: 400 });
+    }
+
+    if ('generarLinkComprobante' in data && typeof data.generarLinkComprobante !== 'boolean') {
+      return json({ success: false, error: 'generarLinkComprobante debe ser booleano' }, { status: 400 });
+    }
+
+    if ('incluirLinkEnNotasCliente' in data && typeof data.incluirLinkEnNotasCliente !== 'boolean') {
+      return json({ success: false, error: 'incluirLinkEnNotasCliente debe ser booleano' }, { status: 400 });
+    }
+
+    if (data.incluirLinkEnNotasCliente && !data.generarLinkComprobante) {
+      return json({ success: false, error: 'No se puede incluir el link en notas sin generar el link' }, { status: 400 });
+    }
+
+    if ('notasCliente' in data && data.notasCliente != null && typeof data.notasCliente !== 'string') {
+      return json({ success: false, error: 'notasCliente debe ser texto' }, { status: 400 });
+    }
+
     // Flags opcionales para generar link de comprobante al crear
     const generarLinkComprobante = !!data.generarLinkComprobante;
     const incluirLinkEnNotasCliente = !!data.incluirLinkEnNotasCliente;
     let linkComprobanteGenerado: string | null = null;
+    const notasClienteBase = String(data.notasCliente || '').trim();
+
+    if (notasClienteBase.length > MAX_NOTAS_CLIENTE_LENGTH) {
+      return json({ success: false, error: `notasCliente excede el máximo de ${MAX_NOTAS_CLIENTE_LENGTH} caracteres` }, { status: 400 });
+    }
 
     // Validar límite de facturas del plan
     const orgId = (user as any).organizacion;
@@ -587,7 +637,7 @@ export const POST: RequestHandler = async (event) => {
       data.moneda || 'MXN',
       parseFloat(data.tipoCambio || '1.0000'),
       data.condicionesPago || null,
-      data.notasCliente || null,
+      notasClienteBase || null,
       data.notasInternas || null,
       data.desglosarImpuestos ? true : false,
       data.identificador || null,
@@ -618,15 +668,14 @@ export const POST: RequestHandler = async (event) => {
       linkComprobanteGenerado = `${url.origin}/comprobante-factura/${tokenComprobante}`;
 
       if (incluirLinkEnNotasCliente) {
+        const notasConLink = mergeNotasClienteConLink(notasClienteBase, linkComprobanteGenerado);
         await client.query(
           `UPDATE facturas
            SET tokencomprobantecf = $1,
                tokenexpiracioncf = $2,
-               notascliente = CONCAT(COALESCE(notascliente, ''),
-                 CASE WHEN COALESCE(notascliente, '') = '' THEN '' ELSE E'\n\n' END,
-                 $3::text)
+               notascliente = $3::text
            WHERE id = $4`,
-          [tokenComprobante, tokenExpiracion, `Link para subir comprobante: ${linkComprobanteGenerado}`, facturaId]
+          [tokenComprobante, tokenExpiracion, notasConLink, facturaId]
         );
       } else {
         await client.query(

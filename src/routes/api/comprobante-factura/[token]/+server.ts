@@ -104,6 +104,11 @@ export const POST: RequestHandler = async (event) => {
 		}, { status: 429 });
 	}
 
+	const contentLength = Number(request.headers.get('content-length') || '0');
+	if (Number.isFinite(contentLength) && contentLength > 8 * 1024 * 1024) {
+		return json({ success: false, error: 'Payload demasiado grande' }, { status: 413 });
+	}
+
 	try {
 		const body = await request.json();
 		const { imagenBase64, mimetype } = body;
@@ -134,55 +139,81 @@ export const POST: RequestHandler = async (event) => {
 		}
 
 		const pool = await getConnection();
+		const client = await pool.connect();
+		try {
+			await client.query('BEGIN');
 
-		// Buscar factura por token
-		const facturaResult = await pool.query(
-			`SELECT f.id, f.tokenexpiracioncf, cl.organizacionid
-			 FROM Facturas f
-			 INNER JOIN Clientes cl ON f.clienteid = cl.id
-			 WHERE f.tokencomprobantecf = $1`,
-			[validatedToken]
-		);
+			// Buscar factura por token y bloquear fila para evitar doble consumo concurrente.
+			const facturaResult = await client.query(
+				`SELECT f.id, f.tokenexpiracioncf, cl.organizacionid
+				 FROM Facturas f
+				 INNER JOIN Clientes cl ON f.clienteid = cl.id
+				 WHERE f.tokencomprobantecf = $1
+				 FOR UPDATE`,
+				[validatedToken]
+			);
 
-		if (facturaResult.rows.length === 0) {
-			secureLog('warn', `[COMPROBANTE FACTURA] Token POST inválido - IP: ${clientIP}, Token: ${validatedToken.substring(0, 8)}...`);
-			return json({ success: false, error: 'Este link no es válido o ya fue utilizado' }, { status: 404 });
+			if (facturaResult.rows.length === 0) {
+				await client.query('ROLLBACK');
+				secureLog('warn', `[COMPROBANTE FACTURA] Token POST inválido - IP: ${clientIP}, Token: ${validatedToken.substring(0, 8)}...`);
+				return json({ success: false, error: 'Este link no es válido o ya fue utilizado' }, { status: 404 });
+			}
+
+			const factura = facturaResult.rows[0];
+
+			if (!factura.tokenexpiracioncf || new Date(factura.tokenexpiracioncf) < new Date()) {
+				await client.query('ROLLBACK');
+				return json({ success: false, error: 'Este link no es válido o ya fue utilizado' }, { status: 404 });
+			}
+
+			const tokenParcial = validatedToken.substring(validatedToken.length - 16);
+
+			// Verificar duplicado por token parcial
+			const existeResult = await client.query(
+				`SELECT id FROM comprobantes_facturas WHERE facturaid = $1 AND token_usado = $2`,
+				[factura.id, tokenParcial]
+			);
+
+			if (existeResult.rows.length > 0) {
+				await client.query('ROLLBACK');
+				return json({ success: false, error: 'Ya se subió un comprobante con este link' }, { status: 409 });
+			}
+
+			const dataToStore = imagenBase64.includes(',') ? imagenBase64 : `data:${mimetype};base64,${imagenBase64}`;
+
+			// Insertar comprobante e invalidar token en la factura de forma atómica.
+			await client.query(
+				`INSERT INTO comprobantes_facturas (facturaid, organizacionid, imagenbase64, imagenmimetype, fechasubida, ip_cliente, token_usado, visto)
+				 VALUES ($1, $2, $3, $4, NOW(), $5, $6, FALSE)`,
+				[factura.id, factura.organizacionid, dataToStore, mimetype, clientIP, tokenParcial]
+			);
+
+			const invalidateResult = await client.query(
+				`UPDATE Facturas
+				 SET tokencomprobantecf = NULL, tokenexpiracioncf = NULL
+				 WHERE id = $1 AND tokencomprobantecf = $2`,
+				[factura.id, validatedToken]
+			);
+
+			if (invalidateResult.rowCount === 0) {
+				await client.query('ROLLBACK');
+				return json({ success: false, error: 'Este link no es válido o ya fue utilizado' }, { status: 409 });
+			}
+
+			await client.query('COMMIT');
+
+			secureLog('info', `[COMPROBANTE FACTURA] Subido exitosamente - FacturaId: ${factura.id}, IP: ${clientIP}, Size: ${sizeBytes}`);
+			return json({ success: true, message: 'Comprobante recibido correctamente. ¡Gracias!' });
+		} catch (txErr) {
+			try {
+				await client.query('ROLLBACK');
+			} catch {
+				// noop
+			}
+			throw txErr;
+		} finally {
+			client.release();
 		}
-
-		const factura = facturaResult.rows[0];
-
-		if (!factura.tokenexpiracioncf || new Date(factura.tokenexpiracioncf) < new Date()) {
-			return json({ success: false, error: 'Este link no es válido o ya fue utilizado' }, { status: 404 });
-		}
-
-		// Verificar duplicado por token parcial
-		const existeResult = await pool.query(
-			`SELECT id FROM comprobantes_facturas WHERE facturaid = $1 AND token_usado = $2`,
-			[factura.id, validatedToken.substring(validatedToken.length - 16)]
-		);
-
-		if (existeResult.rows.length > 0) {
-			return json({ success: false, error: 'Ya se subió un comprobante con este link' }, { status: 409 });
-		}
-
-		const dataToStore = imagenBase64.includes(',') ? imagenBase64 : `data:${mimetype};base64,${imagenBase64}`;
-		const tokenParcial = validatedToken.substring(validatedToken.length - 16);
-
-		// Insertar comprobante e invalidar token en la factura
-		await pool.query(
-			`INSERT INTO comprobantes_facturas (facturaid, organizacionid, imagenbase64, imagenmimetype, fechasubida, ip_cliente, token_usado, visto)
-			 VALUES ($1, $2, $3, $4, NOW(), $5, $6, FALSE)`,
-			[factura.id, factura.organizacionid, dataToStore, mimetype, clientIP, tokenParcial]
-		);
-
-		await pool.query(
-			`UPDATE Facturas SET tokencomprobantecf = NULL, tokenexpiracioncf = NULL WHERE id = $1`,
-			[factura.id]
-		);
-
-		secureLog('info', `[COMPROBANTE FACTURA] Subido exitosamente - FacturaId: ${factura.id}, IP: ${clientIP}, Size: ${sizeBytes}`);
-
-		return json({ success: true, message: 'Comprobante recibido correctamente. ¡Gracias!' });
 
 	} catch (err) {
 		secureLog('error', `[COMPROBANTE FACTURA] Error POST - IP: ${clientIP}, Token: ${validatedToken.substring(0, 8)}...`);
