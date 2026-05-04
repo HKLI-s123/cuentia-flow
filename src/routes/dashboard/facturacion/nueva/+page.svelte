@@ -138,6 +138,8 @@
 	// Notas
 	let notasCliente = '';
 	let notasInternas = '';
+	let generarLinkComprobante = false;
+	let incluirLinkEnNotasCliente = false;
 
 	// Plantillas de notas reutilizables
 	interface PlantillaNota { id: number; nombre: string; contenido: string; }
@@ -679,6 +681,28 @@
 			const result = await response.json();
 
 			if (result.success) {
+				const facturaIdGenerada = result.facturaId || result.id;
+				let linkComprobanteGenerado = '';
+
+				if (generarLinkComprobante && facturaIdGenerada) {
+					try {
+						const orgId = get(orgIdStore)?.toString() || '';
+						if (orgId) {
+							const linkResp = await authFetch(`/api/facturas/${facturaIdGenerada}/generar-link?organizacionId=${orgId}`, {
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify({ agregarEnNotasCliente: incluirLinkEnNotasCliente })
+							});
+							const linkData = await linkResp.json();
+							if (linkData.success && linkData.link) {
+								linkComprobanteGenerado = linkData.link;
+							}
+						}
+					} catch {
+						// No bloquear guardado/timbrado por fallo de generación de link
+					}
+				}
+
 				// Verificar si la factura fue timbrada o no
 				if (result.timbrado && result.timbrado.success) {
 					// Factura timbrada correctamente
@@ -850,6 +874,47 @@
 							confirmButtonText: 'Aceptar'
 						});
 					}
+				}
+
+				if (linkComprobanteGenerado) {
+					const copyResult = await Swal.fire({
+						icon: 'info',
+						title: 'Link para comprobante generado',
+						html: `
+							<div class="text-left">
+								<p class="text-sm text-gray-600 mb-2">Comparte este link con el cliente para que suba su comprobante de pago:</p>
+								<input id="link-comprobante-input" class="swal2-input" style="width:100%;font-size:12px;" readonly value="${linkComprobanteGenerado}" />
+							</div>
+						`,
+						showDenyButton: true,
+						denyButtonText: 'Copiar link',
+						confirmButtonText: 'Continuar',
+						confirmButtonColor: '#3b82f6',
+						preDeny: async () => {
+							try {
+								await navigator.clipboard.writeText(linkComprobanteGenerado);
+								return false;
+							} catch {
+								return false;
+							}
+						}
+					});
+
+					if (copyResult.isDenied) {
+						await Swal.fire({
+							icon: 'success',
+							title: 'Link copiado',
+							timer: 1200,
+							showConfirmButton: false
+						});
+					}
+				} else if (generarLinkComprobante) {
+					await Swal.fire({
+						icon: 'warning',
+						title: 'Factura creada',
+						text: 'No se pudo generar el link del comprobante. Puedes generarlo después desde facturación.',
+						confirmButtonColor: '#3b82f6'
+					});
 				}
 
 				goto('/dashboard/facturacion');
@@ -1779,6 +1844,33 @@
 			placeholder="Ejemplo: Datos de transferencia: BBVA, Cuenta: 1234-5678, CLABE: 012345678901234567. Referencia: número de factura. Pago en un plazo máximo de 30 días."
 			class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 		></textarea>
+
+		<div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-3">
+			<label class="flex items-start gap-3 cursor-pointer">
+				<input
+					type="checkbox"
+					bind:checked={generarLinkComprobante}
+					class="w-4 h-4 mt-0.5 rounded border-gray-300 focus:ring-2 focus:ring-blue-500"
+				/>
+				<div>
+					<p class="text-sm font-medium text-gray-800">Generar link para comprobante de pago</p>
+					<p class="text-xs text-gray-600">Se creará un enlace único para que el cliente suba su comprobante de esta factura.</p>
+				</div>
+			</label>
+
+			{#if generarLinkComprobante}
+				<label class="flex items-start gap-3 cursor-pointer pl-7">
+					<input
+						type="checkbox"
+						bind:checked={incluirLinkEnNotasCliente}
+						class="w-4 h-4 mt-0.5 rounded border-gray-300 focus:ring-2 focus:ring-blue-500"
+					/>
+					<div>
+						<p class="text-sm text-gray-800">Agregar link automáticamente a "Notas para el cliente"</p>
+					</div>
+				</label>
+			{/if}
+		</div>
 
 		<div class="flex items-center justify-between mt-1">
 			<div>
