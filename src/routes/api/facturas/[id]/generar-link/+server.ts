@@ -78,7 +78,7 @@ export const POST: RequestHandler = async (event) => {
 				     tokenexpiracioncf = $2,
 				     notascliente = CONCAT(COALESCE(notascliente, ''),
 				       CASE WHEN COALESCE(notascliente, '') = '' THEN '' ELSE E'\n\n' END,
-				       $3)
+				       $3::text)
 				 WHERE id = $4`,
 				[token, expiracion, `Link para subir comprobante de pago: ${link}`, parseInt(facturaId)]
 			);
