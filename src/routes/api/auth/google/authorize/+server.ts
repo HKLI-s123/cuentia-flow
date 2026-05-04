@@ -9,6 +9,21 @@
 import { redirect } from '@sveltejs/kit';
 import { GOOGLE_ID, GOOGLE_REDIRECT_URI } from '$env/static/private';
 
+function resolveGoogleRedirectUri(requestUrl: URL): string {
+	const configured = (GOOGLE_REDIRECT_URI || '').trim();
+	let redirectUri = configured || `${requestUrl.origin}/api/auth/google/callback`;
+
+	if (
+		process.env.NODE_ENV === 'production' &&
+		redirectUri.startsWith('http://') &&
+		!redirectUri.startsWith('http://localhost')
+	) {
+		redirectUri = redirectUri.replace('http://', 'https://');
+	}
+
+	return redirectUri;
+}
+
 /**
  * Genera un state token para CSRF protection
  * Lo guardamos en una cookie segura y lo validamos en el callback
@@ -19,8 +34,8 @@ function generateState(): string {
 		.join('');
 }
 
-export const GET = async ({ cookies }) => {
-	const redirectUri = GOOGLE_REDIRECT_URI || 'http://localhost:5173/api/auth/google/callback';
+export const GET = async ({ cookies, url }) => {
+	const redirectUri = resolveGoogleRedirectUri(url);
 
 	// Validar configuración
 	if (!GOOGLE_ID) {

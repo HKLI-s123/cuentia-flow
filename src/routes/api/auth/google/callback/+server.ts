@@ -14,6 +14,21 @@ import { getConnection } from '$lib/server/db';
 import { generateAccessToken, generateRefreshToken } from '$lib/server/tokens';
 import { secureLog, getClientIP } from '$lib/server/security';
 
+function resolveGoogleRedirectUri(requestUrl: URL): string {
+	const configured = (GOOGLE_REDIRECT_URI || '').trim();
+	let redirectUri = configured || `${requestUrl.origin}/api/auth/google/callback`;
+
+	if (
+		process.env.NODE_ENV === 'production' &&
+		redirectUri.startsWith('http://') &&
+		!redirectUri.startsWith('http://localhost')
+	) {
+		redirectUri = redirectUri.replace('http://', 'https://');
+	}
+
+	return redirectUri;
+}
+
 /**
  * Interfaz para respuesta de Google
  */
@@ -45,7 +60,7 @@ export const GET = async ({ url, cookies }: RequestEvent): Promise<void> => {
 		throw redirect(302, '/?error=google_not_configured');
 	}
 
-	const redirectUri = GOOGLE_REDIRECT_URI || 'http://localhost:5173/api/auth/google/callback';
+	const redirectUri = resolveGoogleRedirectUri(url);
 
 	try {
 		const code = url.searchParams.get('code');
