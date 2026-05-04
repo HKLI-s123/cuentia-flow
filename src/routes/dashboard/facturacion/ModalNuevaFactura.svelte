@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { get } from 'svelte/store';
   import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
-  import { X, Save, AlertCircle, FileText } from 'lucide-svelte';
+  import { X, Save, AlertCircle, FileText, Link, Copy, CheckCircle } from 'lucide-svelte';
   import { authFetch } from '$lib/api';
   import { hoyLocal } from '$lib/utils/date';
 
@@ -42,6 +42,13 @@
   // Estado del formulario
   let guardando = false;
   let error = '';
+
+  // Estado del link de comprobante
+  let generarLink = false;
+  let linkGenerado = '';
+  let linkCopiado = false;
+  let estadoModal: 'formulario' | 'exito' = 'formulario';
+  let facturaGuardada: any = null;
   let clientes: any[] = [];
   let clienteSeleccionado: any = null;
 
@@ -111,6 +118,16 @@
     limpiarFormulario();
   }
 
+  async function copiarLink() {
+    try {
+      await navigator.clipboard.writeText(linkGenerado);
+      linkCopiado = true;
+      setTimeout(() => { linkCopiado = false; }, 2000);
+    } catch {
+      // fallback silencioso
+    }
+  }
+
   function limpiarFormulario() {
     formulario = {
       clienteId: '',
@@ -142,6 +159,11 @@
     clienteSeleccionado = null;
     error = '';
     guardando = false;
+    generarLink = false;
+    linkGenerado = '';
+    linkCopiado = false;
+    estadoModal = 'formulario';
+    facturaGuardada = null;
     erroresFormulario = {
       clienteId: '',
       subtotal: '',
@@ -303,8 +325,23 @@
       const result = await response.json();
 
       if (response.ok && result.success) {
+        facturaGuardada = result.factura;
         dispatch('facturaCreada', { factura: result.factura });
-        cerrar();
+        if (generarLink) {
+          try {
+            const orgId = get(orgIdStore);
+            const linkRes = await authFetch(`/api/facturas/${result.factura.id}/generar-link?organizacionId=${orgId}`, {
+              method: 'POST'
+            });
+            const linkData = await linkRes.json();
+            if (linkData.success) {
+              linkGenerado = linkData.link;
+            }
+          } catch {
+            // No bloquear el flujo si falla el link
+          }
+        }
+        estadoModal = 'exito';
       } else {
         error = result.error || 'Error al crear la factura';
       }
@@ -366,6 +403,63 @@
       <!-- Contenido -->
       <div class="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
 
+        {#if estadoModal === 'exito'}
+          <!-- Estado de éxito con link -->
+          <div class="flex flex-col items-center text-center py-6 space-y-5">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+              <CheckCircle class="w-8 h-8 text-green-600" />
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">¡Factura creada!</h3>
+              {#if facturaGuardada?.numero_factura}
+                <p class="text-sm text-gray-500 mt-1">Factura #{facturaGuardada.numero_factura} registrada exitosamente.</p>
+              {/if}
+            </div>
+
+            {#if linkGenerado}
+              <div class="w-full bg-blue-50 rounded-xl p-4 text-left">
+                <p class="text-xs font-medium text-blue-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <Link class="w-3.5 h-3.5" />
+                  Link para comprobante del cliente
+                </p>
+                <div class="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={linkGenerado}
+                    readonly
+                    class="flex-1 text-xs bg-white border border-blue-200 rounded-lg px-3 py-2 text-gray-700 font-mono truncate"
+                  />
+                  <button
+                    type="button"
+                    on:click={copiarLink}
+                    class="flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
+                  >
+                    {#if linkCopiado}
+                      <CheckCircle class="w-3.5 h-3.5" />
+                      Copiado
+                    {:else}
+                      <Copy class="w-3.5 h-3.5" />
+                      Copiar
+                    {/if}
+                  </button>
+                </div>
+                <p class="text-xs text-blue-500 mt-2">Este link es válido por 7 días y se invalida al usarse.</p>
+              </div>
+            {:else if generarLink}
+              <div class="w-full bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-left">
+                <p class="text-sm text-yellow-700">No se pudo generar el link. Puedes generarlo desde el detalle de la factura.</p>
+              </div>
+            {/if}
+
+            <button
+              type="button"
+              on:click={cerrar}
+              class="w-full sm:w-auto px-6 py-3 bg-gray-900 text-white rounded-xl font-semibold text-sm hover:bg-gray-800 transition-colors"
+            >
+              Cerrar
+            </button>
+          </div>
+        {:else}
         <form on:submit|preventDefault={guardarFactura} class="space-y-8">
           <!-- Información del Cliente -->
           <div class="bg-gray-50 rounded-xl p-6">
@@ -672,6 +766,26 @@
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               ></textarea>
             </div>
+
+            <!-- Opción: Generar link para comprobante -->
+            <div class="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
+              <label class="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  bind:checked={generarLink}
+                  class="mt-0.5 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <div>
+                  <p class="text-sm font-medium text-gray-800 flex items-center gap-1.5">
+                    <Link class="w-4 h-4 text-blue-600" />
+                    Generar link para comprobante
+                  </p>
+                  <p class="text-xs text-gray-500 mt-0.5">
+                    Se generará un link único que puedes enviar al cliente para que suba su comprobante de pago. Válido por 7 días.
+                  </p>
+                </div>
+              </label>
+            </div>
           </div>
 
           <!-- Botones al final del formulario -->
@@ -695,6 +809,7 @@
             </button>
           </div>
         </form>
+        {/if}
       </div>
     </div>
   </div>

@@ -81,6 +81,36 @@
   // Organización ID
   let organizacionId = '';
 
+  // Notificación de comprobantes nuevos subidos a nivel factura
+  let facturasConComprobantesNuevos: any[] = [];
+  let bannerComprobantesVisible = false;
+
+  async function cargarComprobantesNuevos() {
+    try {
+      const orgId = get(orgIdStore)?.toString() || '';
+      if (!orgId) return;
+
+      const resp = await authFetch(`/api/facturas/comprobantes-nuevos?organizacionId=${orgId}`);
+      const data = await resp.json();
+
+      if (data.success) {
+        const dismissados = JSON.parse(localStorage.getItem('comprobantes_vistos') || '[]');
+        facturasConComprobantesNuevos = (data.facturas || []).filter((f: any) => !dismissados.includes(f.facturaid));
+        bannerComprobantesVisible = facturasConComprobantesNuevos.length > 0;
+      }
+    } catch (err) {
+      console.error('Error cargando comprobantes nuevos:', err);
+    }
+  }
+
+  function cerrarBannerComprobantes() {
+    const ids = facturasConComprobantesNuevos.map(f => f.facturaid);
+    const dismissados = JSON.parse(localStorage.getItem('comprobantes_vistos') || '[]');
+    const nuevos = [...new Set([...dismissados, ...ids])];
+    localStorage.setItem('comprobantes_vistos', JSON.stringify(nuevos));
+    bannerComprobantesVisible = false;
+  }
+
   /**
    * Carga los pagos del API
    */
@@ -304,6 +334,7 @@
   onMount(() => {
     organizacionId = get(orgIdStore)?.toString() || '';
     cargarPagos();
+    cargarComprobantesNuevos();
 
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -336,6 +367,32 @@
       </Button>
     </div>
   </div>
+
+  {#if bannerComprobantesVisible}
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start justify-between gap-4">
+      <div class="flex items-start gap-3">
+        <AlertTriangle class="w-5 h-5 text-amber-600 mt-0.5" />
+        <div>
+          <p class="text-sm font-semibold text-amber-900">Hay comprobantes nuevos por revisar</p>
+          <p class="text-sm text-amber-800 mt-1">
+            {facturasConComprobantesNuevos.length} factura{facturasConComprobantesNuevos.length === 1 ? '' : 's'} tiene{facturasConComprobantesNuevos.length === 1 ? '' : 'n'} comprobantes subidos por el cliente.
+          </p>
+          <div class="mt-2 text-xs text-amber-700">
+            {#each facturasConComprobantesNuevos.slice(0, 3) as factura}
+              <div>Factura #{factura.numero_factura} - {factura.clientenombre} ({factura.nuevos} nuevo{factura.nuevos === '1' ? '' : 's'})</div>
+            {/each}
+          </div>
+        </div>
+      </div>
+      <button
+        type="button"
+        on:click={cerrarBannerComprobantes}
+        class="text-amber-700 hover:text-amber-900 text-sm font-medium"
+      >
+        Cerrar
+      </button>
+    </div>
+  {/if}
 
   <!-- Métricas (Tarjetas de resumen) -->
   {#if metricas && !cargando}

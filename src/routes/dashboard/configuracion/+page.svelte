@@ -357,7 +357,7 @@
   let motivoCancelacion = '';
   let procesandoCancelacion = false;
   let mostrarModalCancelar = false;
-  let pasoCancelacion: 'razon' | 'retencion' | 'confirmar' = 'razon';
+  let pasoCancelacion: 'motivo' | 'retencion' | 'confirmar' = 'motivo';
 
   const preciosPlanes: Record<string, number> = { basico: 399, pro: 799, enterprise: 1499 };
   $: precioOriginal = suscripcion ? (preciosPlanes[suscripcion.plan] || 0) : 0;
@@ -2141,7 +2141,7 @@ Teléfono: {telefono_empresa}
                         {/if}
                         Método de pago y facturas
                       </button>
-                      {#if suscripcion.estado === 'active' || suscripcion.estado === 'past_due'}
+                      {#if suscripcion.estado === 'active' || suscripcion.estado === 'past_due' || suscripcion.estado === 'trialing'}
                         <button
                           on:click={abrirModalCancelar}
                           class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
