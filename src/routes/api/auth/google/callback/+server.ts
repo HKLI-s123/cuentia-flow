@@ -13,6 +13,7 @@ import { GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT_URI } from '$env/static/priva
 import { getConnection } from '$lib/server/db';
 import { generateAccessToken, generateRefreshToken } from '$lib/server/tokens';
 import { secureLog, getClientIP } from '$lib/server/security';
+import bcrypt from 'bcryptjs';
 
 function resolveGoogleRedirectUri(requestUrl: URL): string {
 	const configured = (GOOGLE_REDIRECT_URI || '').trim();
@@ -179,12 +180,22 @@ export const GET = async ({ url, cookies }: RequestEvent): Promise<void> => {
 		const nombres = profile.name.split(' ');
 		const nombre = profile.given_name || nombres[0] || 'Usuario';
 		const apellido = profile.family_name || nombres[1] || profile.email.split('@')[0];
+		const oauthPasswordHash = await bcrypt.hash(`${profile.id}:${Date.now()}:${Math.random()}`, 12);
 
 		const insertResult = await pool.query(
-			`INSERT INTO usuarios (correo, nombre, apellido, google_id, foto_url, provider, activo)
-			 VALUES ($1, $2, $3, $4, $5, $6, $7)
+			`INSERT INTO usuarios (correo, contrasena, nombre, apellido, google_id, foto_url, provider, activo)
+			 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 			 RETURNING id as id`,
-			[profile.email.toLowerCase(), nombre, apellido, profile.id, profile.picture || null, 'google', true]
+			[
+				profile.email.toLowerCase(),
+				oauthPasswordHash,
+				nombre,
+				apellido,
+				profile.id,
+				profile.picture || null,
+				'google',
+				true
+			]
 		);
 
 		const newUserIdResult = insertResult.rows[0];
