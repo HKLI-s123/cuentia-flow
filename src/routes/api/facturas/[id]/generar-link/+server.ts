@@ -78,15 +78,14 @@ export const POST: RequestHandler = async (event) => {
 				     tokenexpiracioncf = $2,
 				     notascliente = CONCAT(COALESCE(notascliente, ''),
 				       CASE WHEN COALESCE(notascliente, '') = '' THEN '' ELSE E'\n\n' END,
-				       $3),
-				     updatedat = NOW()
+				       $3)
 				 WHERE id = $4`,
 				[token, expiracion, `Link para subir comprobante de pago: ${link}`, parseInt(facturaId)]
 			);
 		} else {
 			await pool.query(
 				`UPDATE Facturas
-				 SET tokencomprobantecf = $1, tokenexpiracioncf = $2, updatedat = NOW()
+				 SET tokencomprobantecf = $1, tokenexpiracioncf = $2
 				 WHERE id = $3`,
 				[token, expiracion, parseInt(facturaId)]
 			);
