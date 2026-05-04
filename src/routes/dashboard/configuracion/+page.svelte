@@ -356,6 +356,8 @@
   let procesandoFormPersonalizado = false;
   let motivoCancelacion = '';
   let procesandoCancelacion = false;
+  let mostrarModalCancelar = false;
+  let pasoCancelacion: 'razon' | 'retencion' | 'confirmar' = 'razon';
 
   const preciosPlanes: Record<string, number> = { basico: 399, pro: 799, enterprise: 1499 };
   $: precioOriginal = suscripcion ? (preciosPlanes[suscripcion.plan] || 0) : 0;
