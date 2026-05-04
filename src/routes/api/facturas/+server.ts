@@ -4,6 +4,7 @@ import { db, getConnection } from '$lib/server/db';
 import { getUserFromRequest, unauthorizedResponse, validateOrganizationAccess } from '$lib/server/auth';
 import { validarLimiteFacturas, validarAccesoFuncion } from '$lib/server/validar-plan';
 import { hoyLocal, fechaLocal } from '$lib/utils/date';
+import crypto from 'crypto';
 
 export const GET: RequestHandler = async (event) => {
   // Verificar autenticación
@@ -337,11 +338,16 @@ export const POST: RequestHandler = async (event) => {
     return unauthorizedResponse('Token de autenticación requerido');
   }
 
-  const { request, fetch } = event;
+  const { request, fetch, url } = event;
   let client: any = null;
 
   try {
     const data = await request.json();
+
+    // Flags opcionales para generar link de comprobante al crear
+    const generarLinkComprobante = !!data.generarLinkComprobante;
+    const incluirLinkEnNotasCliente = !!data.incluirLinkEnNotasCliente;
+    let linkComprobanteGenerado: string | null = null;
 
     // Validar límite de facturas del plan
     const orgId = (user as any).organizacion;
@@ -605,6 +611,34 @@ export const POST: RequestHandler = async (event) => {
     const facturaResult = await client.query(insertFacturaQuery, facturaParams);
     const facturaId = facturaResult.rows[0].id;
 
+    // Si se solicita, generar link de comprobante antes del timbrado automático
+    if (generarLinkComprobante) {
+      const tokenComprobante = crypto.randomBytes(32).toString('hex');
+      const tokenExpiracion = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+      linkComprobanteGenerado = `${url.origin}/comprobante-factura/${tokenComprobante}`;
+
+      if (incluirLinkEnNotasCliente) {
+        await client.query(
+          `UPDATE facturas
+           SET tokencomprobantecf = $1,
+               tokenexpiracioncf = $2,
+               notascliente = CONCAT(COALESCE(notascliente, ''),
+                 CASE WHEN COALESCE(notascliente, '') = '' THEN '' ELSE E'\n\n' END,
+                 $3::text)
+           WHERE id = $4`,
+          [tokenComprobante, tokenExpiracion, linkComprobanteGenerado, facturaId]
+        );
+      } else {
+        await client.query(
+          `UPDATE facturas
+           SET tokencomprobantecf = $1,
+               tokenexpiracioncf = $2
+           WHERE id = $3`,
+          [tokenComprobante, tokenExpiracion, facturaId]
+        );
+      }
+    }
+
     // Validar conceptos antes de insertar
     for (const concepto of data.conceptos) {
       // Validar que tenga clave de producto/servicio
@@ -732,6 +766,7 @@ export const POST: RequestHandler = async (event) => {
           ? 'Factura creada exitosamente. No se timbró porque la fecha de la primer factura es diferente a hoy.'
           : 'Factura creada exitosamente. El timbrado automático solo se realiza para facturas con fecha de emisión actual.',
       facturaId,
+      linkComprobante: linkComprobanteGenerado,
       timbrado: seTimbro
         ? (resultadoTimbrado || { success: false, message: 'No se pudo timbrar automáticamente' })
         : { success: false, message: saltarPorFechaPrimeraFactura ? 'No se timbró automáticamente porque la fecha de la primer factura es diferente a hoy' : 'No se timbró automáticamente porque la fecha de emisión es diferente a la fecha actual' }

@@ -319,7 +319,9 @@
         estadoId: formulario.estadoId,
         prioridadId: formulario.prioridadId,
         observaciones: formulario.observaciones || null,
-        notasCliente: formulario.notasCliente || null
+        notasCliente: formulario.notasCliente || null,
+        generarLinkComprobante: generarLink,
+        incluirLinkEnNotasCliente: incluirLinkEnNotas
       };
 
       const response = await authFetch('/api/facturas', {
@@ -332,22 +334,7 @@
       if (response.ok && result.success) {
         facturaGuardada = result.factura;
         dispatch('facturaCreada', { factura: result.factura });
-        if (generarLink) {
-          try {
-            const orgId = get(orgIdStore);
-            const linkRes = await authFetch(`/api/facturas/${result.factura.id}/generar-link?organizacionId=${orgId}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ agregarEnNotasCliente: incluirLinkEnNotas })
-            });
-            const linkData = await linkRes.json();
-            if (linkData.success) {
-              linkGenerado = linkData.link;
-            }
-          } catch {
-            // No bloquear el flujo si falla el link
-          }
-        }
+        linkGenerado = result.linkComprobante || '';
         estadoModal = 'exito';
       } else {
         error = result.error || 'Error al crear la factura';

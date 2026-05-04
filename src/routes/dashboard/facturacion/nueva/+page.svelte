@@ -670,7 +670,9 @@
 				montoTotal: totalGeneral,
 				agenteIAActivo,
 				enviarPorCorreo,
-				enviarPorWhatsApp: enviarPorWhatsApp && whatsappHabilitado
+				enviarPorWhatsApp: enviarPorWhatsApp && whatsappHabilitado,
+				generarLinkComprobante,
+				incluirLinkEnNotasCliente
 			};
 
 			const response = await authFetch('/api/facturas', {
@@ -682,26 +684,7 @@
 
 			if (result.success) {
 				const facturaIdGenerada = result.facturaId || result.id;
-				let linkComprobanteGenerado = '';
-
-				if (generarLinkComprobante && facturaIdGenerada) {
-					try {
-						const orgId = get(orgIdStore)?.toString() || '';
-						if (orgId) {
-							const linkResp = await authFetch(`/api/facturas/${facturaIdGenerada}/generar-link?organizacionId=${orgId}`, {
-								method: 'POST',
-								headers: { 'Content-Type': 'application/json' },
-								body: JSON.stringify({ agregarEnNotasCliente: incluirLinkEnNotasCliente })
-							});
-							const linkData = await linkResp.json();
-							if (linkData.success && linkData.link) {
-								linkComprobanteGenerado = linkData.link;
-							}
-						}
-					} catch {
-						// No bloquear guardado/timbrado por fallo de generación de link
-					}
-				}
+				const linkComprobanteGenerado = result.linkComprobante || '';
 
 				// Verificar si la factura fue timbrada o no
 				if (result.timbrado && result.timbrado.success) {
