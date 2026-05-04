@@ -25,7 +25,9 @@ const PUBLIC_ROUTES = [
 	'/terminos',
 	'/aviso-privacidad',
 	'/comprobante',
+	'/comprobante-factura',
 	'/api/comprobante-publico',
+	'/api/comprobante-factura',
 	'/api/auth/password-reset'
 ];
 
@@ -94,7 +96,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(event.request.method)) {
 		const isWorkerEndpoint = event.url.pathname.startsWith('/api/worker/');
 		const isStripeWebhook = event.url.pathname === '/api/stripe/webhook';
-		const isComprobantePublico = event.url.pathname.startsWith('/api/comprobante-publico/');
+		const isComprobantePublico = event.url.pathname.startsWith('/api/comprobante-publico/')
+			|| event.url.pathname.startsWith('/api/comprobante-factura/');
 
 		if (isStripeWebhook || isComprobantePublico) {
 			// Skip CSRF for webhooks and public endpoints

@@ -52,9 +52,13 @@ export const POST: RequestHandler = async (event) => {
 
 		// Verificar que la factura existe y pertenece a la organización
 		const facturaResult = await pool.query(
-			`SELECT f.id, f.numero_factura, f.tokencomprobantecf, f.tokenexpiracioncf
+			`SELECT f.id, f.numero_factura, f.tokencomprobantecf, f.tokenexpiracioncf,
+			        f.facturapiid, f.notascliente,
+			        COALESCE(co.facturapi_key, o.apikeyfacturaapi) as facturapikey
 			 FROM Facturas f
 			 INNER JOIN Clientes cl ON f.clienteid = cl.id
+			 INNER JOIN Organizaciones o ON cl.organizacionid = o.id
+			 LEFT JOIN configuracion_organizacion co ON o.id = co.organizacion_id
 			 WHERE f.id = $1 AND cl.organizacionid = $2`,
 			[parseInt(facturaId), parseInt(organizacionId)]
 		);
@@ -89,6 +93,36 @@ export const POST: RequestHandler = async (event) => {
 				 WHERE id = $3`,
 				[token, expiracion, parseInt(facturaId)]
 			);
+		}
+
+		// Si se agregó a notas y la factura está timbrada, actualizar también en Facturapi
+		if (agregarEnNotasCliente) {
+			const factura = facturaResult.rows[0];
+			const facturapiId = factura.facturapiid;
+			const facturapiKey = factura.facturapikey;
+			if (facturapiId && facturapiKey) {
+				try {
+					// Obtener notas actualizadas desde la DB
+					const notasResult = await pool.query(
+						`SELECT notascliente FROM Facturas WHERE id = $1`,
+						[parseInt(facturaId)]
+					);
+					const notasActualizadas = notasResult.rows[0]?.notascliente || '';
+					const credentials = Buffer.from(`${facturapiKey}:`).toString('base64');
+					await fetch(`https://www.facturapi.io/v2/invoices/${encodeURIComponent(facturapiId)}`, {
+						method: 'PUT',
+						headers: {
+							'Authorization': `Basic ${credentials}`,
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify({ pdf_custom_section: notasActualizadas })
+					});
+					secureLog('info', `[LINK CF] Facturapi actualizado - FacturaId: ${facturaId}`);
+				} catch (facturapiErr) {
+					// No fallar si Facturapi no responde, el DB ya fue actualizado
+					console.warn('[LINK CF] No se pudo actualizar Facturapi:', facturapiErr);
+				}
+			}
 		}
 
 		secureLog('info', `[LINK CF] Generado - FacturaId: ${facturaId}, Usuario: ${user.id}, IP: ${clientIP}`);
