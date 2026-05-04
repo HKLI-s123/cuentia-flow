@@ -84,7 +84,7 @@ export const POST: RequestHandler = async (event) => {
 				       CASE WHEN COALESCE(notascliente, '') = '' THEN '' ELSE E'\n\n' END,
 				       $3::text)
 				 WHERE id = $4`,
-				[token, expiracion, `Link para subir comprobante de pago: ${link}`, parseInt(facturaId)]
+				[token, expiracion, link, parseInt(facturaId)]
 			);
 		} else {
 			await pool.query(

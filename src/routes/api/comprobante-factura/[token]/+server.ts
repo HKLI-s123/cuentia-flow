@@ -176,7 +176,7 @@ export const POST: RequestHandler = async (event) => {
 		);
 
 		await pool.query(
-			`UPDATE Facturas SET tokencomprobantecf = NULL, tokenexpiracioncf = NULL, updatedat = NOW() WHERE id = $1`,
+			`UPDATE Facturas SET tokencomprobantecf = NULL, tokenexpiracioncf = NULL WHERE id = $1`,
 			[factura.id]
 		);
 
