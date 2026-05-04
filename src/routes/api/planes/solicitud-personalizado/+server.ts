@@ -4,7 +4,7 @@ import { getConnection } from '$lib/server/db';
 import { getUserFromRequest, unauthorizedResponse } from '$lib/server/auth';
 import { RESEND_API_KEY, RESEND_FROM } from '$lib/server/email-config';
 
-const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'soporte@cuentia.mx';
+const OWNER_EMAIL = process.env.OWNER_EMAIL || 'srgiorosales123@gmail.com';
 
 export const POST: RequestHandler = async (event) => {
 	const user = getUserFromRequest(event);
@@ -52,11 +52,11 @@ export const POST: RequestHandler = async (event) => {
 		const solicitudId = result.rows[0].id;
 		const createdAt = result.rows[0].createdat;
 
-		// Preparar email para soporte
-		const asunto = `Nueva solicitud de plan personalizado - Usuario: ${user.email}`;
+		// Preparar email para el owner
+		const asunto = `Nueva solicitud de plan personalizado - Usuario: ${user.correo}`;
 		const contenidoEmail = `
 			<h2>Nueva Solicitud de Plan Personalizado</h2>
-			<p><strong>Usuario:</strong> ${user.email}</p>
+			<p><strong>Usuario:</strong> ${user.correo}</p>
 			<p><strong>ID de Solicitud:</strong> ${solicitudId}</p>
 			<p><strong>Organizacion ID:</strong> ${organizacionId || 'N/A'}</p>
 			<hr>
@@ -69,7 +69,7 @@ export const POST: RequestHandler = async (event) => {
 			<p><small>Fecha de solicitud: ${new Date(createdAt).toLocaleString('es-MX')}</small></p>
 		`;
 
-		// Enviar email a soporte (sin esperar respuesta)
+		// Enviar email al owner (sin esperar respuesta)
 		if (RESEND_API_KEY) {
 			fetch('https://api.resend.com/emails', {
 				method: 'POST',
@@ -79,7 +79,7 @@ export const POST: RequestHandler = async (event) => {
 				},
 				body: JSON.stringify({
 					from: RESEND_FROM,
-					to: SUPPORT_EMAIL,
+					to: OWNER_EMAIL,
 					subject: asunto,
 					html: contenidoEmail
 				})
@@ -96,13 +96,13 @@ export const POST: RequestHandler = async (event) => {
 				},
 				body: JSON.stringify({
 					from: RESEND_FROM,
-					to: user.email,
+					to: user.correo,
 					subject: 'Solicitud de Plan Personalizado Recibida - Cuentia',
 					html: `
 						<h2>Hola ${user.nombre || 'usuario'},</h2>
-						<p>Hemos recibido tu solicitud de plan personalizado. Uno de nuestros especialistas se pondrá en contacto contigo pronto para discutir los detalles y preparar una propuesta adaptada a tus necesidades.</p>
+						<p>Hemos recibido tu solicitud de plan personalizado. Nuestro equipo revisará tus necesidades y se pondrá en contacto contigo pronto con una propuesta personalizada.</p>
 						<p><strong>Número de solicitud:</strong> #${solicitudId}</p>
-						<p>Mientras tanto, si tienes alguna pregunta, no dudes en contactarnos.</p>
+						<p>Mientras tanto, si tienes alguna pregunta, puedes responder a este email.</p>
 						<hr>
 						<p><small>Cuentia Flow - Gestión de Facturas</small></p>
 					`

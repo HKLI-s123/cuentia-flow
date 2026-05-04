@@ -2187,7 +2187,7 @@ Teléfono: {telefono_empresa}
                 <p class="text-sm text-gray-500 mb-5">Todos los planes incluyen prueba gratuita. Cancela en cualquier momento.</p>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  {#each planesInfo as plan}
+                  {#each planesInfo.filter(p => !p.custom) as plan}
                     {@const esPlanActual = suscripcion.plan === plan.id}
                     <div class="relative rounded-2xl border-2 {esPlanActual ? 'border-green-400 ring-2 ring-green-100' : plan.popular ? plan.border : 'border-gray-200'} p-6 {plan.dark && !esPlanActual ? plan.gradient + ' text-white' : 'bg-white'} transition-all hover:shadow-lg">
                       {#if plan.popular && !esPlanActual}
@@ -2232,13 +2232,6 @@ Teléfono: {telefono_empresa}
                         >
                           {procesandoCambio ? 'Procesando...' : 'Reactivar plan'}
                         </button>
-                      {:else if plan.custom}
-                        <button
-                          on:click={() => mostrarFormularioPersonalizado = true}
-                          class="w-full py-2.5 rounded-xl font-semibold text-sm transition-all border-2 {plan.btn}"
-                        >
-                          Solicitar presupuesto
-                        </button>
                       {:else if suscripcion.tieneStripe}
                         <button
                           on:click={() => abrirModalCambio(plan)}
@@ -2263,6 +2256,19 @@ Teléfono: {telefono_empresa}
                       {/if}
                     </div>
                   {/each}
+                </div>
+
+                <!-- Botón Plan Personalizado -->
+                <div class="mt-8 text-center border-t pt-8">
+                  <p class="text-gray-600 text-sm mb-4">
+                    ¿Necesitas límites personalizados o integraciones especiales?
+                  </p>
+                  <button
+                    on:click={() => mostrarFormularioPersonalizado = true}
+                    class="inline-block px-6 py-2.5 rounded-lg border-2 border-purple-400 text-purple-700 font-semibold hover:bg-purple-50 transition-all"
+                  >
+                    Solicitar plan personalizado
+                  </button>
                 </div>
               </div>
 
