@@ -345,9 +345,15 @@
   let planDestino: typeof planesInfo[0] | null = null;
   let procesandoCambio = false;
 
-  // ═══ Estado de Cancelación ═══
-  let mostrarModalCancelar = false;
-  let pasoCancelacion: 'motivo' | 'retencion' | 'confirmar' = 'motivo';
+  let mostrarFormularioPersonalizado = false;
+  let formPersonalizado = {
+    requiereFacturas: '',
+    requiereClientes: '',
+    requiereIntegraciones: '',
+    necesidesEspeciales: ''
+  };
+  let enviadoFormPersonalizado = false;
+  let procesandoFormPersonalizado = false;
   let motivoCancelacion = '';
   let procesandoCancelacion = false;
 
@@ -391,14 +397,27 @@
       periodo: 'MXN/mes',
       descripcion: 'Para grandes empresas',
       color: 'slate',
-      features: ['Organizaciones ilimitadas', 'Facturas ilimitadas', 'Clientes ilimitados', 'Cobrador IA avanzado', 'API para integraciones', 'Soporte prioritario'],
+      features: ['Organizaciones ilimitadas', '500 facturas/mes', '500 clientes', 'Cobrador IA avanzado', 'API para integraciones', 'Soporte prioritario'],
       gradient: 'bg-gradient-to-br from-slate-800 to-slate-900',
       border: 'border-slate-700',
       badge: 'bg-slate-800 text-white',
       btn: 'border-white/30 text-white hover:bg-white/10 hover:border-white/50',
       dark: true,
+    },
+    {
+      id: 'personalizado',
+      nombre: 'Personalizado',
+      precio: 'A consultar',
+      periodo: 'Según tu necesidad',
+      descripcion: 'Solución customizada para tu empresa',
+      color: 'purple',
+      features: ['Límites personalizados', 'Integraciones específicas', 'SLA garantizado', 'Soporte 24/7', 'Consultor dedicado', 'Actualizaciones prioritarias'],
+      gradient: 'from-purple-50 to-pink-50',
+      border: 'border-purple-400',
+      badge: 'bg-purple-100 text-purple-700',
+      btn: 'border-purple-300 text-purple-700 hover:border-purple-500 hover:text-purple-900 hover:bg-purple-50',
+      custom: true,
     }
-  ];
 
   async function cargarSuscripcion() {
     cargandoSuscripcion = true;
@@ -570,6 +589,34 @@
   function formatearFecha(fecha: string | null): string {
     if (!fecha) return '-';
     return new Date(fecha).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  async function enviarSolicitudPersonalizado() {
+    procesandoFormPersonalizado = true;
+    mensajePlan = '';
+    try {
+      const response = await authFetch('/api/planes/solicitud-personalizado', {
+        method: 'POST',
+        body: JSON.stringify(formPersonalizado)
+      });
+      const data = await response.json();
+      if (response.ok) {
+        mensajePlan = 'Solicitud enviada correctamente. Nos contactaremos en breve.';
+        tipoMensajePlan = 'success';
+        enviadoFormPersonalizado = true;
+        mostrarFormularioPersonalizado = false;
+        formPersonalizado = { requiereFacturas: '', requiereClientes: '', requiereIntegraciones: '', necesidesEspeciales: '' };
+        setTimeout(() => { mensajePlan = ''; enviadoFormPersonalizado = false; }, 4000);
+      } else {
+        mensajePlan = data.error || 'Error al enviar solicitud';
+        tipoMensajePlan = 'error';
+      }
+    } catch {
+      mensajePlan = 'Error al conectar con el servidor';
+      tipoMensajePlan = 'error';
+    } finally {
+      procesandoFormPersonalizado = false;
+    }
   }
 
   function nombrePlan(plan: string): string {
@@ -2182,6 +2229,13 @@ Teléfono: {telefono_empresa}
                         >
                           {procesandoCambio ? 'Procesando...' : 'Reactivar plan'}
                         </button>
+                      {:else if plan.custom}
+                        <button
+                          on:click={() => mostrarFormularioPersonalizado = true}
+                          class="w-full py-2.5 rounded-xl font-semibold text-sm transition-all border-2 {plan.btn}"
+                        >
+                          Solicitar presupuesto
+                        </button>
                       {:else if suscripcion.tieneStripe}
                         <button
                           on:click={() => abrirModalCambio(plan)}
@@ -2670,6 +2724,114 @@ Teléfono: {telefono_empresa}
               </div>
             </div>
           {/if}
+
+        {/if}
+      {/if}
+
+      <!-- Modal Solicitud Plan Personalizado -->
+      {#if mostrarFormularioPersonalizado}
+        <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-8">
+              <!-- Header -->
+              <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Plan Personalizado</h2>
+                <p class="text-gray-600">Cuéntanos tus necesidades y nos pondremos en contacto para crear el plan perfecto para ti</p>
+              </div>
+
+              <!-- Formulario -->
+              <form on:submit|preventDefault={enviarSolicitudPersonalizado} class="space-y-5">
+                <!-- Campo: Facturas -->
+                <div>
+                  <label for="requiereFacturas" class="block text-sm font-semibold text-gray-700 mb-2">
+                    ¿Cuántas facturas necesitas por mes?
+                  </label>
+                  <input
+                    id="requiereFacturas"
+                    type="text"
+                    bind:value={formPersonalizado.requiereFacturas}
+                    placeholder="Ej: 1000, 5000, 10000..."
+                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+
+                <!-- Campo: Clientes -->
+                <div>
+                  <label for="requiereClientes" class="block text-sm font-semibold text-gray-700 mb-2">
+                    ¿Cuántos clientes tienes o esperas tener?
+                  </label>
+                  <input
+                    id="requiereClientes"
+                    type="text"
+                    bind:value={formPersonalizado.requiereClientes}
+                    placeholder="Ej: 50, 200, 1000..."
+                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+
+                <!-- Campo: Integraciones -->
+                <div>
+                  <label for="requiereIntegraciones" class="block text-sm font-semibold text-gray-700 mb-2">
+                    ¿Necesitas integraciones específicas?
+                  </label>
+                  <textarea
+                    id="requiereIntegraciones"
+                    bind:value={formPersonalizado.requiereIntegraciones}
+                    placeholder="Ej: SAP, Microsoft Dynamics, Shopify, WooCommerce, etc."
+                    rows="3"
+                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  ></textarea>
+                </div>
+
+                <!-- Campo: Necesidades Especiales -->
+                <div>
+                  <label for="necesidadesEspeciales" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Necesidades especiales o comentarios adicionales
+                  </label>
+                  <textarea
+                    id="necesidadesEspeciales"
+                    bind:value={formPersonalizado.necesidesEspeciales}
+                    placeholder="Cuéntanos cualquier detalle importante para tu negocio..."
+                    rows="3"
+                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  ></textarea>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex gap-3 mt-8">
+                  <button
+                    type="button"
+                    on:click={() => {
+                      mostrarFormularioPersonalizado = false;
+                      formPersonalizado = {
+                        requiereFacturas: '',
+                        requiereClientes: '',
+                        requiereIntegraciones: '',
+                        necesidesEspeciales: ''
+                      };
+                    }}
+                    class="flex-1 py-2.5 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={procesandoFormPersonalizado}
+                    class="flex-1 py-2.5 rounded-lg bg-purple-600 text-white font-semibold hover:bg-purple-700 transition-colors disabled:opacity-50"
+                  >
+                    {#if procesandoFormPersonalizado}
+                      <RefreshCw class="w-4 h-4 inline animate-spin mr-2" />
+                      Enviando...
+                    {:else}
+                      Enviar Solicitud
+                    {/if}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      {/if}
 
         {:else if tabActivo === 'whatsapp'}
           <!-- Configuración de WhatsApp -->

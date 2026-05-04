@@ -46,8 +46,8 @@ export const PLAN_LIMITS: Record<string, PlanLimits> = {
 	},
 	enterprise: {
 		maxOrganizaciones: 999999,
-		maxFacturasMes: 999999,
-		maxClientes: 999999,
+		maxFacturasMes: 500,
+		maxClientes: 500,
 		whatsapp: true,
 		agenteIA: true,
 		complementoAutomatico: true,

@@ -630,6 +630,13 @@
           <a href="/register" class="block w-full text-center py-3 rounded-xl border-2 border-slate-200 text-slate-700 font-semibold hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50/50 transition-all">Contactar ventas</a>
         </div>
       </div>
+
+      <!-- Nota sobre planes personalizados -->
+      <div class="mt-12 pt-8 border-t border-slate-200 max-w-2xl mx-auto">
+        <p class="text-center text-sm text-slate-600">
+          ¿Necesitas límites personalizados? Crea una cuenta gratuita y accede a <span class="font-semibold">Configuración → Planes</span> para solicitar un plan adaptado a tus necesidades específicas.
+        </p>
+      </div>
     </div>
   </section>
 
