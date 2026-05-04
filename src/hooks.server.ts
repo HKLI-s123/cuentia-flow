@@ -13,6 +13,7 @@ const PUBLIC_ROUTES = [
 	'/api/auth/refresh',
 	'/api/auth/logout',
 	'/api/auth/csrf',
+	'/api/auth/google',
 	'/',
 	'/login',
 	'/register',

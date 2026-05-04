@@ -1,12 +1,14 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { loginExterno, loginConGoogle } from '$lib/auth';
-  import { dev } from '$app/environment';
   import { onMount, onDestroy } from 'svelte';
   import { PasswordInput } from '$lib/components/ui';
 
   // Importar el Site Key de reCAPTCHA (público, seguro de importar)
-  const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LcNcMAsAAAAANh3YnPjv_UGhYQtDQZGcwd-9v6v';
+  const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
+  const RECAPTCHA_ENABLED =
+    (import.meta.env.VITE_RECAPTCHA_ENABLED ?? (import.meta.env.PROD ? 'true' : 'false')) === 'true' &&
+    !!RECAPTCHA_SITE_KEY;
 
   let email = '';
   let password = '';
@@ -18,6 +20,10 @@
    * Espera hasta 5 segundos a que grecaptcha esté disponible
    */
   const getRecaptchaToken = async (action: string = 'login'): Promise<string> => {
+    if (!RECAPTCHA_ENABLED) {
+      return '';
+    }
+
     // Esperar a que grecaptcha esté disponible (máximo 5 segundos)
     let attempts = 0;
     while (!window.grecaptcha && attempts < 50) {
@@ -60,6 +66,10 @@
   };
 
   onMount(() => {
+    if (!RECAPTCHA_ENABLED) {
+      return;
+    }
+
     if (typeof window !== 'undefined' && window.grecaptcha && RECAPTCHA_SITE_KEY) {
       window.grecaptcha.ready(() => {
       });
@@ -70,6 +80,7 @@
 
   onDestroy(() => {
     if (typeof window === 'undefined') return;
+    if (!RECAPTCHA_ENABLED) return;
     // Ocultar el badge de reCAPTCHA
     const badge = document.querySelector('.grecaptcha-badge') as HTMLElement;
     if (badge) badge.style.visibility = 'hidden';
@@ -85,7 +96,9 @@
 </script>
 
 <svelte:head>
-  <script src="https://www.google.com/recaptcha/api.js?render=6LcNcMAsAAAAANh3YnPjv_UGhYQtDQZGcwd-9v6v" async defer></script>
+  {#if RECAPTCHA_ENABLED}
+    <script src={`https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`} async defer></script>
+  {/if}
 </svelte:head>
 
 <div class="flex min-h-screen">

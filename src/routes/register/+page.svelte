@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 
 onDestroy(() => {
   if (typeof window === 'undefined') return;
+  if (!RECAPTCHA_ENABLED) return;
   const badge = document.querySelector('.grecaptcha-badge') as HTMLElement;
   if (badge) badge.style.visibility = 'hidden';
   document.querySelectorAll('script[src*="recaptcha"]').forEach(el => el.remove());
@@ -16,7 +17,10 @@ onDestroy(() => {
     delete (window as any).___grecaptcha_cfg;
   }
 });
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '6LcNcMAsAAAAANh3YnPjv_UGhYQtDQZGcwd-9v6v';
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
+const RECAPTCHA_ENABLED =
+  (import.meta.env.VITE_RECAPTCHA_ENABLED ?? (import.meta.env.PROD ? 'true' : 'false')) === 'true' &&
+  !!RECAPTCHA_SITE_KEY;
 
 let formData = {
   nombre: '',
@@ -58,6 +62,10 @@ const isPasswordValid = () => {
 };
 
 const getRecaptchaToken = async (action: string = 'register'): Promise<string> => {
+  if (!RECAPTCHA_ENABLED) {
+    return '';
+  }
+
   let attempts = 0;
   while (!window.grecaptcha && attempts < 50) {
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -167,7 +175,9 @@ async function handleRegister(e: Event) {
 // End of script
 </script>
 <svelte:head>
-  <script src="https://www.google.com/recaptcha/api.js?render=6LcNcMAsAAAAANh3YnPjv_UGhYQtDQZGcwd-9v6v" async defer></script>
+  {#if RECAPTCHA_ENABLED}
+    <script src={`https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`} async defer></script>
+  {/if}
 </svelte:head>
 
 <div class="flex min-h-screen">

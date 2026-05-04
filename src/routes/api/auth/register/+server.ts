@@ -13,11 +13,13 @@ import {
 	validatePassword,
 	validatePhoneNumber
 } from '$lib/server/security';
-import { RECAPTCHA_SECRET_KEY } from '$env/static/private';
+import { env as privateEnv } from '$env/dynamic/private';
 import { RESEND_FROM, RESEND_API_KEY } from '$lib/server/email-config';
 import crypto from 'crypto';
 
 const ALLOW_USER_REGISTRATION = process.env.ALLOW_USER_REGISTRATION === 'true';
+const RECAPTCHA_ENABLED =
+	(process.env.RECAPTCHA_ENABLED ?? (process.env.NODE_ENV === 'production' ? 'true' : 'false')).toLowerCase() === 'true';
 
 export const POST: RequestHandler = async (event) => {
 	try {
@@ -34,19 +36,27 @@ export const POST: RequestHandler = async (event) => {
 		const requestData = await event.request.json();
 		const { correo, contrasena, nombre, apellido, numero_tel, recaptchaToken } = requestData;
 
-		// Validar reCAPTCHA
-		if (!recaptchaToken) {
-			secureLog('warn', 'Registration attempt without reCAPTCHA token', { ip: clientIP });
-			return secureErrorResponse(400, 'reCAPTCHA token requerido');
-		}
+		// Validar reCAPTCHA solo si está habilitado por entorno
+		if (RECAPTCHA_ENABLED) {
+			const recaptchaSecret = privateEnv.RECAPTCHA_SECRET_KEY || '';
+			if (!recaptchaSecret) {
+				secureLog('error', 'RECAPTCHA_SECRET_KEY is missing while captcha is enabled');
+				return secureErrorResponse(500, 'Configuración de seguridad incompleta');
+			}
 
-		const recaptchaResult = await validateRecaptcha(recaptchaToken, RECAPTCHA_SECRET_KEY);
-		if (!recaptchaResult.valid) {
-			secureLog('warn', 'Registration attempt with failed reCAPTCHA', {
-				ip: clientIP,
-				recaptchaScore: recaptchaResult.score
-			});
-			return secureErrorResponse(403, 'Verificación de seguridad fallida. Por favor intenta nuevamente.');
+			if (!recaptchaToken) {
+				secureLog('warn', 'Registration attempt without reCAPTCHA token', { ip: clientIP });
+				return secureErrorResponse(400, 'reCAPTCHA token requerido');
+			}
+
+			const recaptchaResult = await validateRecaptcha(recaptchaToken, recaptchaSecret);
+			if (!recaptchaResult.valid) {
+				secureLog('warn', 'Registration attempt with failed reCAPTCHA', {
+					ip: clientIP,
+					recaptchaScore: recaptchaResult.score
+				});
+				return secureErrorResponse(403, 'Verificación de seguridad fallida. Por favor intenta nuevamente.');
+			}
 		}
 
 		// Rate limiting por IP
