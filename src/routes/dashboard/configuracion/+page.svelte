@@ -418,6 +418,7 @@
       btn: 'border-purple-300 text-purple-700 hover:border-purple-500 hover:text-purple-900 hover:bg-purple-50',
       custom: true,
     }
+  ];
 
   async function cargarSuscripcion() {
     cargandoSuscripcion = true;
