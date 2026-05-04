@@ -80,6 +80,12 @@ export const PUT: RequestHandler = async (event) => {
 			hashedPassword = await bcrypt.hash(contrasena, 12);
 		}
 
+		let passwordToStore = hashedPassword || checkUser.rows[0].contrasena;
+		if (!passwordToStore) {
+			// Blindaje para cuentas históricas OAuth sin contraseña local
+			passwordToStore = await bcrypt.hash(`oauth-fallback:${parsedId}:${Date.now()}`, 12);
+		}
+
 		const nombreFinal = nombre ? nombre.trim() : checkUser.rows[0].nombre;
 		const apellidoFinal = apellido !== undefined ? apellido.trim() : checkUser.rows[0].apellido;
 
@@ -94,7 +100,7 @@ export const PUT: RequestHandler = async (event) => {
 			 WHERE id = $6`,
 			[
 				correoFinal,
-				hashedPassword || checkUser.rows[0].contrasena,
+				passwordToStore,
 				nombreFinal,
 				apellidoFinal,
 				activo !== undefined ? activo : checkUser.rows[0].activo,

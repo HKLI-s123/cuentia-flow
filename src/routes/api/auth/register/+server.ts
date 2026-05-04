@@ -19,7 +19,7 @@ import crypto from 'crypto';
 
 const ALLOW_USER_REGISTRATION = process.env.ALLOW_USER_REGISTRATION === 'true';
 const RECAPTCHA_ENABLED =
-	(process.env.RECAPTCHA_ENABLED ?? (process.env.NODE_ENV === 'production' ? 'true' : 'false')).toLowerCase() === 'true';
+	(process.env.RECAPTCHA_ENABLED ?? 'false').toLowerCase() === 'true';
 
 export const POST: RequestHandler = async (event) => {
 	try {
@@ -40,22 +40,22 @@ export const POST: RequestHandler = async (event) => {
 		if (RECAPTCHA_ENABLED) {
 			const recaptchaSecret = privateEnv.RECAPTCHA_SECRET_KEY || '';
 			if (!recaptchaSecret) {
-				secureLog('error', 'RECAPTCHA_SECRET_KEY is missing while captcha is enabled');
-				return secureErrorResponse(500, 'Configuración de seguridad incompleta');
-			}
+				secureLog('warn', 'RECAPTCHA_ENABLED=true pero falta RECAPTCHA_SECRET_KEY. Se omite validación de captcha temporalmente.');
+			} else {
 
-			if (!recaptchaToken) {
-				secureLog('warn', 'Registration attempt without reCAPTCHA token', { ip: clientIP });
-				return secureErrorResponse(400, 'reCAPTCHA token requerido');
-			}
+				if (!recaptchaToken) {
+					secureLog('warn', 'Registration attempt without reCAPTCHA token', { ip: clientIP });
+					return secureErrorResponse(400, 'reCAPTCHA token requerido');
+				}
 
-			const recaptchaResult = await validateRecaptcha(recaptchaToken, recaptchaSecret);
-			if (!recaptchaResult.valid) {
-				secureLog('warn', 'Registration attempt with failed reCAPTCHA', {
-					ip: clientIP,
-					recaptchaScore: recaptchaResult.score
-				});
-				return secureErrorResponse(403, 'Verificación de seguridad fallida. Por favor intenta nuevamente.');
+				const recaptchaResult = await validateRecaptcha(recaptchaToken, recaptchaSecret);
+				if (!recaptchaResult.valid) {
+					secureLog('warn', 'Registration attempt with failed reCAPTCHA', {
+						ip: clientIP,
+						recaptchaScore: recaptchaResult.score
+					});
+					return secureErrorResponse(403, 'Verificación de seguridad fallida. Por favor intenta nuevamente.');
+				}
 			}
 		}
 

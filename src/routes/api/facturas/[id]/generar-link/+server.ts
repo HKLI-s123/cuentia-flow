@@ -33,6 +33,14 @@ export const POST: RequestHandler = async (event) => {
 		return orgValidation.error!;
 	}
 
+	let agregarEnNotasCliente = false;
+	try {
+		const body = await event.request.json();
+		agregarEnNotasCliente = !!body?.agregarEnNotasCliente;
+	} catch {
+		agregarEnNotasCliente = false;
+	}
+
 	const clientIP = getClientIP(event);
 	const rateCheck = checkRateLimit(`generar_link_cf:${user.id}:${clientIP}`, 20, 30);
 	if (!rateCheck.allowed) {
@@ -59,16 +67,30 @@ export const POST: RequestHandler = async (event) => {
 		const token = crypto.randomBytes(32).toString('hex');
 		const expiracion = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 días
 
-		await pool.query(
-			`UPDATE Facturas
-			 SET tokencomprobantecf = $1, tokenexpiracioncf = $2, updatedat = NOW()
-			 WHERE id = $3`,
-			[token, expiracion, parseInt(facturaId)]
-		);
-
 		// Obtener el origin para construir la URL
 		const origin = url.origin;
 		const link = `${origin}/comprobante-factura/${token}`;
+
+		if (agregarEnNotasCliente) {
+			await pool.query(
+				`UPDATE Facturas
+				 SET tokencomprobantecf = $1,
+				     tokenexpiracioncf = $2,
+				     notascliente = CONCAT(COALESCE(notascliente, ''),
+				       CASE WHEN COALESCE(notascliente, '') = '' THEN '' ELSE E'\n\n' END,
+				       $3),
+				     updatedat = NOW()
+				 WHERE id = $4`,
+				[token, expiracion, `Link para subir comprobante de pago: ${link}`, parseInt(facturaId)]
+			);
+		} else {
+			await pool.query(
+				`UPDATE Facturas
+				 SET tokencomprobantecf = $1, tokenexpiracioncf = $2, updatedat = NOW()
+				 WHERE id = $3`,
+				[token, expiracion, parseInt(facturaId)]
+			);
+		}
 
 		secureLog('info', `[LINK CF] Generado - FacturaId: ${facturaId}, Usuario: ${user.id}, IP: ${clientIP}`);
 

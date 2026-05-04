@@ -4,7 +4,7 @@
   import { organizacionId as orgIdStore } from '$lib/stores/organizacion';
   import { page } from '$app/stores';
   import { Button, Badge, Input, Modal } from '$lib/components/ui';
-  import { CreditCard, AlertCircle, Loader, Trash2, Plus, Upload, Link, CheckCircle, Copy, Image } from 'lucide-svelte';
+  import { CreditCard, AlertCircle, Loader, Trash2, Plus, Upload, CheckCircle, Image } from 'lucide-svelte';
   import { createEventDispatcher } from 'svelte';
   import { onMount } from 'svelte';
   import { hoyLocal } from '$lib/utils/date';
@@ -63,14 +63,16 @@
   let guardando = false;
   let errorMensaje: string | null = null;
 
-  // Estado de comprobante por factura: 'ninguno' | 'subir' | 'link'
+  // Estado de comprobante por factura: 'ninguno' | 'subir' | 'asignar'
   let modoComprobante: Record<number, string> = {};
   let archivosComprobante: Record<number, { base64: string; mimetype: string; nombre: string } | null> = {};
+  let comprobantesExistentes: Record<number, any[]> = {};
+  let comprobanteSeleccionado: Record<number, number | null> = {};
+  let cargandoComprobantes: Record<number, boolean> = {};
 
   // Estado post-guardado (exito)
   let mostrarExito = false;
   let pagosGuardados: { pagoId: number; facturaId: number; monto: number }[] = [];
-  let linksGenerados: Record<number, string> = {};
   let procesandoComprobantes = false;
 
   // Reactividad
@@ -302,9 +304,32 @@
      }
   }
 
+  async function cargarComprobantesFactura(facturaId: number) {
+    if (cargandoComprobantes[facturaId]) return;
+    cargandoComprobantes = { ...cargandoComprobantes, [facturaId]: true };
+    try {
+      const response = await authFetch(`/api/facturas/${facturaId}/comprobantes?organizacionId=${organizacionId}`);
+      const data = await response.json();
+      comprobantesExistentes = {
+        ...comprobantesExistentes,
+        [facturaId]: data.success ? (data.comprobantes || []) : []
+      };
+    } catch {
+      comprobantesExistentes = { ...comprobantesExistentes, [facturaId]: [] };
+    } finally {
+      cargandoComprobantes = { ...cargandoComprobantes, [facturaId]: false };
+    }
+  }
+
+  function seleccionarModoComprobante(facturaId: number, modo: string) {
+    modoComprobante = { ...modoComprobante, [facturaId]: modo };
+    if (modo === 'asignar') {
+      cargarComprobantesFactura(facturaId);
+    }
+  }
+
   async function procesarComprobantes() {
     procesandoComprobantes = true;
-    linksGenerados = {};
 
     for (const pago of pagosGuardados) {
       const modo = modoComprobante[pago.facturaId] || 'ninguno';
@@ -325,22 +350,21 @@
             console.error(`Error subiendo comprobante para pago ${pago.pagoId}:`, err);
           }
         }
-      } else if (modo === 'link') {
+      } else if (modo === 'asignar') {
+        const comprobanteFacturaId = comprobanteSeleccionado[pago.facturaId];
+        if (!comprobanteFacturaId) continue;
         try {
-          const resp = await authFetch(`/api/pagos/${pago.pagoId}/generar-link?organizacionId=${organizacionId}`, {
-            method: 'POST'
+          await authFetch(`/api/pagos/${pago.pagoId}/asignar-comprobante?organizacionId=${organizacionId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ comprobanteFacturaId })
           });
-          const linkData = await resp.json();
-          if (linkData.success && linkData.link) {
-            linksGenerados[pago.pagoId] = linkData.link;
-          }
         } catch (err) {
-          console.error(`Error generando link para pago ${pago.pagoId}:`, err);
+          console.error(`Error asignando comprobante al pago ${pago.pagoId}:`, err);
         }
       }
     }
 
-    linksGenerados = { ...linksGenerados };
     procesandoComprobantes = false;
   }
 
@@ -371,10 +395,6 @@
     input.click();
   }
 
-  async function copiarLink(link: string) {
-    await navigator.clipboard.writeText(link);
-  }
-   
   function cerrar() {
     if (mostrarExito) {
       mostrarExito = false;
@@ -401,9 +421,11 @@
 
     modoComprobante = {};
     archivosComprobante = {};
+    comprobantesExistentes = {};
+    comprobanteSeleccionado = {};
+    cargandoComprobantes = {};
     mostrarExito = false;
     pagosGuardados = [];
-    linksGenerados = {};
     procesandoComprobantes = false;
   }
 
@@ -673,14 +695,14 @@
                 <div class="flex gap-2">
                   <button
                     type="button"
-                    on:click={() => { modoComprobante[factura.id] = 'ninguno'; modoComprobante = {...modoComprobante}; }}
+                    on:click={() => seleccionarModoComprobante(factura.id, 'ninguno')}
                     class="px-2 py-1 text-xs rounded-md border transition-colors {(!modoComprobante[factura.id] || modoComprobante[factura.id] === 'ninguno') ? 'bg-gray-200 border-gray-400 text-gray-800' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}"
                   >
                     Ninguno
                   </button>
                   <button
                     type="button"
-                    on:click={() => { modoComprobante[factura.id] = 'subir'; modoComprobante = {...modoComprobante}; }}
+                    on:click={() => seleccionarModoComprobante(factura.id, 'subir')}
                     class="px-2 py-1 text-xs rounded-md border transition-colors flex items-center gap-1 {modoComprobante[factura.id] === 'subir' ? 'bg-blue-100 border-blue-400 text-blue-800' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}"
                   >
                     <Upload class="w-3 h-3" />
@@ -688,11 +710,11 @@
                   </button>
                   <button
                     type="button"
-                    on:click={() => { modoComprobante[factura.id] = 'link'; modoComprobante = {...modoComprobante}; }}
-                    class="px-2 py-1 text-xs rounded-md border transition-colors flex items-center gap-1 {modoComprobante[factura.id] === 'link' ? 'bg-purple-100 border-purple-400 text-purple-800' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}"
+                    on:click={() => seleccionarModoComprobante(factura.id, 'asignar')}
+                    class="px-2 py-1 text-xs rounded-md border transition-colors flex items-center gap-1 {modoComprobante[factura.id] === 'asignar' ? 'bg-indigo-100 border-indigo-400 text-indigo-800' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'}"
                   >
-                    <Link class="w-3 h-3" />
-                    Enviar link
+                    <CheckCircle class="w-3 h-3" />
+                    Asignar comprobante
                   </button>
                 </div>
 
@@ -732,9 +754,24 @@
                   </div>
                 {/if}
 
-                {#if modoComprobante[factura.id] === 'link'}
-                  <div class="mt-2 bg-purple-50 border border-purple-200 rounded-lg p-2">
-                    <p class="text-xs text-purple-700">Se generara un link para que el cliente suba su comprobante despues de guardar el pago.</p>
+                {#if modoComprobante[factura.id] === 'asignar'}
+                  <div class="mt-2 bg-indigo-50 border border-indigo-200 rounded-lg p-3">
+                    {#if cargandoComprobantes[factura.id]}
+                      <p class="text-xs text-indigo-700">Cargando comprobantes...</p>
+                    {:else if !comprobantesExistentes[factura.id] || comprobantesExistentes[factura.id].length === 0}
+                      <p class="text-xs text-indigo-700">No hay comprobantes cargados para esta factura.</p>
+                    {:else}
+                      <label class="block text-xs text-indigo-800 mb-1 font-medium">Selecciona comprobante</label>
+                      <select
+                        bind:value={comprobanteSeleccionado[factura.id]}
+                        class="w-full px-2 py-1.5 text-xs border border-indigo-300 rounded-md bg-white"
+                      >
+                        <option value={null}>Seleccionar...</option>
+                        {#each comprobantesExistentes[factura.id] as c}
+                          <option value={c.id}>#{c.id} - {formatearFecha(c.fechasubida)}</option>
+                        {/each}
+                      </select>
+                    {/if}
                   </div>
                 {/if}
               </div>
@@ -772,32 +809,7 @@
         </div>
       {/if}
 
-      {#if Object.keys(linksGenerados).length > 0}
-        <div>
-          <h4 class="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
-            <Link class="w-4 h-4 text-purple-600" />
-            Links para comprobantes
-          </h4>
-          <div class="space-y-2">
-            {#each Object.entries(linksGenerados) as [pagoId, link]}
-              <div class="bg-purple-50 border border-purple-200 rounded-lg p-3 flex items-center gap-3">
-                <div class="flex-1 min-w-0">
-                  <p class="text-xs text-purple-600 mb-1">Pago #{pagoId}</p>
-                  <p class="text-sm text-purple-800 font-mono truncate">{link}</p>
-                </div>
-                <button
-                  type="button"
-                  on:click={() => copiarLink(link)}
-                  class="flex-shrink-0 p-2 text-purple-600 hover:text-purple-800 hover:bg-purple-100 rounded-lg transition-colors"
-                  title="Copiar link"
-                >
-                  <Copy class="w-4 h-4" />
-                </button>
-              </div>
-            {/each}
-          </div>
-        </div>
-      {/if}
+
     </div>
   {/if}
 

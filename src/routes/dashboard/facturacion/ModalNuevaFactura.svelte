@@ -36,7 +36,8 @@
     // Estados
     estadoId: 1, // Default: pendiente
     prioridadId: 2, // Default: media
-    observaciones: ''
+    observaciones: '',
+    notasCliente: ''
   };
 
   // Estado del formulario
@@ -45,6 +46,7 @@
 
   // Estado del link de comprobante
   let generarLink = false;
+  let incluirLinkEnNotas = false;
   let linkGenerado = '';
   let linkCopiado = false;
   let estadoModal: 'formulario' | 'exito' = 'formulario';
@@ -154,12 +156,14 @@
       // Estados
       estadoId: 1, // Default: pendiente
       prioridadId: 2, // Default: media
-      observaciones: ''
+      observaciones: '',
+      notasCliente: ''
     };
     clienteSeleccionado = null;
     error = '';
     guardando = false;
     generarLink = false;
+    incluirLinkEnNotas = false;
     linkGenerado = '';
     linkCopiado = false;
     estadoModal = 'formulario';
@@ -314,7 +318,8 @@
         fechaVencimiento: formulario.fechaVencimiento,
         estadoId: formulario.estadoId,
         prioridadId: formulario.prioridadId,
-        observaciones: formulario.observaciones || null
+        observaciones: formulario.observaciones || null,
+        notasCliente: formulario.notasCliente || null
       };
 
       const response = await authFetch('/api/facturas', {
@@ -331,7 +336,9 @@
           try {
             const orgId = get(orgIdStore);
             const linkRes = await authFetch(`/api/facturas/${result.factura.id}/generar-link?organizacionId=${orgId}`, {
-              method: 'POST'
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ agregarEnNotasCliente: incluirLinkEnNotas })
             });
             const linkData = await linkRes.json();
             if (linkData.success) {
@@ -767,6 +774,19 @@
               ></textarea>
             </div>
 
+            <div class="mt-4">
+              <label for="notas-cliente" class="block text-sm font-medium text-gray-700 mb-2">
+                Notas para el cliente
+              </label>
+              <textarea
+                id="notas-cliente"
+                bind:value={formulario.notasCliente}
+                rows="3"
+                placeholder="Texto visible para el cliente en la factura..."
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              ></textarea>
+            </div>
+
             <!-- Opción: Generar link para comprobante -->
             <div class="mt-4 p-4 bg-blue-50 rounded-xl border border-blue-100">
               <label class="flex items-start gap-3 cursor-pointer">
@@ -785,6 +805,24 @@
                   </p>
                 </div>
               </label>
+
+              {#if generarLink}
+                <label class="flex items-start gap-3 cursor-pointer mt-3 pt-3 border-t border-blue-200">
+                  <input
+                    type="checkbox"
+                    bind:checked={incluirLinkEnNotas}
+                    class="mt-0.5 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <div>
+                    <p class="text-sm font-medium text-gray-800">
+                      Agregar link en "Notas para el cliente"
+                    </p>
+                    <p class="text-xs text-gray-500 mt-0.5">
+                      El enlace se anexará automáticamente en la nota de la factura.
+                    </p>
+                  </div>
+                </label>
+              {/if}
             </div>
           </div>
 

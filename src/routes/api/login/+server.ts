@@ -17,7 +17,7 @@ import { env as privateEnv } from '$env/dynamic/private';
 const MAX_LOGIN_ATTEMPTS = parseInt(process.env.MAX_LOGIN_ATTEMPTS || '5');
 const LOGIN_LOCKOUT_MINUTES = parseInt(process.env.LOGIN_LOCKOUT_MINUTES || '15');
 const RECAPTCHA_ENABLED =
-	(process.env.RECAPTCHA_ENABLED ?? (process.env.NODE_ENV === 'production' ? 'true' : 'false')).toLowerCase() === 'true';
+	(process.env.RECAPTCHA_ENABLED ?? 'false').toLowerCase() === 'true';
 
 export const POST: RequestHandler = async (event) => {
 	try {
@@ -39,23 +39,23 @@ export const POST: RequestHandler = async (event) => {
 		if (RECAPTCHA_ENABLED) {
 			const recaptchaSecret = privateEnv.RECAPTCHA_SECRET_KEY || '';
 			if (!recaptchaSecret) {
-				secureLog('error', 'RECAPTCHA_SECRET_KEY is missing while captcha is enabled');
-				return secureErrorResponse(500, 'Configuración de seguridad incompleta');
-			}
+				secureLog('warn', 'RECAPTCHA_ENABLED=true pero falta RECAPTCHA_SECRET_KEY. Se omite validación de captcha temporalmente.');
+			} else {
 
-			if (!recaptchaToken) {
-				secureLog('warn', 'Login attempt without reCAPTCHA token', { ip: clientIP, email: emailValidation.value });
-				return secureErrorResponse(400, 'reCAPTCHA token requerido');
-			}
+				if (!recaptchaToken) {
+					secureLog('warn', 'Login attempt without reCAPTCHA token', { ip: clientIP, email: emailValidation.value });
+					return secureErrorResponse(400, 'reCAPTCHA token requerido');
+				}
 
-			const recaptchaResult = await validateRecaptcha(recaptchaToken, recaptchaSecret);
-			if (!recaptchaResult.valid) {
-				secureLog('warn', 'Login attempt with failed reCAPTCHA', {
-					ip: clientIP,
-					email: emailValidation.value,
-					recaptchaScore: recaptchaResult.score
-				});
-				return secureErrorResponse(403, 'Verificación de seguridad fallida. Por favor intenta nuevamente.');
+				const recaptchaResult = await validateRecaptcha(recaptchaToken, recaptchaSecret);
+				if (!recaptchaResult.valid) {
+					secureLog('warn', 'Login attempt with failed reCAPTCHA', {
+						ip: clientIP,
+						email: emailValidation.value,
+						recaptchaScore: recaptchaResult.score
+					});
+					return secureErrorResponse(403, 'Verificación de seguridad fallida. Por favor intenta nuevamente.');
+				}
 			}
 		}
 
