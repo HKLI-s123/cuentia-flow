@@ -5,31 +5,7 @@ import { getUserFromRequest, unauthorizedResponse, validateOrganizationAccess } 
 import { validarLimiteFacturas, validarAccesoFuncion } from '$lib/server/validar-plan';
 import { hoyLocal, fechaLocal } from '$lib/utils/date';
 import crypto from 'crypto';
-
-const LINK_COMPROBANTE_LABEL = 'Link para subir comprobante:';
-const MAX_NOTAS_CLIENTE_LENGTH = 1000;
-
-function mergeNotasClienteConLink(notasActuales: string | null | undefined, link: string): string {
-  const normalizado = String(notasActuales || '').replace(/\r\n/g, '\n');
-  const lineasSinLink = normalizado
-    .split('\n')
-    .filter((linea) => {
-      const lower = linea.toLowerCase();
-      return !lower.includes('link para subir comprobante:') && !linea.includes('/comprobante-factura/');
-    })
-    .join('\n')
-    .trim();
-
-  const textoConLink = `${LINK_COMPROBANTE_LABEL} ${link}`;
-  const combinado = lineasSinLink ? `${lineasSinLink}\n\n${textoConLink}` : textoConLink;
-
-  // Prioriza conservar el link si el texto excede el límite permitido.
-  if (combinado.length > MAX_NOTAS_CLIENTE_LENGTH) {
-    return textoConLink;
-  }
-
-  return combinado;
-}
+import { mergeNotasClienteConLink, MAX_NOTAS_CLIENTE_LENGTH } from '$lib/server/notas-comprobante';
 
 export const GET: RequestHandler = async (event) => {
   // Verificar autenticación

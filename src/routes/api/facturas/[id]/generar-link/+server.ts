@@ -4,30 +4,7 @@ import { getConnection } from '$lib/server/db';
 import crypto from 'crypto';
 import { getUserFromRequest, unauthorizedResponse, validateOrganizationAccess } from '$lib/server/auth';
 import { checkRateLimit, getClientIP, secureLog } from '$lib/server/security';
-
-const LINK_COMPROBANTE_LABEL = 'Link para subir comprobante:';
-const MAX_NOTAS_CLIENTE_LENGTH = 1000;
-
-function mergeNotasClienteConLink(notasActuales: string | null | undefined, link: string): string {
-	const normalizado = String(notasActuales || '').replace(/\r\n/g, '\n');
-	const lineasSinLink = normalizado
-		.split('\n')
-		.filter((linea) => {
-			const lower = linea.toLowerCase();
-			return !lower.includes('link para subir comprobante:') && !linea.includes('/comprobante-factura/');
-		})
-		.join('\n')
-		.trim();
-
-	const textoConLink = `${LINK_COMPROBANTE_LABEL} ${link}`;
-	const combinado = lineasSinLink ? `${lineasSinLink}\n\n${textoConLink}` : textoConLink;
-
-	if (combinado.length > MAX_NOTAS_CLIENTE_LENGTH) {
-		return textoConLink;
-	}
-
-	return combinado;
-}
+import { mergeNotasClienteConLink } from '$lib/server/notas-comprobante';
 
 /**
  * POST /api/facturas/[id]/generar-link?organizacionId=X
