@@ -16,6 +16,21 @@
  
   let modalPagosAbierto = false;
 
+  // Comprobantes del cliente
+  let comprobantes: { id: number; fechasubida: string; imagenmimetype: string; imagenbase64: string; visto: boolean }[] = [];
+
+  async function cargarComprobantes() {
+    try {
+      const organizacionId = get(orgIdStore)?.toString() || null;
+      if (!organizacionId || !facturaId) return;
+      const res = await authFetch(`/api/facturas/${facturaId}/comprobantes?organizacionId=${organizacionId}`);
+      const data = await res.json();
+      if (data.success) comprobantes = data.comprobantes || [];
+    } catch (e) {
+      console.error('Error al cargar comprobantes:', e);
+    }
+  }
+
   // Obtener ID de la factura desde la URL
   $: facturaId = $page.params.id;
 
@@ -429,6 +444,7 @@
     cargarFactura().then(() => {
       cargarConfigCobranza();
       cargarStatsRecordatorios();
+        cargarComprobantes();
     });
   });
 </script>
@@ -934,7 +950,7 @@
           {#if factura.notasCliente || factura.notasInternas}
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h3 class="text-sm font-bold text-gray-700 uppercase mb-6">NOTAS</h3>
-              <div class="space-y-4">
+                <div class="space-y-4">
                 {#if factura.notasCliente}
                   <div>
                     <p class="text-sm text-gray-600 mb-1">Notas para el cliente (PAC)</p>
@@ -952,6 +968,33 @@
           {/if}
 
           <!-- DOCUMENTOS CON RELACIÓN -->
+
+          <!-- COMPROBANTE DE PAGO DEL CLIENTE -->
+          {#if comprobantes.length > 0}
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 class="text-sm font-bold text-gray-700 uppercase mb-4">COMPROBANTE DE PAGO</h3>
+              {#each comprobantes as comp}
+                <div class="mb-4 last:mb-0">
+                  <p class="text-xs text-gray-500 mb-2">Subido el {formatearFecha(comp.fechasubida)}</p>
+                  <img
+                    src={comp.imagenbase64}
+                    alt="Comprobante de pago"
+                    class="max-w-full max-h-96 rounded border border-gray-200 object-contain"
+                  />
+                  <div class="mt-2">
+                    <a
+                      href={comp.imagenbase64}
+                      download={`comprobante-${factura.numero_factura}-${comp.id}.${comp.imagenmimetype.split('/')[1] || 'jpg'}`}
+                      class="text-sm text-blue-600 hover:underline"
+                    >
+                      Descargar comprobante
+                    </a>
+                  </div>
+                </div>
+              {/each}
+            </div>
+          {/if}
+
           <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 class="text-sm font-bold text-gray-700 uppercase mb-6">DOCUMENTOS CON RELACIÓN</h3>
             <table class="w-full">

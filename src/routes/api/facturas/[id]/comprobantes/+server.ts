@@ -46,7 +46,7 @@ export const GET: RequestHandler = async (event) => {
 		}
 
 		const result = await pool.query(
-			`SELECT id, fechasubida, imagenmimetype, visto
+			`SELECT id, fechasubida, imagenmimetype, imagenbase64, visto
 			 FROM comprobantes_facturas
 			 WHERE facturaid = $1
 			 ORDER BY fechasubida DESC`,
