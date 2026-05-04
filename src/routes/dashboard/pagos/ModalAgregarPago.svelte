@@ -761,8 +761,9 @@
                     {:else if !comprobantesExistentes[factura.id] || comprobantesExistentes[factura.id].length === 0}
                       <p class="text-xs text-indigo-700">No hay comprobantes cargados para esta factura.</p>
                     {:else}
-                      <label class="block text-xs text-indigo-800 mb-1 font-medium">Selecciona comprobante</label>
+                      <label for={"comprobante-" + factura.id} class="block text-xs text-indigo-800 mb-1 font-medium">Selecciona comprobante</label>
                       <select
+                        id={"comprobante-" + factura.id}
                         bind:value={comprobanteSeleccionado[factura.id]}
                         class="w-full px-2 py-1.5 text-xs border border-indigo-300 rounded-md bg-white"
                       >

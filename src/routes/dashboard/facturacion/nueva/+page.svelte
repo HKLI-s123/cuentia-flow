@@ -1809,6 +1809,7 @@
 							on:click={() => eliminarPlantilla(p.id)}
 							class="text-gray-400 hover:text-red-500 flex-shrink-0 mt-0.5"
 							title="Eliminar plantilla"
+							aria-label="Eliminar plantilla"
 						>
 							<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
