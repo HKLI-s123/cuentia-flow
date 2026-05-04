@@ -626,7 +626,7 @@ export const POST: RequestHandler = async (event) => {
                  CASE WHEN COALESCE(notascliente, '') = '' THEN '' ELSE E'\n\n' END,
                  $3::text)
            WHERE id = $4`,
-          [tokenComprobante, tokenExpiracion, linkComprobanteGenerado, facturaId]
+          [tokenComprobante, tokenExpiracion, `Link para subir comprobante: ${linkComprobanteGenerado}`, facturaId]
         );
       } else {
         await client.query(
