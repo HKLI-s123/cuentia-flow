@@ -14,11 +14,11 @@
   const limpiarRazonSocial = (razonSocial: string, rfc: string): string => {
       const esPersonaFisica = rfc && rfc.length === 13;
     
-      let resultado = razonSocial.toUpperCase(); // SOLO may├║sculas
-    
-      // ÔÜá´©Å NO eliminar acentos ni ├æ
-    
-      // Solo eliminar r├®gimen societario si es persona moral
+      let resultado = razonSocial.toUpperCase(); // SOLO mayusculas
+
+      // NO eliminar acentos ni N
+
+      // Solo eliminar regimen societario si es persona moral
       if (!esPersonaFisica) {
         resultado = resultado
           .replace(/\s+S\.?\s?A\.?\s+(DE\s+)?C\.?\s?V\.?$/i, '')
@@ -33,7 +33,7 @@
   // Props
   export let open = false;
   export let organizacionId: string;
-  // ­ƒö╣ NUEVAS PROPS
+  // NUEVAS PROPS
   export let facturaInicial: any = null;
   export let clienteInicial: any = null;
   export let abrirConFactura = false;
@@ -67,7 +67,7 @@
   let modoComprobante: Record<number, string> = {};
   let archivosComprobante: Record<number, { base64: string; mimetype: string; nombre: string } | null> = {};
 
-  // Estado post-guardado (├®xito)
+  // Estado post-guardado (exito)
   let mostrarExito = false;
   let pagosGuardados: { pagoId: number; facturaId: number; monto: number }[] = [];
   let linksGenerados: Record<number, string> = {};
@@ -97,7 +97,7 @@
 }
 
 
-  // M├®todos
+  // Metodos
   async function buscarClientes() {
     if (busquedaCliente.trim().length < 2) {
       clientesEncontrados = [];
@@ -145,14 +145,14 @@
 
     const termino = busquedaFactura.toLowerCase().trim();
 
-    // Si el campo est├í vac├¡o, mostrar todas las facturas disponibles
+    // Si el campo esta vacio, mostrar todas las facturas disponibles
     if (termino.length === 0) {
       facturasEncontradas = [...facturasDisponibles];
       mostrarListaFacturas = facturasDisponibles.length > 0;
       return;
     }
 
-    // Filtrar facturas disponibles por t├®rmino de b├║squeda
+    // Filtrar facturas disponibles por termino de busqueda
     facturasEncontradas = facturasDisponibles.filter(f => {
       const numeroFactura = f.numeroFactura.toLowerCase();
       return numeroFactura.includes(termino);
@@ -180,7 +180,7 @@
         metodosDisponibles = data.metodos;
       }
     } catch (err) {
-      console.error('Error al cargar m├®todos:', err);
+      console.error('Error al cargar metodos:', err);
     } finally {
       cargandoMetodos = false;
     }
@@ -229,14 +229,14 @@
 
   async function guardarPago() {
      try {
-       // Validaciones b├ísicas
+      // Validaciones basicas
        if (!clienteSeleccionado) {
          errorMensaje = 'Debes seleccionar un cliente.';
          return;
        }
    
        if (!metodoPago) {
-         errorMensaje = 'Debes seleccionar un m├®todo de pago.';
+         errorMensaje = 'Debes seleccionar un metodo de pago.';
          return;
        }
    
@@ -448,7 +448,7 @@
       </div>
     {/if}
 
-    <!-- Secci├│n: Datos del pago -->
+    <!-- Seccion: Datos del pago -->
     <div>
       <h4 class="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
         <CreditCard class="w-4 h-4 text-blue-600" />
@@ -456,7 +456,7 @@
       </h4>
 
       <div class="space-y-4">
-        <!-- B├║squeda de cliente -->
+        <!-- Busqueda de cliente -->
         <div class="relative">
           <label for="busqueda-cliente" class="block text-sm font-medium text-gray-700 mb-2">
             Cliente <span class="text-red-500">*</span>
@@ -508,10 +508,10 @@
           {/if}
         </div>
 
-        <!-- M├®todo de pago -->
+        <!-- Metodo de pago -->
         <div>
           <label for="metodo-pago" class="block text-sm font-medium text-gray-700 mb-2">
-            M├®todo de pago <span class="text-red-500">*</span>
+            Metodo de pago <span class="text-red-500">*</span>
           </label>
           <select
             id="metodo-pago"
@@ -519,7 +519,7 @@
             on:focus={cargarMetodos}
             class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="">Selecciona un m├®todo</option>
+            <option value="">Selecciona un metodo</option>
             {#each metodosDisponibles as metodo}
               <option value={metodo.codigo}>
                 {metodo.codigo} - {metodo.nombre}
@@ -547,13 +547,13 @@
             label="Identificador (opcional)"
             type="text"
             bind:value={identificador}
-            placeholder="Ref. de pago, n├║mero de cheque, etc."
+            placeholder="Ref. de pago, numero de cheque, etc."
           />
         </div>
       </div>
     </div>
 
-    <!-- Secci├│n: Agregar facturas -->
+    <!-- Seccion: Agregar facturas -->
     <div>
       <h4 class="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
         <CreditCard class="w-4 h-4 text-blue-600" />
@@ -565,7 +565,7 @@
           <Loader class="w-5 h-5 animate-spin text-gray-400" />
         </div>
       {:else if clienteSeleccionado && facturasDisponibles.length > 0}
-        <!-- B├║squeda de facturas -->
+        <!-- Busqueda de facturas -->
         <div class="relative mb-4">
           <label for="busqueda-factura" class="block text-sm font-medium text-gray-700 mb-2">
             Buscar factura
@@ -574,7 +574,7 @@
             <input
               id="busqueda-factura"
               type="text"
-              placeholder="Escribe n├║mero de factura"
+              placeholder="Escribe numero de factura"
               bind:value={busquedaFactura}
               on:input={buscarFacturas}
               on:focus={buscarFacturas}
@@ -590,9 +590,9 @@
                   mostrarListaFacturas = false;
                 }}
                 class="absolute right-3 top-10 text-gray-400 hover:text-gray-600 p-1 rounded"
-                aria-label="Limpiar b├║squeda"
+                aria-label="Limpiar busqueda"
               >
-                Ô£ò
+                x
               </button>
             {/if}
           </div>
@@ -612,11 +612,11 @@
                   </p>
                   {#if factura.diasVencido > 0}
                     <Badge variant="danger" size="sm" class="mt-2">
-                      Vencida hace {factura.diasVencido} d├¡as
+                      Vencida hace {factura.diasVencido} dias
                     </Badge>
                   {:else if factura.diasVencido < 0}
                     <Badge variant="warning" size="sm" class="mt-2">
-                      Vence en {Math.abs(factura.diasVencido)} d├¡as
+                      Vence en {Math.abs(factura.diasVencido)} dias
                     </Badge>
                   {/if}
                 </button>
@@ -708,7 +708,7 @@
                             on:click={() => { archivosComprobante[factura.id] = null; archivosComprobante = {...archivosComprobante}; }}
                             class="text-red-500 hover:text-red-700 text-xs"
                           >
-                            Ô£ò
+                            x
                           </button>
                         </div>
                         {#if archivosComprobante[factura.id]?.base64}
@@ -726,7 +726,7 @@
                         class="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-xs text-gray-500 hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center gap-1"
                       >
                         <Upload class="w-3 h-3" />
-                        Seleccionar imagen (JPEG, PNG, WebP ÔÇö m├íx 5MB)
+                        Seleccionar imagen (JPEG, PNG, WebP - max 5MB)
                       </button>
                     {/if}
                   </div>
@@ -734,7 +734,7 @@
 
                 {#if modoComprobante[factura.id] === 'link'}
                   <div class="mt-2 bg-purple-50 border border-purple-200 rounded-lg p-2">
-                    <p class="text-xs text-purple-700">Se generar├í un link para que el cliente suba su comprobante despu├®s de guardar el pago.</p>
+                    <p class="text-xs text-purple-700">Se generara un link para que el cliente suba su comprobante despues de guardar el pago.</p>
                   </div>
                 {/if}
               </div>
@@ -754,14 +754,14 @@
   </form>
   {/if}
 
-  <!-- Vista de ├®xito -->
+  <!-- Vista de exito -->
   {#if mostrarExito}
     <div class="space-y-6">
       <div class="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
         <CheckCircle class="w-12 h-12 text-green-600 mx-auto mb-3" />
         <h3 class="text-lg font-semibold text-green-800">Pago registrado exitosamente</h3>
         <p class="text-sm text-green-600 mt-1">
-          Se timbr├│ el complemento de pago y se registraron {pagosGuardados.length} pago(s).
+          Se timbro el complemento de pago y se registraron {pagosGuardados.length} pago(s).
         </p>
       </div>
 
