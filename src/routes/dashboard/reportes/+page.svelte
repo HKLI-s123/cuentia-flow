@@ -76,6 +76,18 @@
     return ((monto / totalAging) * 100).toFixed(1);
   }
 
+  function toNumber(value: unknown): number {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function getCampo(obj: any, ...keys: string[]) {
+    for (const key of keys) {
+      if (obj && obj[key] != null) return obj[key];
+    }
+    return undefined;
+  }
+
   // CSV Download utility
   function descargarCSV(datos: Record<string, any>[], nombreArchivo: string) {
     if (!datos || datos.length === 0) return;
@@ -129,11 +141,15 @@
     for (let i = 3; i >= 0; i--) {
       const fecha = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
       const nombreMes = fecha.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
-      const datosDelMes = ventasPorMes.find((v: any) => v.Anio === fecha.getFullYear() && v.Mes === (fecha.getMonth() + 1));
+      const datosDelMes = ventasPorMes.find((v: any) => {
+        const anio = toNumber(getCampo(v, 'anio', 'Anio'));
+        const mes = toNumber(getCampo(v, 'mes', 'Mes'));
+        return anio === fecha.getFullYear() && mes === (fecha.getMonth() + 1);
+      });
       datos.push({
         'Mes': nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1),
-        'Total Facturado': datosDelMes?.TotalVentas || 0,
-        'Cantidad Facturas': datosDelMes?.CantidadFacturas || 0
+        'Total Facturado': toNumber(getCampo(datosDelMes, 'totalventas', 'TotalVentas')),
+        'Cantidad Facturas': toNumber(getCampo(datosDelMes, 'cantidadfacturas', 'CantidadFacturas'))
       });
     }
     descargarCSV(datos, 'facturacion_mensual');
@@ -153,9 +169,9 @@
   function descargarTopDeudores() {
     descargarCSV(topSaldoVencido.map((c, i) => ({
       '#': i + 1,
-      'Cliente': c.ClienteNombre || 'Sin nombre',
-      'Facturas Vencidas': c.CantidadFacturas,
-      'Saldo Vencido': c.TotalSaldoVencido
+      'Cliente': String(getCampo(c, 'clientenombre', 'ClienteNombre') || 'Sin nombre'),
+      'Facturas Vencidas': toNumber(getCampo(c, 'cantidadfacturas', 'CantidadFacturas')),
+      'Saldo Vencido': toNumber(getCampo(c, 'totalsaldovencido', 'TotalSaldoVencido'))
     })), 'top_deudores');
   }
 
@@ -258,10 +274,12 @@
         const nombreMes = fecha.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
         labels.push(nombreMes.charAt(0).toUpperCase() + nombreMes.slice(1));
 
-        const datosDelMes = ventasPorMes.find(
-          (v: any) => v.Anio === fecha.getFullYear() && v.Mes === (fecha.getMonth() + 1)
-        );
-        datosFacturado.push(datosDelMes?.TotalVentas || 0);
+        const datosDelMes = ventasPorMes.find((v: any) => {
+          const anio = toNumber(getCampo(v, 'anio', 'Anio'));
+          const mes = toNumber(getCampo(v, 'mes', 'Mes'));
+          return anio === fecha.getFullYear() && mes === (fecha.getMonth() + 1);
+        });
+        datosFacturado.push(toNumber(getCampo(datosDelMes, 'totalventas', 'TotalVentas')));
       }
 
       chartVentasMensual = new Chart(canvasVentasMensual, {
@@ -672,15 +690,18 @@
             </thead>
             <tbody class="divide-y divide-gray-100">
               {#each topSaldoVencido as cliente, i}
-                {@const maxSaldo = topSaldoVencido[0]?.TotalSaldoVencido || 1}
+                {@const maxSaldo = toNumber(getCampo(topSaldoVencido[0], 'totalsaldovencido', 'TotalSaldoVencido')) || 1}
+                {@const nombreCliente = String(getCampo(cliente, 'clientenombre', 'ClienteNombre') || 'Sin nombre')}
+                {@const cantidadFacturas = toNumber(getCampo(cliente, 'cantidadfacturas', 'CantidadFacturas'))}
+                {@const totalSaldoVencido = toNumber(getCampo(cliente, 'totalsaldovencido', 'TotalSaldoVencido'))}
                 <tr class="hover:bg-gray-50">
                   <td class="px-4 py-3 text-sm text-gray-500 font-medium">{i + 1}</td>
-                  <td class="px-4 py-3 text-sm font-medium text-gray-800">{cliente.ClienteNombre || 'Sin nombre'}</td>
-                  <td class="px-4 py-3 text-right text-sm text-gray-700">{cliente.CantidadFacturas}</td>
-                  <td class="px-4 py-3 text-right text-sm font-semibold text-red-600">{formatearMoneda(cliente.TotalSaldoVencido)}</td>
+                  <td class="px-4 py-3 text-sm font-medium text-gray-800">{nombreCliente}</td>
+                  <td class="px-4 py-3 text-right text-sm text-gray-700">{cantidadFacturas}</td>
+                  <td class="px-4 py-3 text-right text-sm font-semibold text-red-600">{formatearMoneda(totalSaldoVencido)}</td>
                   <td class="px-4 py-3">
                     <div class="w-full bg-gray-200 rounded-full h-2">
-                      <div class="bg-red-500 h-2 rounded-full transition-all" style="width: {(cliente.TotalSaldoVencido / maxSaldo) * 100}%"></div>
+                      <div class="bg-red-500 h-2 rounded-full transition-all" style="width: {(totalSaldoVencido / maxSaldo) * 100}%"></div>
                     </div>
                   </td>
                 </tr>
@@ -698,12 +719,12 @@
         </div>
         <div class="bg-white rounded-xl p-5 shadow-sm border text-center">
           <p class="text-xs text-gray-500 uppercase font-medium mb-1">Mayor deudor</p>
-          <p class="text-lg font-bold text-gray-900 truncate">{topSaldoVencido[0]?.ClienteNombre || '-'}</p>
-          <p class="text-sm text-red-600 font-semibold">{formatearMoneda(topSaldoVencido[0]?.TotalSaldoVencido || 0)}</p>
+          <p class="text-lg font-bold text-gray-900 truncate">{String(getCampo(topSaldoVencido[0], 'clientenombre', 'ClienteNombre') || '-')}</p>
+          <p class="text-sm text-red-600 font-semibold">{formatearMoneda(toNumber(getCampo(topSaldoVencido[0], 'totalsaldovencido', 'TotalSaldoVencido')))}</p>
         </div>
         <div class="bg-white rounded-xl p-5 shadow-sm border text-center">
           <p class="text-xs text-gray-500 uppercase font-medium mb-1">Total vencido (Top 10)</p>
-          <p class="text-2xl font-bold text-red-600">{formatearMoneda(topSaldoVencido.reduce((acc, c) => acc + (c.TotalSaldoVencido || 0), 0))}</p>
+          <p class="text-2xl font-bold text-red-600">{formatearMoneda(topSaldoVencido.reduce((acc, c) => acc + toNumber(getCampo(c, 'totalsaldovencido', 'TotalSaldoVencido')), 0))}</p>
         </div>
       </div>
     {:else}
